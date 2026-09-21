@@ -1037,6 +1037,7 @@ static void ProcessLeftRight(void)
          && (itemIndex == ITEM_SOUND_MUSIC_VOLUME || itemIndex == ITEM_SOUND_SFX_VOLUME))
         {
             struct ChallengeSettings *cs = &gSaveBlock3Ptr->challengeSettings;
+            cs->audioVolumeInitialized = 1;
             cs->musicVolume = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_MUSIC_VOLUME);
             cs->sfxVolume = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SFX_VOLUME);
             cs->musicOnOff = (cs->musicVolume == 0);
@@ -1130,6 +1131,7 @@ static void Task_Save(u8 taskId)
     cs->lrToRun            = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_LR_RUN);
     cs->runType            = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_RUN_TYPE);
 
+    cs->audioVolumeInitialized = 1;
     cs->musicVolume        = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_MUSIC_VOLUME);
     cs->sfxVolume          = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SFX_VOLUME);
     cs->musicOnOff         = (cs->musicVolume == 0);
@@ -1240,8 +1242,10 @@ void CB2_InitOptionMenu(void)
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_LR_RUN)          = cs->lrToRun;
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_RUN_TYPE)        = cs->runType;
 
-        *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_MUSIC_VOLUME) = (cs->musicVolume < 6) ? cs->musicVolume : 1;
-        *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SFX_VOLUME)   = (cs->sfxVolume < 6) ? cs->sfxVolume : 1;
+        *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_MUSIC_VOLUME) =
+            cs->audioVolumeInitialized && cs->musicVolume < 6 ? cs->musicVolume : 1;
+        *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SFX_VOLUME) =
+            cs->audioVolumeInitialized && cs->sfxVolume < 6 ? cs->sfxVolume : 1;
         *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_BIKE_MUSIC)   = cs->bikeMusic;
         *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SURF_MUSIC) = cs->surfMusic;
 
