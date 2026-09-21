@@ -339,9 +339,11 @@ struct ChallengeSettings
     u8 tx_Difficulty_EscapeRopeDig:1;
     u8 tx_Features_ShinyChance:4;
 
-    // Family Remix audio levels: 0 = muted, 1..5 = 20%..100%.
-    u8 musicVolume;
-    u8 sfxVolume;
+    // Family Remix audio settings use existing spare bits so ChallengeSettings
+    // stays exactly 32 bytes and old save layouts remain compatible.
+    u8 audioVolumeInitialized:1;
+    u8 musicVolume:3; // 0 = muted, 1..5 = 20%..100%
+    u8 sfxVolume:3;   // 0 = muted, 1..5 = 20%..100%
 };
 
 struct SaveBlock3
