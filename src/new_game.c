@@ -137,6 +137,7 @@ void SetDefaultChallengeSettings(void)
     gSaveblock3.challengeSettings.newBattleUI = 0;
     gSaveblock3.challengeSettings.musicOnOff = 0;
     // Family Remix recommended audio preset: start quietly instead of blasting at 100%.
+    gSaveblock3.challengeSettings.audioVolumeInitialized = 1;
     gSaveblock3.challengeSettings.musicVolume = 1; // 20%
     gSaveblock3.challengeSettings.sfxVolume = 1;   // 20%
     gSaveblock3.challengeSettings.runType = 0;
