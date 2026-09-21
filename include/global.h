@@ -338,6 +338,10 @@ struct ChallengeSettings
     u8 tx_Features_FrontierBans:1;
     u8 tx_Difficulty_EscapeRopeDig:1;
     u8 tx_Features_ShinyChance:4;
+
+    // Family Remix audio levels: 0 = muted, 1..5 = 20%..100%.
+    u8 musicVolume;
+    u8 sfxVolume;
 };
 
 struct SaveBlock3
