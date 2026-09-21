@@ -36,17 +36,27 @@ static const u16 sUserVolumeLevels[] = {0, 51, 102, 154, 205, 256};
 
 u16 GetUserMusicVolume(void)
 {
-    u8 level = gSaveblock3.challengeSettings.musicVolume;
+    u8 level;
+
+    if (!gSaveblock3.challengeSettings.audioVolumeInitialized)
+        return sUserVolumeLevels[1]; // Existing saves: default safely to 20%.
+
+    level = gSaveblock3.challengeSettings.musicVolume;
     if (level >= ARRAY_COUNT(sUserVolumeLevels))
-        level = 1; // Safe fallback: 20%.
+        level = 1;
     return sUserVolumeLevels[level];
 }
 
 u16 GetUserSfxVolume(void)
 {
-    u8 level = gSaveblock3.challengeSettings.sfxVolume;
+    u8 level;
+
+    if (!gSaveblock3.challengeSettings.audioVolumeInitialized)
+        return sUserVolumeLevels[1]; // Existing saves: default safely to 20%.
+
+    level = gSaveblock3.challengeSettings.sfxVolume;
     if (level >= ARRAY_COUNT(sUserVolumeLevels))
-        level = 1; // Safe fallback: 20%.
+        level = 1;
     return sUserVolumeLevels[level];
 }
 
