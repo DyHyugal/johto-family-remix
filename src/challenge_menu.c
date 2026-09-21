@@ -163,6 +163,7 @@ struct ChallengeMenuState
     u16 scrollOffset[TAB_COUNT];
     u16 selectedRow[TAB_COUNT];
     u8 selections[TAB_COUNT * MAX_ITEMS_PER_TAB];
+    u8 initialSelections[TAB_COUNT * MAX_ITEMS_PER_TAB];
 };
 
 static EWRAM_DATA struct ChallengeMenuState *sMenu = NULL;
@@ -363,7 +364,7 @@ static const u8 sText_TopBar_Cancel[] = _("{B_BUTTON}CANCEL");
 // =============================================================================
 
 static const u8 *const sDesc_Gamemode[] = {
-    COMPOUND_STRING("Recommended settings."),
+    COMPOUND_STRING("Recommended settings.\nPress A to start during setup."),
     COMPOUND_STRING("Choose your own rules."),
 };
 static const u8 *const sDesc_ModernMoves[] = {
@@ -1743,6 +1744,16 @@ static void SwitchTab(u8 taskId, s8 direction)
 {
     s8 newTab = sMenu->currentTab + direction;
 
+    if (sIsInitialSetup && sMenu->currentTab == TAB_MODE && direction > 0
+     && *GetSelectionPtr(TAB_MODE, ITEM_MODE_GAMEMODE) == 0)
+    {
+        // Discard any challenge edits made while exploring Custom in this setup.
+        memcpy(sMenu->selections, sMenu->initialSelections, sizeof(sMenu->selections));
+        ApplyRecommendedPresets();
+        Task_ConfirmSaveYes(taskId);
+        return;
+    }
+
     if (newTab < 0 || newTab > TAB_COUNT)
         return;
     else if (newTab == TAB_COUNT)
@@ -1892,6 +1903,13 @@ static void Task_ProcessInput(u8 taskId)
         return;
     }
 
+    if (sIsInitialSetup && sMenu->currentTab == TAB_MODE
+     && (u32)input == ITEM_MODE_GAMEMODE)
+    {
+        SwitchTab(taskId, +1);
+        return;
+    }
+
     if (sMenu->currentTab == TAB_CHALLENGES && (u32)input == ITEM_CHALLENGES_SAVE)
     {
         gTasks[taskId].func = Task_Save;
@@ -1953,7 +1971,8 @@ static void Task_ConfirmSaveYes(u8 taskId)
     struct ChallengeSettings *cs = &gSaveBlock3Ptr->challengeSettings;
 
 #if IS_HNS
-    SeedRngAndSetTrainerId();
+    if (sIsInitialSetup)
+        SeedRngAndSetTrainerId();
 #endif
 
     // Mode tab
@@ -2294,6 +2313,7 @@ void CB2_InitChallengeMenu(void)
             *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_MIRROR_THIEF)  = cs->tx_Challenges_Mirror_Thief;
         }
 
+        memcpy(sMenu->initialSelections, sMenu->selections, sizeof(sMenu->selections));
         gMain.state++;
         break;
     case 7:

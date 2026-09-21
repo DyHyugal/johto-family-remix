@@ -1,5 +1,6 @@
 #include "global.h"
 #include "option_menu.h"
+#include "challenge_menu.h"
 #include "bg.h"
 #include "gpu_regs.h"
 #include "international_string_util.h"
@@ -52,6 +53,7 @@ enum {
     ITEM_MAIN_UNIT_TYPE,
     ITEM_MAIN_MATCHCALL,
     ITEM_MAIN_FRAMETYPE,
+    ITEM_MAIN_CHALLENGES,
     ITEM_MAIN_COUNT,
 };
 
@@ -97,6 +99,7 @@ struct OptionMenuItem
 
 struct OptionMenuState
 {
+    bool8 openChallenges;
     u8 currentTab;
     u8 listTaskId;
     u8 arrowTaskId;
@@ -106,6 +109,7 @@ struct OptionMenuState
 };
 
 static EWRAM_DATA struct OptionMenuState *sMenu = NULL;
+static EWRAM_DATA MainCallback sOptionsReturnCallback = NULL;
 
 // =============================================================================
 // Window / BG templates
@@ -391,7 +395,16 @@ static const u8 *const sDesc_SurfMusic[] = {
 // Tab item tables
 // =============================================================================
 
+static const u8 *const sDesc_Challenges[] = {
+    COMPOUND_STRING("Open game rules, RANDOMIZER\nand NUZLOCKE settings."),
+};
+
 static const struct OptionMenuItem sTabItems_Main[] = {
+    [ITEM_MAIN_CHALLENGES] = {
+        .name = COMPOUND_STRING("CHALLENGE SETTINGS"),
+        .descriptions = sDesc_Challenges,
+        .numChoices = 0,
+    },
     [ITEM_MAIN_TEXTSPEED] = {
         .name         = COMPOUND_STRING("TEXT SPEED"),
         .descriptions = sDesc_TextSpeed,
@@ -1095,7 +1108,12 @@ static void Task_ProcessInput(u8 taskId)
         return;
     }
 
-    ListMenu_ProcessInput(sMenu->listTaskId);
+    s32 input = ListMenu_ProcessInput(sMenu->listTaskId);
+    if (sMenu->currentTab == TAB_MAIN && input == ITEM_MAIN_CHALLENGES)
+    {
+        sMenu->openChallenges = TRUE;
+        gTasks[taskId].func = Task_Save;
+    }
 }
 
 static void Task_Save(u8 taskId)
@@ -1137,9 +1155,16 @@ static void Task_Save(u8 taskId)
     cs->musicOnOff         = (cs->musicVolume == 0);
     cs->bikeMusic          = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_BIKE_MUSIC);
     cs->surfMusic          = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SURF_MUSIC);
+    ApplyUserAudioVolumes();
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_FadeOut;
+}
+
+static void CB2_ReturnFromChallengeSettings(void)
+{
+    gMain.savedCallback = sOptionsReturnCallback;
+    SetMainCallback2(CB2_InitOptionMenu);
 }
 
 static void Task_FadeOut(u8 taskId)
@@ -1149,8 +1174,17 @@ static void Task_FadeOut(u8 taskId)
         DestroyCurrentListMenu();
         DestroyTask(taskId);
         FreeAllWindowBuffers();
+        bool8 openChallenges = sMenu->openChallenges;
         FREE_AND_SET_NULL(sMenu);
-        SetMainCallback2(gMain.savedCallback);
+        if (openChallenges)
+        {
+            sOptionsReturnCallback = gMain.savedCallback;
+            gMain.savedCallback = CB2_ReturnFromChallengeSettings;
+            ChallengeMenu_SetInitialSetup(FALSE);
+            SetMainCallback2(CB2_InitChallengeMenu);
+        }
+        else
+            SetMainCallback2(gMain.savedCallback);
     }
 }
 
@@ -1243,7 +1277,7 @@ void CB2_InitOptionMenu(void)
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_RUN_TYPE)        = cs->runType;
 
         *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_MUSIC_VOLUME) =
-            cs->audioVolumeInitialized && cs->musicVolume < 6 ? cs->musicVolume : 1;
+            cs->musicOnOff ? 0 : (cs->audioVolumeInitialized && cs->musicVolume < 6 ? cs->musicVolume : 1);
         *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SFX_VOLUME) =
             cs->audioVolumeInitialized && cs->sfxVolume < 6 ? cs->sfxVolume : 1;
         *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_BIKE_MUSIC)   = cs->bikeMusic;
