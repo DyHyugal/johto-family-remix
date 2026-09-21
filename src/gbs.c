@@ -13,6 +13,7 @@
 #include "gba/m4a_internal.h"
 #include "gbs.h"
 #include "m4a.h"
+#include "sound.h"
 
 static bool32 GBSTrack_Update(struct MusicPlayerInfo *info, struct GBSTrack *track);
 static void ApplyPitchBend(struct GBSTrack *track);
@@ -31,7 +32,13 @@ static void UpdateStereoPan(struct GBSTrack *track);
 static void UpdateDutyEnvelopeVelocity(struct GBSTrack *track, vu8 *lengthDuty, vu8 *envelopeVelocity);
 static void LoadWavePattern(struct GBSTrack *track, int patternID);
 static inline bool32 IsM4AUsingCGBChannel(int channel);
-static u32 GetMasterVolumeFromFade(u32 volX);
+// Set by GBSMain before dispatching this track. No save/assembly layout changes.
+static u16 sTrackGain;
+static u16 sChannelGain[4];
+static u8 GetEnvelopeVelocity(struct GBSTrack *track)
+{
+    return track->envelope | ((track->velocity * sTrackGain / 256) << 4);
+}
 static u16 CalculateNoteLength(u8 noteUnitLength, u16 tempo, u8 length, u16 previousLeftover);
 static u16 CalculatePitch(u8 note, s8 keyShift, u8 octave);
 static void ClearCGBChannel(struct GBSTrack *track);
@@ -547,6 +554,14 @@ static void UpdateCGBChannel(struct GBSTrack *track, u16 pitch)
 {
     if (!IsM4AUsingCGBChannel(track->channelID - 1))
     {
+        u32 channel = track->channelID - 1;
+        if (sChannelGain[channel] != sTrackGain)
+        {
+            sChannelGain[channel] = sTrackGain;
+            track->noteNoiseSampling = TRUE;
+            if (channel == CGBCHANNEL_WAVE)
+                SOUND_INFO_PTR->cgbChans[channel].currentPointer = 0;
+        }
         switch (track->channelID - 1)
         {
             case CGBCHANNEL_TONE1:
@@ -562,6 +577,10 @@ static void UpdateCGBChannel(struct GBSTrack *track, u16 pitch)
                 UpdateCGBNoise(track);
                 break;
         }
+        // NR50=0 is still audible on GBA. Disconnect a muted channel from both
+        // speakers, including a sustained note whose volume changed this frame.
+        if (sTrackGain == 0)
+            REG_NR51 &= ~SOUND_INFO_PTR->cgbChans[channel].panMask;
     }
 }
 
@@ -687,7 +706,7 @@ static void UpdateCGBNoise(struct GBSTrack *track)
     {
         UpdateStereoPan(track);
         *length = 0x3F;
-        *envelopeVelocity = track->envelope | track->velocity << 4;
+        *envelopeVelocity = GetEnvelopeVelocity(track);
         *frequency = track->pitch & 0xFF;
         *control = 0x80;
     }
@@ -721,7 +740,17 @@ static void LoadWavePattern(struct GBSTrack *track, int patternID)
         if (patternID < ARRAY_COUNT(sWaveTrackPatterns) && soundInfo->cgbChans[CGBCHANNEL_WAVE].currentPointer != (u32*)sWaveTrackPatterns[patternID])
         {
             u32* mainPattern = (u32 *)(REG_ADDR_WAVE_RAM0);
-            memcpy(mainPattern, sWaveTrackPatterns[patternID], sizeof(sWaveTrackPatterns[patternID]));
+            u32 i;
+            const u8 *source = (const u8 *)sWaveTrackPatterns[patternID];
+            vu8 *destination = (vu8 *)mainPattern;
+            for (i = 0; i < sizeof(sWaveTrackPatterns[patternID]); i++)
+            {
+                // Scale both 4-bit samples around the midpoint, preserving NR32's
+                // instrument volume and avoiding its coarse 0/25/50/100% steps.
+                s32 hi = 8 + (((source[i] >> 4) - 8) * (s32)sTrackGain / 256);
+                s32 lo = 8 + (((source[i] & 15) - 8) * (s32)sTrackGain / 256);
+                destination[i] = (hi << 4) | lo;
+            }
             soundInfo->cgbChans[CGBCHANNEL_WAVE].currentPointer = (u32*)sWaveTrackPatterns[patternID];
         }
 
@@ -736,7 +765,7 @@ static void LoadWavePattern(struct GBSTrack *track, int patternID)
 static void UpdateDutyEnvelopeVelocity(struct GBSTrack *track, vu8 *lengthDuty, vu8 *envelopeVelocity)
 {
     *lengthDuty = 0x3F | (track->dutyCycle << 6);
-    *envelopeVelocity = track->envelope | track->velocity << 4;
+    *envelopeVelocity = GetEnvelopeVelocity(track);
 }
 
 //
@@ -748,7 +777,10 @@ bool32 GBSMain(struct MusicPlayerInfo *info, struct MusicPlayerTrack *track)
     struct GBSTrack *gbsTrack = (struct GBSTrack *)track;
     vu8 *soundControl = (vu8 *)REG_ADDR_NR50;
     bool32 success = FALSE;
-    u32 masterVolume = 0;
+    // Apply fades and user gain per channel. NR50 is shared with unrelated SFX
+    // and cannot implement separate music/effect sliders.
+    // Preserve GBS's previous 0x55 master loudness (6/8 of full scale).
+    sTrackGain = GetUserAudioVolume(info) * track->volX * 3 / 256;
     
     // Set bias level to 0 for less crunch
     // Always set here since m4a engine may have changed it
@@ -773,22 +805,7 @@ bool32 GBSMain(struct MusicPlayerInfo *info, struct MusicPlayerTrack *track)
         gGBSSFXActiveMask &= ~(1 << (gbsTrack->channelID - 1));
     }
 
-    masterVolume = GetMasterVolumeFromFade(track->volX);
-    // Ensure we're not stepping on m4a's toes by checking for default volume and channel usage
-    if ((masterVolume == 0x77) && (gUsedCGBChannels == 0) && gbsTrack->volumeChange)
-    {
-        masterVolume = gbsTrack->channelVolume;
-        gbsTrack->volumeChange = FALSE;
-    }
-    // Shift GBS master output down by 2 volume steps (each nibble = one SO channel, 0-7)
-    {
-        u32 left  = (masterVolume >> 4) & 0x7;
-        u32 right = masterVolume & 0x7;
-        if (left  > 1) left  -= 2; else left  = 0;
-        if (right > 1) right -= 2; else right = 0;
-        masterVolume = (left << 4) | right;
-    }
-    soundControl[0] = masterVolume;
+    soundControl[0] = 0x77;
 
     return success;
 }
@@ -805,7 +822,7 @@ void ply_gbs_switch(struct MusicPlayerInfo *mplayInfo, struct MusicPlayerTrack *
         // volX is m4a's fade scalar, written by FadeOutBody / m4aMPlayVolumeControl
         // and read back in GBSMain. GBSTrack mirrors MusicPlayerTrack's layout so
         // both engines share this byte; it has to survive the wipe below, or the
-        // fade state is lost and GetMasterVolumeFromFade cannot tell "faded out"
+        // fade state is lost and the channel gain cannot tell "faded out"
         // from "uninitialised".
         u8 volXBackup = track->volX;
 
@@ -862,22 +879,6 @@ static inline bool32 IsM4AUsingCGBChannel(int channel)
     // set by the M4A CGB handler; it manages ownership through cgbChans[].statusFlags.
     struct SoundInfo *soundInfo = SOUND_INFO_PTR;
     return !!(soundInfo->cgbChans[channel].statusFlags & SOUND_CHANNEL_SF_ON);
-}
-
-// volX is m4a's 0..64 fade scalar: 0 is silent, 64 is full. Do not special-case 0
-// here - ply_gbs_switch preserves volX precisely so that a zero arriving here
-// always means "faded out", never "uninitialised".
-static u32 GetMasterVolumeFromFade(u32 volX)
-{
-    // Respect the master M4A fade control.
-    u32 masterVolume = volX / 8;
-
-    if (masterVolume > 7)
-    {
-        masterVolume = 7;
-    }
-
-    return (masterVolume << 4) | masterVolume;
 }
 
 static u16 CalculateNoteLength(u8 noteUnitLength, u16 tempo, u8 length, u16 previousLeftover)

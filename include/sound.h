@@ -48,6 +48,8 @@ bool8 IsBGMPlaying(void);
 bool8 IsSpecialSEPlaying(void);
 void Task_DuckBGMForPokemonCry(u8 taskId);
 void RestorePSGMasterVolume(void);
+struct MusicPlayerInfo;
+u16 GetUserAudioVolume(struct MusicPlayerInfo *player);
 void ApplyUserAudioVolumes(void);
 u16 GetUserMusicVolume(void);
 u16 GetUserSfxVolume(void);

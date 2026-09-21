@@ -14,6 +14,10 @@
 
 #include "gba/gba.h"
 
+struct MusicPlayerInfo;
+struct MusicPlayerTrack;
+bool32 GBSMain(struct MusicPlayerInfo *info, struct MusicPlayerTrack *track);
+
 enum GBSCommands
 {
 	SetOctave7 = 0xD0,

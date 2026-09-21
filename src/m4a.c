@@ -1,5 +1,6 @@
 #include "global.h"
 #include "gba/m4a_internal.h"
+#include "sound.h"
 #include "global.h"
 
 extern const u8 gCgb3Vol[];
@@ -785,6 +786,7 @@ void TrkVolPitSet(struct MusicPlayerInfo *mplayInfo, struct MusicPlayerTrack *tr
         s32 y;
 
         x = (u32)(track->vol * track->volX) >> 5;
+        x = (u32)(x * GetUserAudioVolume(mplayInfo)) >> 8;
 
         if (track->modT == 1)
             x = (u32)(x * (track->modM + 128)) >> 7;
@@ -1220,7 +1222,10 @@ void CgbSound(void)
         /* 4. apply envelope & volume to HW registers */
         if (channels->modify & CGB_CHANNEL_MO_VOL)
         {
-            REG_NR51 = (REG_NR51 & ~channels->panMask) | channels->pan;
+            // A hardware envelope may still be decaying after the mixer reaches
+            // zero. Disconnect both outputs immediately without stopping the song.
+            u8 pan = (channels->leftVolume || channels->rightVolume) ? channels->pan : 0;
+            REG_NR51 = (REG_NR51 & ~channels->panMask) | pan;
             if (ch == 3)
             {
                 *nrx2ptr = gCgb3Vol[channels->envelopeVolume];

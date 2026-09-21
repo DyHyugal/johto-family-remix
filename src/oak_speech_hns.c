@@ -632,6 +632,9 @@ static void Task_NewGameHnsSpeech_FadeOutToChallengeMenu(u8 taskId)
         gSaveBlock3Ptr->challengeSettings.lrToRun            = savedOptions.lrToRun;
         gSaveBlock3Ptr->challengeSettings.runType            = savedOptions.runType;
         gSaveBlock3Ptr->challengeSettings.musicOnOff         = savedOptions.musicOnOff;
+        gSaveBlock3Ptr->challengeSettings.audioVolumeInitialized = savedOptions.audioVolumeInitialized;
+        gSaveBlock3Ptr->challengeSettings.musicVolume        = savedOptions.musicVolume;
+        gSaveBlock3Ptr->challengeSettings.sfxVolume          = savedOptions.sfxVolume;
         gSaveBlock3Ptr->challengeSettings.bikeMusic          = savedOptions.bikeMusic;
         gSaveBlock3Ptr->challengeSettings.surfMusic          = savedOptions.surfMusic;
         ChallengeMenu_SetInitialSetup(TRUE);
