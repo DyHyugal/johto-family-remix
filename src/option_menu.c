@@ -68,7 +68,8 @@ enum {
 
 enum {
     ITEM_SOUND_SOUND,
-    ITEM_SOUND_MUSIC,
+    ITEM_SOUND_MUSIC_VOLUME,
+    ITEM_SOUND_SFX_VOLUME,
     ITEM_SOUND_BIKE_MUSIC,
     ITEM_SOUND_SURF_MUSIC,
     ITEM_SOUND_COUNT,
@@ -214,6 +215,15 @@ static const u8 *const sChoices_MonoStereo[] = {
     COMPOUND_STRING("STEREO"),
 };
 
+static const u8 *const sChoices_Volume[] = {
+    COMPOUND_STRING("OFF"),
+    COMPOUND_STRING("20%"),
+    COMPOUND_STRING("40%"),
+    COMPOUND_STRING("60%"),
+    COMPOUND_STRING("80%"),
+    COMPOUND_STRING("100%"),
+};
+
 static const u8 *const sChoices_ButtonMode[] = {
     COMPOUND_STRING("NORMAL"),
     COMPOUND_STRING("LR"),
@@ -352,9 +362,21 @@ static const u8 *const sDesc_Sound[] = {
     COMPOUND_STRING("Sound is the same in all speakers.\nRecommended for original hardware."),
     COMPOUND_STRING("Play the left and right audio channel\nseparately. Great with headphones."),
 };
-static const u8 *const sDesc_Music[] = {
-    COMPOUND_STRING("Enables music playback.\nChange maps to take effect."),
-    COMPOUND_STRING("Disables music playback.\nChange maps to take effect."),
+static const u8 *const sDesc_MusicVolume[] = {
+    COMPOUND_STRING("Mute background music."),
+    COMPOUND_STRING("Background music at 20%."),
+    COMPOUND_STRING("Background music at 40%."),
+    COMPOUND_STRING("Background music at 60%."),
+    COMPOUND_STRING("Background music at 80%."),
+    COMPOUND_STRING("Background music at full volume."),
+};
+static const u8 *const sDesc_SfxVolume[] = {
+    COMPOUND_STRING("Mute sound effects and cries."),
+    COMPOUND_STRING("Sound effects and cries at 20%."),
+    COMPOUND_STRING("Sound effects and cries at 40%."),
+    COMPOUND_STRING("Sound effects and cries at 60%."),
+    COMPOUND_STRING("Sound effects and cries at 80%."),
+    COMPOUND_STRING("Sound effects and cries at full volume."),
 };
 static const u8 *const sDesc_BikeMusic[] = {
     COMPOUND_STRING("Enables BIKE music."),
@@ -502,11 +524,17 @@ static const struct OptionMenuItem sTabItems_Sound[] = {
         .numChoices   = 2,
         .choiceNames  = sChoices_MonoStereo,
     },
-    [ITEM_SOUND_MUSIC] = {
-        .name         = COMPOUND_STRING("MUSIC"),
-        .descriptions = sDesc_Music,
-        .numChoices   = 2,
-        .choiceNames  = sChoices_OnOff,
+    [ITEM_SOUND_MUSIC_VOLUME] = {
+        .name         = COMPOUND_STRING("MUSIC VOLUME"),
+        .descriptions = sDesc_MusicVolume,
+        .numChoices   = 6,
+        .choiceNames  = sChoices_Volume,
+    },
+    [ITEM_SOUND_SFX_VOLUME] = {
+        .name         = COMPOUND_STRING("SFX VOLUME"),
+        .descriptions = sDesc_SfxVolume,
+        .numChoices   = 6,
+        .choiceNames  = sChoices_Volume,
     },
     [ITEM_SOUND_BIKE_MUSIC] = {
         .name         = COMPOUND_STRING("BIKE MUSIC"),
@@ -1002,9 +1030,18 @@ static void ProcessLeftRight(void)
 
     if (*sel != prev)
     {
-        // Sound setting side effect
+        // Sound setting side effects
         if (sMenu->currentTab == TAB_SOUND && itemIndex == ITEM_SOUND_SOUND)
             SetPokemonCryStereo(*sel);
+        if (sMenu->currentTab == TAB_SOUND
+         && (itemIndex == ITEM_SOUND_MUSIC_VOLUME || itemIndex == ITEM_SOUND_SFX_VOLUME))
+        {
+            struct ChallengeSettings *cs = &gSaveBlock3Ptr->challengeSettings;
+            cs->musicVolume = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_MUSIC_VOLUME);
+            cs->sfxVolume = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SFX_VOLUME);
+            cs->musicOnOff = (cs->musicVolume == 0);
+            ApplyUserAudioVolumes();
+        }
 
         // Quick Run → disable LR Run when not applicable
         if (sMenu->currentTab == TAB_BATTLE && itemIndex == ITEM_BATTLE_RUN_TYPE)
@@ -1093,7 +1130,9 @@ static void Task_Save(u8 taskId)
     cs->lrToRun            = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_LR_RUN);
     cs->runType            = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_RUN_TYPE);
 
-    cs->musicOnOff         = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_MUSIC);
+    cs->musicVolume        = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_MUSIC_VOLUME);
+    cs->sfxVolume          = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SFX_VOLUME);
+    cs->musicOnOff         = (cs->musicVolume == 0);
     cs->bikeMusic          = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_BIKE_MUSIC);
     cs->surfMusic          = *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SURF_MUSIC);
 
@@ -1201,8 +1240,9 @@ void CB2_InitOptionMenu(void)
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_LR_RUN)          = cs->lrToRun;
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_RUN_TYPE)        = cs->runType;
 
-        *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_MUSIC)      = cs->musicOnOff;
-        *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_BIKE_MUSIC) = cs->bikeMusic;
+        *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_MUSIC_VOLUME) = (cs->musicVolume < 6) ? cs->musicVolume : 1;
+        *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SFX_VOLUME)   = (cs->sfxVolume < 6) ? cs->sfxVolume : 1;
+        *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_BIKE_MUSIC)   = cs->bikeMusic;
         *GetSelectionPtr(TAB_SOUND, ITEM_SOUND_SURF_MUSIC) = cs->surfMusic;
 
         gMain.state++;
