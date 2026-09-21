@@ -31,6 +31,50 @@ static u16 sFanfareCounter;
 
 COMMON_DATA bool8 gDisableMusic = 0;
 
+// User-facing volume steps. Values map to m4a's 0..256 volume range.
+static const u16 sUserVolumeLevels[] = {0, 51, 102, 154, 205, 256};
+
+u16 GetUserMusicVolume(void)
+{
+    u8 level = gSaveblock3.challengeSettings.musicVolume;
+    if (level >= ARRAY_COUNT(sUserVolumeLevels))
+        level = 1; // Safe fallback: 20%.
+    return sUserVolumeLevels[level];
+}
+
+u16 GetUserSfxVolume(void)
+{
+    u8 level = gSaveblock3.challengeSettings.sfxVolume;
+    if (level >= ARRAY_COUNT(sUserVolumeLevels))
+        level = 1; // Safe fallback: 20%.
+    return sUserVolumeLevels[level];
+}
+
+static u16 GetDuckedUserMusicVolume(void)
+{
+    // Vanilla ducks to 85/256 (~33%). Keep the same ratio at any user volume.
+    return (GetUserMusicVolume() * 85) / 256;
+}
+
+static s8 ScaleCryVolumeForUser(s8 volume)
+{
+    return (s8)(((s16)volume * (s16)GetUserSfxVolume()) / 256);
+}
+
+void ApplyUserAudioVolumes(void)
+{
+    u16 musicVolume = gSaveblock3.challengeSettings.musicOnOff ? 0 : GetUserMusicVolume();
+    u16 sfxVolume = GetUserSfxVolume();
+
+    m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, musicVolume);
+    m4aMPlayVolumeControl(&gMPlayInfo_SE1, TRACKS_ALL, sfxVolume);
+    m4aMPlayVolumeControl(&gMPlayInfo_SE2, TRACKS_ALL, sfxVolume);
+    m4aMPlayVolumeControl(&gMPlayInfo_SE3, TRACKS_ALL, sfxVolume);
+
+    if (gMPlay_PokemonCry != NULL)
+        m4aMPlayVolumeControl(gMPlay_PokemonCry, TRACKS_ALL, sfxVolume);
+}
+
 extern struct ToneData gCryTable[];
 extern struct ToneData gCryTable_Reverse[];
 
@@ -344,6 +388,8 @@ void FadeInNewBGM(u16 songNum, u8 speed)
     m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0);
     m4aSongNumStop(songNum, isGBSEnabled);
     m4aMPlayFadeIn(&gMPlayInfo_BGM, speed);
+    m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL,
+        gSaveblock3.challengeSettings.musicOnOff ? 0 : GetUserMusicVolume());
 }
 
 void FadeOutBGMTemporarily(u8 speed)
@@ -379,7 +425,7 @@ bool8 IsBGMStopped(void)
 
 void PlayCry_Normal(u16 species, s8 pan)
 {
-    m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 85);
+    m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, GetDuckedUserMusicVolume());
     PlayCryInternal(species, pan, CRY_VOLUME, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
     gPokemonCryBGMDuckingCounter = 2;
     RestoreBGMVolumeAfterPokemonCry();
@@ -399,7 +445,7 @@ void PlayCry_ByMode(u16 species, s8 pan, u8 mode)
     }
     else
     {
-        m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 85);
+        m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, GetDuckedUserMusicVolume());
         PlayCryInternal(species, pan, CRY_VOLUME, CRY_PRIORITY_NORMAL, mode);
         gPokemonCryBGMDuckingCounter = 2;
         RestoreBGMVolumeAfterPokemonCry();
@@ -416,7 +462,7 @@ void PlayCry_ReleaseDouble(u16 species, s8 pan, u8 mode)
     else
     {
         if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
-            m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 85);
+            m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, GetDuckedUserMusicVolume());
         PlayCryInternal(species, pan, CRY_VOLUME, CRY_PRIORITY_NORMAL, mode);
     }
 }
@@ -430,7 +476,7 @@ void PlayCry_DuckNoRestore(u16 species, s8 pan, u8 mode)
     }
     else
     {
-        m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 85);
+        m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, GetDuckedUserMusicVolume());
         PlayCryInternal(species, pan, CRY_VOLUME, CRY_PRIORITY_NORMAL, mode);
         gPokemonCryBGMDuckingCounter = 2;
     }
@@ -438,7 +484,7 @@ void PlayCry_DuckNoRestore(u16 species, s8 pan, u8 mode)
 
 void PlayCry_Script(u16 species, u8 mode)
 {
-    m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 85);
+    m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, GetDuckedUserMusicVolume());
     PlayCryInternal(species, 0, CRY_VOLUME, CRY_PRIORITY_NORMAL, mode);
     gPokemonCryBGMDuckingCounter = 2;
     RestoreBGMVolumeAfterPokemonCry();
@@ -539,6 +585,7 @@ void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
         break;
     }
 
+    volume = ScaleCryVolumeForUser(volume);
     SetPokemonCryVolume(volume);
     SetPokemonCryPanpot(pan);
     SetPokemonCryPitch(pitch);
@@ -611,7 +658,7 @@ void Task_DuckBGMForPokemonCry(u8 taskId)
 
     if (!IsPokemonCryPlaying(gMPlay_PokemonCry))
     {
-        m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 256);
+        m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, gSaveblock3.challengeSettings.musicOnOff ? 0 : GetUserMusicVolume());
         DestroyTask(taskId);
     }
 }
@@ -642,6 +689,8 @@ void PlayBGM(u16 songNum)
     if (gSaveblock3.challengeSettings.musicOnOff)
         songNum = 0;
     m4aSongNumStart(songNum, FlagGet(FLAG_SYS_GBS_ENABLED));
+    m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL,
+        gSaveblock3.challengeSettings.musicOnOff ? 0 : GetUserMusicVolume());
 }
 
 // GBS sound effects have to be started on a cleared music player. SE1 and SE2 both
@@ -676,6 +725,9 @@ void PlaySE(u16 songNum)
 
         ClearPlayerForGBSSoundEffect(songNum, isGBSEnabled);
         m4aSongNumStart(songNum, isGBSEnabled);
+        m4aMPlayVolumeControl(&gMPlayInfo_SE1, TRACKS_ALL, GetUserSfxVolume());
+        m4aMPlayVolumeControl(&gMPlayInfo_SE2, TRACKS_ALL, GetUserSfxVolume());
+        m4aMPlayVolumeControl(&gMPlayInfo_SE3, TRACKS_ALL, GetUserSfxVolume());
     }
 }
 
@@ -684,6 +736,9 @@ void PlaySECursorMove(u16 songNum)
     if (FlagGet(FLAG_SYS_GBS_ENABLED))
         return;
     m4aSongNumStart(songNum, FALSE);
+    m4aMPlayVolumeControl(&gMPlayInfo_SE1, TRACKS_ALL, GetUserSfxVolume());
+    m4aMPlayVolumeControl(&gMPlayInfo_SE2, TRACKS_ALL, GetUserSfxVolume());
+    m4aMPlayVolumeControl(&gMPlayInfo_SE3, TRACKS_ALL, GetUserSfxVolume());
 }
 
 void PlaySE12WithPanning(u16 songNum, s8 pan)
@@ -696,6 +751,8 @@ void PlaySE12WithPanning(u16 songNum, s8 pan)
     m4aMPlayImmInit(&gMPlayInfo_SE2);
     m4aMPlayPanpotControl(&gMPlayInfo_SE1, TRACKS_ALL, pan);
     m4aMPlayPanpotControl(&gMPlayInfo_SE2, TRACKS_ALL, pan);
+    m4aMPlayVolumeControl(&gMPlayInfo_SE1, TRACKS_ALL, GetUserSfxVolume());
+    m4aMPlayVolumeControl(&gMPlayInfo_SE2, TRACKS_ALL, GetUserSfxVolume());
 }
 
 void PlaySE1WithPanning(u16 songNum, s8 pan)
@@ -706,6 +763,7 @@ void PlaySE1WithPanning(u16 songNum, s8 pan)
     m4aSongNumStart(songNum, isGBSEnabled);
     m4aMPlayImmInit(&gMPlayInfo_SE1);
     m4aMPlayPanpotControl(&gMPlayInfo_SE1, TRACKS_ALL, pan);
+    m4aMPlayVolumeControl(&gMPlayInfo_SE1, TRACKS_ALL, GetUserSfxVolume());
 }
 
 void PlaySE2WithPanning(u16 songNum, s8 pan)
@@ -716,6 +774,7 @@ void PlaySE2WithPanning(u16 songNum, s8 pan)
     m4aSongNumStart(songNum, isGBSEnabled);
     m4aMPlayImmInit(&gMPlayInfo_SE2);
     m4aMPlayPanpotControl(&gMPlayInfo_SE2, TRACKS_ALL, pan);
+    m4aMPlayVolumeControl(&gMPlayInfo_SE2, TRACKS_ALL, GetUserSfxVolume());
 }
 
 void SE12PanpotControl(s8 pan)
