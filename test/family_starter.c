@@ -65,6 +65,7 @@ TEST("Family starter: primary Eevee remembers only an existing stone evolution")
     FlagSet(FLAG_SYS_POKEMON_GET);
     EXPECT_EQ(FamilyStarter_GetPrimarySpecies(), SPECIES_EEVEE);
     EXPECT_EQ(VarGet(VAR_FAMILY_STARTER_EVOLUTION), SPECIES_VAPOREON);
+    EXPECT(CheckBagHasItem(ITEM_WATER_STONE, 1));
     gSpecialVar_0x8006 = SPECIES_CHARCADET;
     FamilyStarter_RecordPrimary();
     EXPECT_EQ(VarGet(VAR_FAMILY_STARTER_EVOLUTION), SPECIES_NONE);
@@ -79,7 +80,18 @@ TEST("Family starter: Eevee egg stores its existing stone evolution preference")
     EXPECT_EQ(gSpecialVar_Result, MON_GIVEN_TO_PARTY);
     EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_EEVEE);
     EXPECT_EQ(VarGet(VAR_FAMILY_EGG_EVOLUTION), SPECIES_VAPOREON);
-    EXPECT(!CheckBagHasItem(ITEM_WATER_STONE, 1));
+    EXPECT(CheckBagHasItem(ITEM_WATER_STONE, 1));
+}
+
+TEST("Family starter: Charcadet branch grants its selected stone")
+{
+    InitFamilyTest();
+    gSpecialVar_0x8006 = SPECIES_ARMAROUGE;
+    FamilyStarter_GiveEgg();
+    EXPECT_EQ(gSpecialVar_Result, MON_GIVEN_TO_PARTY);
+    EXPECT_EQ(VarGet(VAR_FAMILY_EGG_EVOLUTION), SPECIES_ARMAROUGE);
+    EXPECT(CheckBagHasItem(ITEM_FIRE_STONE, 1));
+    EXPECT(!CheckBagHasItem(ITEM_DUSK_STONE, 1));
 }
 
 TEST("Family starter: the actual selected egg is granted exactly once")

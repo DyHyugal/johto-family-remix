@@ -28,6 +28,27 @@ static const u16 sMenuSpecies[7][5] = {
     {SPECIES_EEVEE},
 };
 
+struct FamilyStarterEvolution
+{
+    u16 species;
+    u16 target;
+    u16 item;
+};
+
+// Selector-only rewards. These do not alter the global evolution tables.
+static const struct FamilyStarterEvolution sStarterEvolutions[] = {
+    {SPECIES_EEVEE, SPECIES_VAPOREON, ITEM_WATER_STONE},
+    {SPECIES_EEVEE, SPECIES_JOLTEON, ITEM_THUNDER_STONE},
+    {SPECIES_EEVEE, SPECIES_FLAREON, ITEM_FIRE_STONE},
+    {SPECIES_EEVEE, SPECIES_ESPEON, ITEM_DAWN_STONE},
+    {SPECIES_EEVEE, SPECIES_UMBREON, ITEM_DUSK_STONE},
+    {SPECIES_EEVEE, SPECIES_LEAFEON, ITEM_LEAF_STONE},
+    {SPECIES_EEVEE, SPECIES_GLACEON, ITEM_ICE_STONE},
+    {SPECIES_EEVEE, SPECIES_SYLVEON, ITEM_SHINY_STONE},
+    {SPECIES_CHARCADET, SPECIES_ARMAROUGE, ITEM_FIRE_STONE},
+    {SPECIES_CHARCADET, SPECIES_CERULEDGE, ITEM_DUSK_STONE},
+};
+
 u16 FamilyStarter_GetCandidate(u32 category, u32 index)
 {
     if (category >= ARRAY_COUNT(sMenuSpecies) || index >= ARRAY_COUNT(sMenuSpecies[0]))
@@ -88,35 +109,51 @@ void FamilyStarter_BuildSpeciesMenu(void)
     PushChoice(COMPOUND_STRING("Retour"), SPECIES_NONE);
 }
 
-void FamilyStarter_BuildEeveeMenu(void)
+void FamilyStarter_HasEvolutionChoices(void)
 {
-    const struct Evolution *evos = GetSpeciesEvolutions(SPECIES_EEVEE);
     u32 i;
-    PushChoice(COMPOUND_STRING("Plus tard"), SPECIES_NONE);
-    // Read existing stone evolutions. No invented mappings and no item grant.
-    if (evos != NULL)
-        for (i = 0; evos[i].method != EVOLUTIONS_END; i++)
-            if (evos[i].method == EVO_ITEM && FamilyStarter_IsAvailable(evos[i].targetSpecies))
-                PushChoice(GetSpeciesName(evos[i].targetSpecies), evos[i].targetSpecies);
+    gSpecialVar_Result = FALSE;
+    for (i = 0; i < ARRAY_COUNT(sStarterEvolutions); i++)
+        if (sStarterEvolutions[i].species == gSpecialVar_0x8005
+         && FamilyStarter_IsAvailable(sStarterEvolutions[i].target))
+            gSpecialVar_Result = TRUE;
 }
 
-static u16 UNUSED ValidEeveePreference(u16 species, u16 preference)
+void FamilyStarter_BuildEvolutionMenu(void)
 {
-    const struct Evolution *evos = GetSpeciesEvolutions(SPECIES_EEVEE);
     u32 i;
-    if (species == SPECIES_EEVEE && evos != NULL)
-        for (i = 0; evos[i].method != EVOLUTIONS_END; i++)
-            if (evos[i].method == EVO_ITEM && evos[i].targetSpecies == preference)
-                return preference;
+    for (i = 0; i < ARRAY_COUNT(sStarterEvolutions); i++)
+        if (sStarterEvolutions[i].species == gSpecialVar_0x8005
+         && FamilyStarter_IsAvailable(sStarterEvolutions[i].target))
+            PushChoice(GetSpeciesName(sStarterEvolutions[i].target), sStarterEvolutions[i].target);
+}
+
+static u16 UNUSED ValidEvolutionPreference(u16 species, u16 preference)
+{
+    u32 i;
+    for (i = 0; i < ARRAY_COUNT(sStarterEvolutions); i++)
+        if (sStarterEvolutions[i].species == species
+         && sStarterEvolutions[i].target == preference
+         && FamilyStarter_IsAvailable(preference))
+            return preference;
     return SPECIES_NONE;
 }
 
-// Integration hook: deliberately no item table or reward until finalized.
-static void UNUSED OnStarterConfirmed(u16 species, bool32 isEgg, u16 evolutionPreference)
+static u16 GetEvolutionItem(u16 species, u16 preference)
 {
-    (void)species;
-    (void)isEgg;
-    (void)evolutionPreference;
+    u32 i;
+    for (i = 0; i < ARRAY_COUNT(sStarterEvolutions); i++)
+        if (sStarterEvolutions[i].species == species
+         && sStarterEvolutions[i].target == preference)
+            return sStarterEvolutions[i].item;
+    return ITEM_NONE;
+}
+
+static void UNUSED GiveEvolutionItem(u16 species, u16 preference)
+{
+    u16 item = GetEvolutionItem(species, preference);
+    if (item != ITEM_NONE && !AddBagItem(item, 1))
+        AddPCItem(item, 1);
 }
 
 void FamilyStarter_RecordPrimary(void)
@@ -125,10 +162,10 @@ void FamilyStarter_RecordPrimary(void)
     u16 species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
     if (IsMenuSpecies(species))
     {
-        u16 preference = ValidEeveePreference(species, gSpecialVar_0x8006);
+        u16 preference = ValidEvolutionPreference(species, gSpecialVar_0x8006);
         VarSet(VAR_FAMILY_STARTER_SPECIES, species);
         VarSet(VAR_FAMILY_STARTER_EVOLUTION, preference);
-        OnStarterConfirmed(species, FALSE, preference);
+        GiveEvolutionItem(species, preference);
     }
 #endif
 }
@@ -147,7 +184,7 @@ void FamilyStarter_GiveEgg(void)
 {
 #if IS_HNS
     u16 species = gSpecialVar_0x8005;
-    u16 preference = ValidEeveePreference(species, gSpecialVar_0x8006);
+    u16 preference = ValidEvolutionPreference(species, gSpecialVar_0x8006);
     u32 personality;
     u8 result;
     gSpecialVar_Result = MON_CANT_GIVE;
@@ -170,7 +207,7 @@ void FamilyStarter_GiveEgg(void)
     VarSet(VAR_FAMILY_EGG_EVOLUTION, preference);
     FlagSet(FLAG_RECEIVED_TOGEPI_EGG);
     FlagClear(FLAG_HIDE_NEWBARKTOWN_LAB_AIDE);
-    OnStarterConfirmed(species, TRUE, preference);
+    GiveEvolutionItem(species, preference);
     gSpecialVar_Result = result;
 #else
     gSpecialVar_Result = MON_CANT_GIVE;
