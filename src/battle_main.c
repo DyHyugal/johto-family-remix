@@ -2029,6 +2029,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
     u32 personalityValue;
     s32 i;
     u8 monsCount;
+    bool8 useScaledEVs[PARTY_SIZE] = {0};
     if (battleTypeFlags & BATTLE_TYPE_TRAINER && !(battleTypeFlags & (BATTLE_TYPE_FRONTIER
                                                                         | BATTLE_TYPE_EREADER_TRAINER
                                                                         | BATTLE_TYPE_TRAINER_HILL)))
@@ -2059,6 +2060,8 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             const struct TrainerMon *partyData = trainer->party;
             struct OriginalTrainerId otId = OTID_STRUCT_RANDOM_NO_SHINY;
             u32 abilityNum = 0;
+
+            useScaledEVs[i] = partyData[monIndex].ev == NULL;
 
             if (trainer->battleType != TRAINER_BATTLE_TYPE_SINGLES)
                 personalityValue = 0x80;
@@ -2183,6 +2186,8 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             u8 ev = GetCurrentTrainerEVs();
             for (i = 0; i < monsCount; i++)
             {
+                if (!useScaledEVs[i])
+                    continue;
                 SetMonData(&party[i], MON_DATA_HP_EV, &ev);
                 SetMonData(&party[i], MON_DATA_SPEED_EV, &ev);
                 if (GetMonData(&party[i], MON_DATA_ATK) > GetMonData(&party[i], MON_DATA_SPATK))

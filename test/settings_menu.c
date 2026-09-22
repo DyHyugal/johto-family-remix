@@ -38,6 +38,27 @@ TEST("Settings shiny rate: extended odds use the existing shiny threshold")
     gSaveblock3.challengeSettings = saved;
 }
 
+TEST("Settings recommended: competitive IVs and scaled Trainer EVs are enabled")
+{
+    struct ChallengeSettings saved = gSaveblock3.challengeSettings;
+    struct Pokemon mon;
+    u32 stat;
+
+    memset(&gSaveblock3.challengeSettings, 0, sizeof(gSaveblock3.challengeSettings));
+    SetDefaultChallengeSettings();
+    EXPECT_EQ((u32)gSaveblock3.challengeSettings.tx_Challenges_MaxPartyIVs, 1);
+    EXPECT_EQ((u32)gSaveblock3.challengeSettings.tx_Challenges_TrainerScalingIVs, 2);
+    EXPECT_EQ((u32)gSaveblock3.challengeSettings.tx_Challenges_TrainerScalingEVs, 1);
+    EXPECT_EQ((u32)gSaveblock3.challengeSettings.tx_Challenges_NoEVs, 0);
+    EXPECT_EQ(GetCurrentTrainerIVs(), MAX_PER_STAT_IVS);
+
+    CreateRandomMon(&mon, SPECIES_BULBASAUR, 5);
+    for (stat = 0; stat < NUM_STATS; stat++)
+        EXPECT_EQ(GetMonData(&mon, MON_DATA_HP_IV + stat), MAX_PER_STAT_IVS);
+
+    gSaveblock3.challengeSettings = saved;
+}
+
 TEST("Settings setup: Recommended A and R bypass all challenge tabs")
 {
     u32 shortcut, frame;
