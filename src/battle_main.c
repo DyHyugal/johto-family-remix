@@ -98,7 +98,6 @@ static void CB2_HandleStartBattle(void);
 static void TryCorrectShedinjaLanguage(struct Pokemon *mon);
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer);
 static void BattleMainCB1(void);
-static bool8 sNativeSpeedWaitForActionRelease;
 static void CB2_EndLinkBattle(void);
 static void EndLinkBattleInSteps(void);
 static void CB2_InitAskRecordBattle(void);
@@ -1870,40 +1869,28 @@ void BattleMainCB2(void)
     u32 speed = GetNativeGameSpeed();
     u32 frame = gMain.vblankCounter1;
 
-    AnimateSprites();
-    RunTextPrinters();
-    UpdatePaletteFade();
-    RunTasks();
-
-    for (tick = 1; tick < speed; tick++)
+    for (tick = 0; tick < speed; tick++)
     {
-        if (!gMain.inBattle || gMain.callback1 != BattleMainCB1
-         || gMain.callback2 != BattleMainCB2
-         || (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_FRONTIER))
-         || IsPlayerBattleControllerWaitingForInput()
-         || !NativeSpeed_CanRunExtraTick()
-         || gMain.vblankCounter1 != frame)
-            break;
-        NativeSpeed_ClearInputEdges();
-        BattleMainCB1();
-        if (!gMain.inBattle || gMain.callback1 != BattleMainCB1
-         || gMain.callback2 != BattleMainCB2)
-            return;
+        if (tick != 0)
+        {
+            if (!gMain.inBattle || gMain.callback1 != BattleMainCB1
+             || gMain.callback2 != BattleMainCB2
+             || (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_FRONTIER))
+             || gMain.heldKeysRaw != 0 || !NativeSpeed_CanRunExtraTick()
+             || gMain.vblankCounter1 != frame)
+                break;
+            NativeSpeed_ClearInputEdges();
+            BattleMainCB1();
+            if (!gMain.inBattle || gMain.callback1 != BattleMainCB1
+             || gMain.callback2 != BattleMainCB2)
+                return;
+        }
         AnimateSprites();
+        BuildOamBuffer();
         RunTextPrinters();
         UpdatePaletteFade();
         RunTasks();
-        if (IsPlayerBattleControllerWaitingForInput())
-        {
-            // An accelerated tick reached an interactive menu. Require a real
-            // release before another action button can select from that menu.
-            sNativeSpeedWaitForActionRelease = TRUE;
-            break;
-        }
     }
-    // OAM is built once from the final state, so intermediate accelerated
-    // menu creation/destruction can never be displayed as a partial frame.
-    BuildOamBuffer();
 
     if (JOY_HELD(B_BUTTON) && gBattleTypeFlags & BATTLE_TYPE_RECORDED && RecordedBattle_CanStopPlayback())
     {
@@ -3189,7 +3176,6 @@ void BeginBattleIntroDummy(void)
 
 void BeginBattleIntro(void)
 {
-    sNativeSpeedWaitForActionRelease = FALSE;
     BattleStartClearSetData();
     gBattleCommunication[1] = 0;
     gBattleStruct->eventState.battleIntro = 0;
@@ -3198,13 +3184,6 @@ void BeginBattleIntro(void)
 
 static void BattleMainCB1(void)
 {
-    if (sNativeSpeedWaitForActionRelease)
-    {
-        if (gMain.heldKeysRaw & ~DPAD_ANY)
-            NativeSpeed_ClearInputEdges();
-        else
-            sNativeSpeedWaitForActionRelease = FALSE;
-    }
     gBattleMainFunc();
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         gBattlerControllerFuncs[battler](battler);

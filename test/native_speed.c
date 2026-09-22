@@ -6,14 +6,8 @@
 #include "constants/vars.h"
 #include "test/test.h"
 #include "test/battle.h"
-#include "battle_controllers.h"
 
 #if IS_HNS
-static void DummyNativeSpeedController(enum BattlerId battler)
-{
-    (void)battler;
-}
-
 SINGLE_BATTLE_TEST("Native speed: a battle turn completes at each multiplier")
 {
     u32 speed = 1;
@@ -63,34 +57,16 @@ TEST("Native speed: extra ticks cannot reuse button presses or repeats")
     u16 savedRaw = gMain.newKeysRaw;
     u16 savedRepeated = gMain.newAndRepeatedKeys;
     u16 savedHeld = gMain.heldKeys;
-    u16 savedHeldRaw = gMain.heldKeysRaw;
     gMain.newKeys = gMain.newKeysRaw = gMain.newAndRepeatedKeys = A_BUTTON;
-    gMain.heldKeys = gMain.heldKeysRaw = DPAD_RIGHT | A_BUTTON;
+    gMain.heldKeys = DPAD_RIGHT;
     NativeSpeed_ClearInputEdges();
     EXPECT_EQ(gMain.newKeys, 0);
     EXPECT_EQ(gMain.newKeysRaw, 0);
     EXPECT_EQ(gMain.newAndRepeatedKeys, 0);
     EXPECT_EQ(gMain.heldKeys, DPAD_RIGHT);
-    EXPECT_EQ(gMain.heldKeysRaw, DPAD_RIGHT);
     gMain.newKeys = savedNew;
     gMain.newKeysRaw = savedRaw;
     gMain.newAndRepeatedKeys = savedRepeated;
     gMain.heldKeys = savedHeld;
-    gMain.heldKeysRaw = savedHeldRaw;
-}
-
-TEST("Native speed: player choice handlers stop accelerated battle ticks")
-{
-    u32 savedBattlersCount = gBattlersCount;
-    void (*savedController)(enum BattlerId) = gBattlerControllerFuncs[0];
-
-    gBattlersCount = 1;
-    gBattlerControllerFuncs[0] = DummyNativeSpeedController;
-    EXPECT(!IsPlayerBattleControllerWaitingForInput());
-    gBattlerControllerFuncs[0] = HandleInputChooseMove;
-    EXPECT(IsPlayerBattleControllerWaitingForInput());
-
-    gBattlerControllerFuncs[0] = savedController;
-    gBattlersCount = savedBattlersCount;
 }
 #endif

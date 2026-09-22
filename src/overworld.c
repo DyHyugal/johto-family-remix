@@ -1925,37 +1925,22 @@ void CB2_Overworld(void)
     bool32 fading = (gPaletteFade.active != 0);
     u32 tick;
     u32 speed = GetNativeGameSpeed();
-    bool32 locked;
 
     if (fading)
         SetVBlankCallback(NULL);
     OverworldBasic();
-    locked = ArePlayerFieldControlsLocked();
 
+    // SoulGold advances only the visual movement callbacks on extra passes.
+    // Re-running CB1_Overworld/OverworldBasic here corrupts object/map state
+    // because those callbacks own the single logical update for this frame.
     for (tick = 1; tick < speed; tick++)
     {
-        if (gMain.callback2 != CB2_Overworld || !NativeSpeed_CanRunExtraTick())
+        if (fading || ArePlayerFieldControlsLocked())
             break;
-        if (locked)
-        {
-            // Cutscenes and battle transitions are task-driven. Advance their
-            // visual state without re-running scripts or field movement.
-            NativeSpeed_ClearInputEdges();
-            RunTasks();
-            AnimateSprites();
-            UpdatePaletteFade();
-        }
-        else
-        {
-            // Field movement owns one logical update but may interpolate its
-            // sprites and camera for the selected native speed.
-            AnimateSprites();
-            CameraUpdate();
-            UpdateCameraPanning();
-        }
+        AnimateSprites();
+        CameraUpdate();
+        UpdateCameraPanning();
     }
-    if (speed > 1)
-        BuildOamBuffer();
 
     if (fading)
     {

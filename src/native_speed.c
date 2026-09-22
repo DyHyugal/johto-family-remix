@@ -32,20 +32,21 @@ void SetNativeGameSpeed(u32 multiplier)
 
 bool32 NativeSpeed_CanRunExtraTick(void)
 {
-    // Audio keeps its real hardware clock. State machines that explicitly
-    // wait for a cry or fanfare still wait, while visual work stays smooth.
+    // Audio and graphics transfers retain their real VBlank clock. Do not
+    // shorten task-based fanfare/cry waits by running them multiple times.
     return !gLinkTransferringData && !gReceivedRemoteLinkPlayers
-        && !gWirelessCommType
-        && !IsDma3ManagerBusyWithBgCopy();
+        && !gWirelessCommType && !gPaletteFade.active
+        && !gPaletteFade.softwareFadeFinishing
+        && !IsDma3ManagerBusyWithBgCopy()
+        && IsFanfareTaskInactive() && !IsCryPlaying()
+        && !FuncIsActiveTask(Task_DuckBGMForPokemonCry);
 }
 
 void NativeSpeed_ClearInputEdges(void)
 {
-    // Action buttons belong to the physical input frame. Keep held directions
-    // for simulation movement, but never let one A press confirm twice.
+    // A press/repeat belongs to the physical input frame, not each simulation
+    // tick. Held directions still work; an A press cannot confirm twice.
     gMain.newKeys = 0;
     gMain.newKeysRaw = 0;
     gMain.newAndRepeatedKeys = 0;
-    gMain.heldKeys &= DPAD_ANY;
-    gMain.heldKeysRaw &= DPAD_ANY;
 }

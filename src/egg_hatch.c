@@ -654,7 +654,9 @@ static void CB2_EggHatch(void)
     {
         if (tick != 0)
         {
-            if (gMain.callback2 != CB2_EggHatch || !NativeSpeed_CanRunExtraTick())
+            if (gMain.callback2 != CB2_EggHatch
+             || gMain.heldKeysRaw != 0
+             || !NativeSpeed_CanRunExtraTick())
                 break;
             NativeSpeed_ClearInputEdges();
         }
