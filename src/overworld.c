@@ -1925,26 +1925,23 @@ void CB2_Overworld(void)
     bool32 fading = (gPaletteFade.active != 0);
     u32 tick;
     u32 speed = GetNativeGameSpeed();
-    u32 frame = gMain.vblankCounter1;
+
     if (fading)
         SetVBlankCallback(NULL);
     OverworldBasic();
+
+    // SoulGold advances only the visual movement callbacks on extra passes.
+    // Re-running CB1_Overworld/OverworldBasic here corrupts object/map state
+    // because those callbacks own the single logical update for this frame.
     for (tick = 1; tick < speed; tick++)
     {
-        // Keep scripts, menus, transitions, link play and saves at x1. Check
-        // after EVERY tick: walking can start an encounter or a warp.
-        if (fading || gMain.callback1 != CB1_Overworld
-         || gMain.callback2 != CB2_Overworld || ArePlayerFieldControlsLocked()
-         || !NativeSpeed_CanRunExtraTick() || gMain.vblankCounter1 != frame)
+        if (fading || ArePlayerFieldControlsLocked())
             break;
-        NativeSpeed_ClearInputEdges();
-        ClearSpriteCopyRequests();
-        CB1_Overworld();
-        if (gMain.callback1 != CB1_Overworld || gMain.callback2 != CB2_Overworld
-         || ArePlayerFieldControlsLocked())
-            break;
-        OverworldBasic();
+        AnimateSprites();
+        CameraUpdate();
+        UpdateCameraPanning();
     }
+
     if (fading)
     {
         SetFieldVBlankCallback();
