@@ -195,6 +195,19 @@ TEST("Family starter: Snorunt egg branches preserve gender and item choice")
     EXPECT(!CheckBagHasItem(ITEM_DAWN_STONE, 1));
 }
 
+TEST("Family starter: Froslass egg is regenerated female if its preview was lost")
+{
+    InitFamilyTest();
+    gSpecialVar_0x8005 = SPECIES_SNORUNT;
+    gSpecialVar_0x8006 = SPECIES_FROSLASS;
+    FamilyStarter_ClearPreview();
+    FamilyStarter_GiveEgg();
+    EXPECT_EQ(gSpecialVar_Result, MON_GIVEN_TO_PARTY);
+    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_SNORUNT);
+    EXPECT_EQ(GetMonGender(&gPlayerParty[1]), MON_FEMALE);
+    EXPECT_EQ(VarGet(VAR_FAMILY_EGG_EVOLUTION), SPECIES_FROSLASS);
+}
+
 TEST("Family starter: item feedback is queued once after a successful grant")
 {
     InitFamilyTest();

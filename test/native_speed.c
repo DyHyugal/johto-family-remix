@@ -6,8 +6,14 @@
 #include "constants/vars.h"
 #include "test/test.h"
 #include "test/battle.h"
+#include "battle_controllers.h"
 
 #if IS_HNS
+static void DummyNativeSpeedController(enum BattlerId battler)
+{
+    (void)battler;
+}
+
 SINGLE_BATTLE_TEST("Native speed: a battle turn completes at each multiplier")
 {
     u32 speed = 1;
@@ -71,5 +77,20 @@ TEST("Native speed: extra ticks cannot reuse button presses or repeats")
     gMain.newAndRepeatedKeys = savedRepeated;
     gMain.heldKeys = savedHeld;
     gMain.heldKeysRaw = savedHeldRaw;
+}
+
+TEST("Native speed: player choice handlers stop accelerated battle ticks")
+{
+    u32 savedBattlersCount = gBattlersCount;
+    void (*savedController)(enum BattlerId) = gBattlerControllerFuncs[0];
+
+    gBattlersCount = 1;
+    gBattlerControllerFuncs[0] = DummyNativeSpeedController;
+    EXPECT(!IsPlayerBattleControllerWaitingForInput());
+    gBattlerControllerFuncs[0] = HandleInputChooseMove;
+    EXPECT(IsPlayerBattleControllerWaitingForInput());
+
+    gBattlerControllerFuncs[0] = savedController;
+    gBattlersCount = savedBattlersCount;
 }
 #endif

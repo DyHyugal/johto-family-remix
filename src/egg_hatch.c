@@ -40,6 +40,7 @@
 #include "party_menu.h"
 #include "randomizer.h"
 #include "nuzlocke.h"
+#include "native_speed.h"
 
 #define GFXTAG_EGG       12345
 #define GFXTAG_EGG_SHARD 23456
@@ -72,6 +73,7 @@ extern const u8 gText_NicknameHatchPrompt[];
 static void Task_EggHatch(u8);
 static void CB2_LoadEggHatch(void);
 static void CB2_EggHatch(void);
+static void EggHatchStep(void);
 static void SpriteCB_Egg_Shake1(struct Sprite *);
 static void SpriteCB_Egg_Shake2(struct Sprite *);
 static void SpriteCB_Egg_Shake3(struct Sprite *);
@@ -645,6 +647,26 @@ static void Task_EggHatchPlayBGM(u8 taskId)
 
 static void CB2_EggHatch(void)
 {
+    u32 tick;
+    u32 speed = GetNativeGameSpeed();
+
+    for (tick = 0; tick < speed; tick++)
+    {
+        if (tick != 0)
+        {
+            if (gMain.callback2 != CB2_EggHatch || !NativeSpeed_CanRunExtraTick())
+                break;
+            NativeSpeed_ClearInputEdges();
+        }
+        EggHatchStep();
+        if (gMain.callback2 != CB2_EggHatch)
+            break;
+    }
+    BuildOamBuffer();
+}
+
+static void EggHatchStep(void)
+{
     u16 species;
     u8 gender;
     u32 personality;
@@ -777,7 +799,6 @@ static void CB2_EggHatch(void)
     RunTasks();
     RunTextPrinters();
     AnimateSprites();
-    BuildOamBuffer();
     UpdatePaletteFade();
 }
 

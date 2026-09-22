@@ -32,14 +32,11 @@ void SetNativeGameSpeed(u32 multiplier)
 
 bool32 NativeSpeed_CanRunExtraTick(void)
 {
-    // Audio and graphics transfers retain their real VBlank clock. Do not
-    // shorten task-based fanfare/cry waits by running them multiple times.
+    // Audio keeps its real hardware clock. State machines that explicitly
+    // wait for a cry or fanfare still wait, while visual work stays smooth.
     return !gLinkTransferringData && !gReceivedRemoteLinkPlayers
-        && !gWirelessCommType && !gPaletteFade.active
-        && !gPaletteFade.softwareFadeFinishing
-        && !IsDma3ManagerBusyWithBgCopy()
-        && IsFanfareTaskInactive() && !IsCryPlaying()
-        && !FuncIsActiveTask(Task_DuckBGMForPokemonCry);
+        && !gWirelessCommType
+        && !IsDma3ManagerBusyWithBgCopy();
 }
 
 void NativeSpeed_ClearInputEdges(void)

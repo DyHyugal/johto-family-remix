@@ -408,6 +408,7 @@ void MoveSelectionCreateCursorAt(u8 cursorPos, u8 arg1);
 void MoveSelectionDestroyCursorAt(u8 cursorPosition);
 void PlayerHandleChooseMove(enum BattlerId battler);
 void HandleInputChooseMove(enum BattlerId battler);
+bool32 IsPlayerBattleControllerWaitingForInput(void);
 void HandleInputChooseTarget(enum BattlerId battler);
 void HandleInputShowEntireFieldTargets(enum BattlerId battler);
 void HandleInputShowTargets(enum BattlerId battler);

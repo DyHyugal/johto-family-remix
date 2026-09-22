@@ -26,6 +26,8 @@ static EWRAM_DATA bool8 sFamilyStarterPreviewIsEgg = FALSE;
 static EWRAM_DATA u16 sFamilyStarterPendingItem = ITEM_NONE;
 static EWRAM_DATA bool8 sFamilyStarterPendingItemInPC = FALSE;
 
+static u16 ValidEvolutionPreference(u16 species, u16 preference);
+
 // Menu specification only. Existing starter, species, evolution and item
 // tables are deliberately not replaced or altered.
 static const u16 sMenuSpecies[7][5] = {
@@ -206,9 +208,15 @@ u32 FamilyStarter_GetPreviewPersonality(u16 species)
 void FamilyStarter_GivePrimary(void)
 {
     u16 species = VarGet(VAR_TEMP_2);
+    u16 preference = ValidEvolutionPreference(species, gSpecialVar_0x8006);
 
     gSpecialVar_Result = FALSE;
     if (sFamilyStarterPreviewSpecies != species
+     || sFamilyStarterPreviewPreference != preference
+     || sFamilyStarterPreviewIsEgg)
+        PreparePreview(species, preference, FALSE);
+    if (sFamilyStarterPreviewSpecies != species
+     || sFamilyStarterPreviewPreference != preference
      || sFamilyStarterPreviewIsEgg
      || gPlayerPartyCount != 0
      || GetMaxPartySize() == 0)
@@ -430,7 +438,13 @@ void FamilyStarter_GiveEgg(void)
      || !CheckBagHasItem(ITEM_MYSTERY_EGG, 1)
      || !IsMenuSpecies(species))
         return;
-    if (sFamilyStarterPreviewSpecies == species && sFamilyStarterPreviewIsEgg)
+    if (sFamilyStarterPreviewSpecies != species
+     || sFamilyStarterPreviewPreference != preference
+     || !sFamilyStarterPreviewIsEgg)
+        PreparePreview(species, preference, TRUE);
+    if (sFamilyStarterPreviewSpecies == species
+     && sFamilyStarterPreviewPreference == preference
+     && sFamilyStarterPreviewIsEgg)
     {
         if (GetMaxPartySize() == 1)
         {

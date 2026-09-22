@@ -410,6 +410,23 @@ static void HandleInputChooseAction(enum BattlerId battler)
     }
 }
 
+bool32 IsPlayerBattleControllerWaitingForInput(void)
+{
+    enum BattlerId battler;
+
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        void (*controller)(enum BattlerId) = gBattlerControllerFuncs[battler];
+        if (controller == HandleInputChooseAction
+         || controller == HandleInputChooseMove
+         || controller == HandleInputChooseTarget
+         || controller == HandleInputShowTargets
+         || controller == HandleInputShowEntireFieldTargets)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 void HandleInputChooseTarget(enum BattlerId battler)
 {
     enum BattlerId i;
