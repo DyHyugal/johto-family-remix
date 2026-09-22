@@ -12,6 +12,7 @@
 #include "item.h"
 #include "challenge_menu.h"
 #include "randomizer.h"
+#include "random.h"
 #include "constants/vars.h"
 #include "constants/flags.h"
 #include "constants/items.h"
@@ -26,6 +27,26 @@ static const u16 sMenuSpecies[7][5] = {
     {SPECIES_GLIGAR, SPECIES_DRILBUR, SPECIES_SANDILE, SPECIES_GOLETT, SPECIES_SANDYGAST},
     {SPECIES_VULPIX_ALOLA, SPECIES_SNORUNT, SPECIES_SWINUB, SPECIES_DARUMAKA_GALAR, SPECIES_VANILLITE},
     {SPECIES_EEVEE},
+};
+
+enum FamilyStarterCategory
+{
+    FAMILY_FIRE,
+    FAMILY_WATER,
+    FAMILY_GRASS,
+    FAMILY_ELECTRIC,
+    FAMILY_GROUND,
+    FAMILY_ICE,
+    FAMILY_EEVEE,
+};
+
+static const u8 sCounterCategory[] = {
+    [FAMILY_FIRE] = FAMILY_WATER,
+    [FAMILY_WATER] = FAMILY_GRASS,
+    [FAMILY_GRASS] = FAMILY_FIRE,
+    [FAMILY_ELECTRIC] = FAMILY_GROUND,
+    [FAMILY_GROUND] = FAMILY_WATER,
+    [FAMILY_ICE] = FAMILY_FIRE,
 };
 
 struct FamilyStarterEvolution
@@ -74,14 +95,41 @@ static bool32 UNUSED IsMenuSpecies(u16 species)
     return FALSE;
 }
 
+static bool32 UNUSED IsFamilyStarterMode(void)
+{
+    if (!IS_HNS || IsOneTypeChallengeActive())
+        return FALSE;
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_STARTER_AND_GIFT_MON))
+        return FALSE;
+#endif
+    return TRUE;
+}
+
 void FamilyStarter_UseMenu(void)
 {
     gSpecialVar_0x8006 = SPECIES_NONE;
-    gSpecialVar_Result = IS_HNS && !IsOneTypeChallengeActive();
-#if RANDOMIZER_AVAILABLE
-    if (RandomizerFeatureEnabled(RANDOMIZE_STARTER_AND_GIFT_MON))
-        gSpecialVar_Result = FALSE;
-#endif
+    gSpecialVar_Result = IsFamilyStarterMode();
+}
+
+static u32 GetMenuCategory(u16 species)
+{
+    u32 category, index;
+    for (category = 0; category < ARRAY_COUNT(sMenuSpecies); category++)
+        for (index = 0; index < ARRAY_COUNT(sMenuSpecies[0]); index++)
+            if (sMenuSpecies[category][index] == species)
+                return category;
+    return FAMILY_EEVEE;
+}
+
+static void SelectRivalStarter(u16 playerSpecies)
+{
+    u32 playerCategory = GetMenuCategory(playerSpecies);
+    u32 counterCategory = playerCategory == FAMILY_EEVEE
+        ? Random() % FAMILY_EEVEE
+        : sCounterCategory[playerCategory];
+    u16 rivalSpecies = sMenuSpecies[counterCategory][Random() % ARRAY_COUNT(sMenuSpecies[0])];
+    VarSet(VAR_FAMILY_RIVAL_SPECIES, rivalSpecies);
 }
 
 static void PushChoice(const u8 *text, u16 id)
@@ -160,14 +208,63 @@ void FamilyStarter_RecordPrimary(void)
 {
 #if IS_HNS
     u16 species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
-    if (IsMenuSpecies(species))
+    if (IsFamilyStarterMode() && IsMenuSpecies(species))
     {
         u16 preference = ValidEvolutionPreference(species, gSpecialVar_0x8006);
         VarSet(VAR_FAMILY_STARTER_SPECIES, species);
         VarSet(VAR_FAMILY_STARTER_EVOLUTION, preference);
+        SelectRivalStarter(species);
         GiveEvolutionItem(species, preference);
     }
 #endif
+}
+
+static u32 GetJohtoRivalStarterStage(u16 species)
+{
+    switch (species)
+    {
+    case SPECIES_CHIKORITA:
+    case SPECIES_CYNDAQUIL:
+    case SPECIES_TOTODILE:
+        return 0;
+    case SPECIES_BAYLEEF:
+    case SPECIES_QUILAVA:
+    case SPECIES_CROCONAW:
+        return 1;
+    case SPECIES_MEGANIUM:
+    case SPECIES_TYPHLOSION:
+    case SPECIES_FERALIGATR:
+        return 2;
+    default:
+        return 3;
+    }
+}
+
+static u16 GetFirstEvolution(u16 species)
+{
+    const struct Evolution *evolutions = GetSpeciesEvolutions(species);
+    u32 i;
+    if (evolutions != NULL)
+        for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+            if (FamilyStarter_IsAvailable(evolutions[i].targetSpecies))
+                return evolutions[i].targetSpecies;
+    return species;
+}
+
+u16 FamilyStarter_GetRivalSpecies(u16 originalSpecies)
+{
+#if IS_HNS
+    u32 stage = GetJohtoRivalStarterStage(originalSpecies);
+    u16 species = VarGet(VAR_FAMILY_RIVAL_SPECIES);
+    u32 i;
+    if (stage < 3 && IsMenuSpecies(species))
+    {
+        for (i = 0; i < stage; i++)
+            species = GetFirstEvolution(species);
+        return species;
+    }
+#endif
+    return originalSpecies;
 }
 
 u16 FamilyStarter_GetPrimarySpecies(void)

@@ -11,5 +11,6 @@ void FamilyStarter_RecordPrimary(void);
 void FamilyStarter_GiveEgg(void);
 void FamilyStarter_HasHatchedEgg(void);
 u16 FamilyStarter_GetPrimarySpecies(void);
+u16 FamilyStarter_GetRivalSpecies(u16 originalSpecies);
 
 #endif

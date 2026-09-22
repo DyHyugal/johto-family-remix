@@ -1,5 +1,6 @@
 #include "global.h"
 #include "native_speed.h"
+#include "family_starter.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "challenge_menu.h"
@@ -2084,6 +2085,8 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             }
             {
                 u16 species = partyData[monIndex].species;
+                if (trainer->trainerClass == TRAINER_CLASS_RIVAL_HNS)
+                    species = FamilyStarter_GetRivalSpecies(species);
                 #if RANDOMIZER_AVAILABLE == TRUE
                 species = RandomizeTrainerMon(trainer->trainerClass, i, monsCount, species);
                 #endif

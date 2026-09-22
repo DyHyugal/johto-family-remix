@@ -29,6 +29,7 @@
 #define VAR_FAMILY_EGG_EVOLUTION                         0x40CA
 #define VAR_FAMILY_EGG_PERSONALITY_LO                     0x40D8
 #define VAR_FAMILY_EGG_PERSONALITY_HI                     0x40D9
+#define VAR_FAMILY_RIVAL_SPECIES                          0x40DA
 #define VAR_1                                            0x4050
 #define VAR_2                                            0x4051
 #define VAR_3                                            0x4052

@@ -94,6 +94,34 @@ TEST("Family starter: Charcadet branch grants its selected stone")
     EXPECT(!CheckBagHasItem(ITEM_DUSK_STONE, 1));
 }
 
+TEST("Family starter: rival uses a Ground starter against Electric")
+{
+    u16 rival;
+    InitFamilyTest();
+    CreateRandomMon(&gPlayerParty[0], SPECIES_ELEKID, 5);
+    FamilyStarter_RecordPrimary();
+    rival = VarGet(VAR_FAMILY_RIVAL_SPECIES);
+    EXPECT(rival == SPECIES_GLIGAR
+        || rival == SPECIES_DRILBUR
+        || rival == SPECIES_SANDILE
+        || rival == SPECIES_GOLETT
+        || rival == SPECIES_SANDYGAST);
+    EXPECT_EQ(FamilyStarter_GetRivalSpecies(SPECIES_CHIKORITA), rival);
+    EXPECT(FamilyStarter_IsAvailable(FamilyStarter_GetRivalSpecies(SPECIES_BAYLEEF)));
+    VarSet(VAR_FAMILY_RIVAL_SPECIES, SPECIES_NONE);
+    EXPECT_EQ(FamilyStarter_GetRivalSpecies(SPECIES_CHIKORITA), SPECIES_CHIKORITA);
+}
+
+TEST("Family starter: monotype keeps the historical rival selection")
+{
+    InitFamilyTest();
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge = TYPE_FIRE;
+    CreateRandomMon(&gPlayerParty[0], SPECIES_CYNDAQUIL, 5);
+    FamilyStarter_RecordPrimary();
+    EXPECT_EQ(VarGet(VAR_FAMILY_RIVAL_SPECIES), SPECIES_NONE);
+    EXPECT_EQ(FamilyStarter_GetRivalSpecies(SPECIES_CHIKORITA), SPECIES_CHIKORITA);
+}
+
 TEST("Family starter: the actual selected egg is granted exactly once")
 {
     u32 isEgg = FALSE;
