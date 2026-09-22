@@ -14,6 +14,7 @@
 static void InitFamilyTest(void)
 {
     InitEventData();
+    FamilyStarter_ClearPreview();
     ZeroPlayerPartyMons();
     ResetPokemonStorageSystem();
     ClearBag();
@@ -25,6 +26,40 @@ static void InitFamilyTest(void)
     gSpecialVar_0x8005 = SPECIES_CHARCADET;
     gSpecialVar_0x8006 = SPECIES_NONE;
     AddBagItem(ITEM_MYSTERY_EGG, 1);
+}
+
+TEST("Family starter: previewed primary is the exact Pokemon received")
+{
+    u32 personality;
+    bool32 isShiny;
+    InitFamilyTest();
+    ZeroPlayerPartyMons();
+    gPlayerPartyCount = 0;
+    VarSet(VAR_TEMP_2, SPECIES_EEVEE);
+    FamilyStarter_PrepareStarterPreview(SPECIES_EEVEE);
+    personality = FamilyStarter_GetPreviewPersonality(SPECIES_EEVEE);
+    isShiny = FamilyStarter_IsPreviewShiny(SPECIES_EEVEE);
+    FamilyStarter_GivePrimary();
+    EXPECT_EQ(gSpecialVar_Result, TRUE);
+    EXPECT_EQ(gPlayerPartyCount, 1);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY), personality);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY), isShiny);
+    EXPECT_EQ(FamilyStarter_GetPreviewPersonality(SPECIES_EEVEE), 0);
+}
+
+TEST("Family starter: previewed egg keeps its exact personality")
+{
+    u32 personality;
+    bool32 isShiny;
+    InitFamilyTest();
+    FlagSet(FLAG_SYS_POKEMON_GET);
+    FamilyStarter_PreparePreview();
+    personality = FamilyStarter_GetPreviewPersonality(SPECIES_CHARCADET);
+    isShiny = FamilyStarter_IsPreviewShiny(SPECIES_CHARCADET);
+    FamilyStarter_GiveEgg();
+    EXPECT_EQ(gSpecialVar_Result, MON_GIVEN_TO_PARTY);
+    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_PERSONALITY), personality);
+    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_IS_SHINY), isShiny);
 }
 
 TEST("Family starter: all 31 menu entries have existing enabled species data")

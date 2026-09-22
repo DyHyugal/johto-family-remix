@@ -19,6 +19,7 @@ FamilyStarter_Species::
 	callnative FamilyStarter_HasEvolutionChoices
 	goto_if_eq VAR_RESULT, TRUE, FamilyStarter_Evolution
 FamilyStarter_ConfirmChoice::
+	callnative FamilyStarter_PreparePreview
 	showmonpic VAR_0x8005, 10, 3
 	bufferspeciesname STR_VAR_1, VAR_0x8005
 	goto_if_ne VAR_0x8006, SPECIES_NONE, FamilyStarter_ConfirmEvolution

@@ -1,6 +1,7 @@
 #include "global.h"
 #include "family_starter.h"
 #include "pokemon.h"
+#include "daycare.h"
 #include "pokemon_storage_system.h"
 #include "starter_choose.h"
 #include "script_pokemon_util.h"
@@ -16,6 +17,11 @@
 #include "constants/vars.h"
 #include "constants/flags.h"
 #include "constants/items.h"
+#include "constants/pokeball.h"
+
+static EWRAM_DATA struct Pokemon sFamilyStarterPreview = {0};
+static EWRAM_DATA u16 sFamilyStarterPreviewSpecies = SPECIES_NONE;
+static EWRAM_DATA bool8 sFamilyStarterPreviewIsEgg = FALSE;
 
 // Menu specification only. Existing starter, species, evolution and item
 // tables are deliberately not replaced or altered.
@@ -104,6 +110,82 @@ static bool32 UNUSED IsFamilyStarterMode(void)
         return FALSE;
 #endif
     return TRUE;
+}
+
+void FamilyStarter_ClearPreview(void)
+{
+    ZeroMonData(&sFamilyStarterPreview);
+    sFamilyStarterPreviewSpecies = SPECIES_NONE;
+    sFamilyStarterPreviewIsEgg = FALSE;
+}
+
+static void PreparePreview(u16 species, bool32 isEgg)
+{
+    u8 value;
+
+    if (!FamilyStarter_IsAvailable(species))
+    {
+        FamilyStarter_ClearPreview();
+        return;
+    }
+    if (sFamilyStarterPreviewSpecies == species
+     && sFamilyStarterPreviewIsEgg == isEgg)
+        return;
+
+    if (isEgg)
+    {
+        CreateEgg(&sFamilyStarterPreview, species, TRUE);
+        value = TRUE;
+        SetMonData(&sFamilyStarterPreview, MON_DATA_IS_EGG, &value);
+    }
+    else
+    {
+        CreateRandomMon(&sFamilyStarterPreview, species, 5);
+        value = BALL_POKE;
+        SetMonData(&sFamilyStarterPreview, MON_DATA_POKEBALL, &value);
+    }
+    sFamilyStarterPreviewSpecies = species;
+    sFamilyStarterPreviewIsEgg = isEgg;
+}
+
+void FamilyStarter_PreparePreview(void)
+{
+    PreparePreview(gSpecialVar_0x8005, FlagGet(FLAG_SYS_POKEMON_GET));
+}
+
+void FamilyStarter_PrepareStarterPreview(u16 species)
+{
+    PreparePreview(species, FALSE);
+}
+
+bool32 FamilyStarter_IsPreviewShiny(u16 species)
+{
+    return sFamilyStarterPreviewSpecies == species
+        && GetMonData(&sFamilyStarterPreview, MON_DATA_IS_SHINY);
+}
+
+u32 FamilyStarter_GetPreviewPersonality(u16 species)
+{
+    if (sFamilyStarterPreviewSpecies != species)
+        return 0;
+    return GetMonData(&sFamilyStarterPreview, MON_DATA_PERSONALITY);
+}
+
+void FamilyStarter_GivePrimary(void)
+{
+    u16 species = VarGet(VAR_TEMP_2);
+
+    gSpecialVar_Result = FALSE;
+    if (sFamilyStarterPreviewSpecies != species
+     || sFamilyStarterPreviewIsEgg
+     || gPlayerPartyCount != 0
+     || GetMaxPartySize() == 0)
+        return;
+    if (GiveScriptedMonToPlayer(&sFamilyStarterPreview, PARTY_SIZE) == MON_GIVEN_TO_PARTY)
+    {
+        FamilyStarter_ClearPreview();
+        gSpecialVar_Result = TRUE;
+    }
 }
 
 void FamilyStarter_UseMenu(void)
@@ -290,9 +372,27 @@ void FamilyStarter_GiveEgg(void)
      || !CheckBagHasItem(ITEM_MYSTERY_EGG, 1)
      || !IsMenuSpecies(species))
         return;
-    result = ScriptGiveEgg(species);
+    if (sFamilyStarterPreviewSpecies == species && sFamilyStarterPreviewIsEgg)
+    {
+        if (GetMaxPartySize() == 1)
+        {
+            SetMonData(&sFamilyStarterPreview, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
+            SetMonData(&sFamilyStarterPreview, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
+            SetMonData(&sFamilyStarterPreview, MON_DATA_OT_ID, gSaveBlock2Ptr->playerTrainerId);
+            result = CopyMonToPC(&sFamilyStarterPreview);
+        }
+        else
+        {
+            result = GiveCapturedMonToPlayer(&sFamilyStarterPreview);
+        }
+    }
+    else
+    {
+        result = ScriptGiveEgg(species);
+    }
     if (result == MON_CANT_GIVE)
         return;
+    FamilyStarter_ClearPreview();
     if (result == MON_GIVEN_TO_PC)
     {
         struct BoxPokemon *egg = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);

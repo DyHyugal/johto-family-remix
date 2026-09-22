@@ -249,9 +249,12 @@ NewBarkTown_Lab_EventScript_ChoseStarter::
 	hidemonpic
 	removeobject VAR_LAST_TALKED
 	msgbox NewBarkTown_Lab_Text_ChoseStarter, MSGBOX_DEFAULT
+	callnative FamilyStarter_GivePrimary
+	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_StarterGiven
 	call_if_eq VAR_STARTER_MON, 0, NewBarkTown_Lab_EventScript_GiveStarter_Chikorita
 	call_if_eq VAR_STARTER_MON, 1, NewBarkTown_Lab_EventScript_GiveStarter_Cyndaquil
 	call_if_eq VAR_STARTER_MON, 2, NewBarkTown_Lab_EventScript_GiveStarter_Totodile
+NewBarkTown_Lab_EventScript_StarterGiven::
 	callnative FamilyStarter_RecordPrimary
 	setflag FLAG_SYS_POKEMON_GET
 	playfanfare MUS_OBTAIN_ITEM
