@@ -16,6 +16,7 @@
 #include "event_data.h"
 #include "main.h"
 #include "menu.h"
+#include "native_speed.h"
 #include "overworld.h"
 #include "palette.h"
 #include "pokedex.h"
@@ -60,6 +61,7 @@ static void Task_EvolutionScene(u8 taskId);
 static void Task_TradeEvolutionScene(u8 taskId);
 static void CB2_EvolutionSceneUpdate(void);
 static void CB2_TradeEvolutionSceneUpdate(void);
+static void RunEvolutionSceneTick(void);
 static void EvoDummyFunc(void);
 static void VBlankCB_EvolutionScene(void);
 static void VBlankCB_TradeEvolutionScene(void);
@@ -534,14 +536,47 @@ void TradeEvolutionScene(struct Pokemon *mon, u16 postEvoSpecies, u8 preEvoSprit
 
 static void CB2_EvolutionSceneUpdate(void)
 {
-    AnimateSprites();
-    BuildOamBuffer();
-    RunTextPrinters();
-    UpdatePaletteFade();
-    RunTasks();
+    u32 tick;
+    u32 speed = GetNativeGameSpeed();
+
+    for (tick = 0; tick < speed; tick++)
+    {
+        if (tick != 0)
+        {
+            if (gMain.callback2 != CB2_EvolutionSceneUpdate
+             || gMain.heldKeysRaw != 0
+             || !NativeSpeed_CanRunExtraTick())
+                break;
+            NativeSpeed_ClearInputEdges();
+        }
+        RunEvolutionSceneTick();
+        if (gMain.callback2 != CB2_EvolutionSceneUpdate)
+            break;
+    }
 }
 
 static void CB2_TradeEvolutionSceneUpdate(void)
+{
+    u32 tick;
+    u32 speed = GetNativeGameSpeed();
+
+    for (tick = 0; tick < speed; tick++)
+    {
+        if (tick != 0)
+        {
+            if (gMain.callback2 != CB2_TradeEvolutionSceneUpdate
+             || gMain.heldKeysRaw != 0
+             || !NativeSpeed_CanRunExtraTick())
+                break;
+            NativeSpeed_ClearInputEdges();
+        }
+        RunEvolutionSceneTick();
+        if (gMain.callback2 != CB2_TradeEvolutionSceneUpdate)
+            break;
+    }
+}
+
+static void RunEvolutionSceneTick(void)
 {
     AnimateSprites();
     BuildOamBuffer();
