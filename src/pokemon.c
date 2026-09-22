@@ -82,7 +82,10 @@ extern u16 gSpecialVar_ItemId;
 
 #define FRIENDSHIP_EVO_THRESHOLD ((P_FRIENDSHIP_EVO_THRESHOLD >= GEN_8) ? 160 : 220)
 
-static const u32 sShinyOddsTable[] = { 8, 16, 32, 64, 128 };
+// Thresholds are compared against a 16-bit shiny value (0..65535).
+// The last three entries are the nearest integer thresholds for the named
+// probabilities; 65536 deliberately makes every possible value shiny.
+static const u32 sShinyOddsTable[] = { 8, 16, 32, 64, 128, 655, 6554, 65536 };
 
 u32 GetShinyOdds(void)
 {

@@ -5,6 +5,7 @@
 #include "new_game.h"
 #include "option_menu.h"
 #include "palette.h"
+#include "pokemon.h"
 #include "test/test.h"
 
 static bool8 sReturnedFromSetup;
@@ -22,6 +23,19 @@ static void PumpSetupFrame(u16 keys)
     gMain.callback2();
     if (gMain.vblankCallback)
         gMain.vblankCallback();
+}
+
+TEST("Settings shiny rate: extended odds use the existing shiny threshold")
+{
+    struct ChallengeSettings saved = gSaveblock3.challengeSettings;
+    const u32 expected[] = {8, 16, 32, 64, 128, 655, 6554, 65536};
+    u32 i;
+    for (i = 0; i < ARRAY_COUNT(expected); i++)
+    {
+        gSaveblock3.challengeSettings.tx_Features_ShinyChance = i;
+        EXPECT_EQ(GetShinyOdds(), expected[i]);
+    }
+    gSaveblock3.challengeSettings = saved;
 }
 
 TEST("Settings setup: Recommended A and R bypass all challenge tabs")
