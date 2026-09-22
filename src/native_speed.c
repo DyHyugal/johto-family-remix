@@ -44,9 +44,11 @@ bool32 NativeSpeed_CanRunExtraTick(void)
 
 void NativeSpeed_ClearInputEdges(void)
 {
-    // A press/repeat belongs to the physical input frame, not each simulation
-    // tick. Held directions still work; an A press cannot confirm twice.
+    // Action buttons belong to the physical input frame. Keep held directions
+    // for simulation movement, but never let one A press confirm twice.
     gMain.newKeys = 0;
     gMain.newKeysRaw = 0;
     gMain.newAndRepeatedKeys = 0;
+    gMain.heldKeys &= DPAD_ANY;
+    gMain.heldKeysRaw &= DPAD_ANY;
 }

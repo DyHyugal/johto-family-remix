@@ -14,6 +14,7 @@ u32 FamilyStarter_GetPreviewPersonality(u16 species);
 void FamilyStarter_ClearPreview(void);
 void FamilyStarter_GivePrimary(void);
 void FamilyStarter_RecordPrimary(void);
+void FamilyStarter_PreparePendingItemMessage(void);
 void FamilyStarter_GiveEgg(void);
 void FamilyStarter_HasHatchedEgg(void);
 u16 FamilyStarter_GetPrimarySpecies(void);

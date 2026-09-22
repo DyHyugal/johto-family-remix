@@ -261,6 +261,7 @@ NewBarkTown_Lab_EventScript_StarterGiven::
 	bufferspeciesname STR_VAR_1, PLAYER_STARTER_SPECIES
 	message NewBarkTown_Lab_Text_ReceivedStarter
 	waitfanfare
+	call FamilyStarter_ShowPendingItem
 	specialvar VAR_RESULT, IsNuzlockeNicknamingActive
 	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_ChoseStarter_NicknameStarter_Nuzlocke
 	msgbox NewBarkTown_Lab_Text_Nickname, MSGBOX_YESNO
@@ -1086,6 +1087,7 @@ NewBarkTown_Lab_FamilyEggChoice::
 	bufferspeciesname STR_VAR_1, VAR_FAMILY_EGG_SPECIES
 	msgbox NewBarkTown_Lab_FamilyEggRecognized, MSGBOX_DEFAULT
 	call_if_eq VAR_0x8007, MON_GIVEN_TO_PC, NewBarkTown_Lab_FamilyEggPC
+	call FamilyStarter_ShowPendingItem
 NewBarkTown_Lab_FamilyEggReturn::
 	return
 

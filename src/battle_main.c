@@ -1869,28 +1869,28 @@ void BattleMainCB2(void)
     u32 speed = GetNativeGameSpeed();
     u32 frame = gMain.vblankCounter1;
 
-    for (tick = 0; tick < speed; tick++)
+    // Rendering and UI tasks are tied to physical frames. Running these more
+    // than once could rebuild or tear down a command window between OAM/text
+    // passes when A was pressed rapidly.
+    AnimateSprites();
+    BuildOamBuffer();
+    RunTextPrinters();
+    UpdatePaletteFade();
+    RunTasks();
+
+    for (tick = 1; tick < speed; tick++)
     {
-        if (tick != 0)
-        {
-            if (!gMain.inBattle || gMain.callback1 != BattleMainCB1
-             || gMain.callback2 != BattleMainCB2
-             || (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_FRONTIER))
-             || gMain.heldKeysRaw != 0 || !NativeSpeed_CanRunExtraTick()
-             || gMain.vblankCounter1 != frame)
-                break;
-            NativeSpeed_ClearInputEdges();
-            ClearSpriteCopyRequests();
-            BattleMainCB1();
-            if (!gMain.inBattle || gMain.callback1 != BattleMainCB1
-             || gMain.callback2 != BattleMainCB2)
-                return;
-        }
-        AnimateSprites();
-        BuildOamBuffer();
-        RunTextPrinters();
-        UpdatePaletteFade();
-        RunTasks();
+        if (!gMain.inBattle || gMain.callback1 != BattleMainCB1
+         || gMain.callback2 != BattleMainCB2
+         || (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_FRONTIER))
+         || !NativeSpeed_CanRunExtraTick()
+         || gMain.vblankCounter1 != frame)
+            break;
+        NativeSpeed_ClearInputEdges();
+        BattleMainCB1();
+        if (!gMain.inBattle || gMain.callback1 != BattleMainCB1
+         || gMain.callback2 != BattleMainCB2)
+            return;
     }
 
     if (JOY_HELD(B_BUTTON) && gBattleTypeFlags & BATTLE_TYPE_RECORDED && RecordedBattle_CanStopPlayback())

@@ -57,16 +57,19 @@ TEST("Native speed: extra ticks cannot reuse button presses or repeats")
     u16 savedRaw = gMain.newKeysRaw;
     u16 savedRepeated = gMain.newAndRepeatedKeys;
     u16 savedHeld = gMain.heldKeys;
+    u16 savedHeldRaw = gMain.heldKeysRaw;
     gMain.newKeys = gMain.newKeysRaw = gMain.newAndRepeatedKeys = A_BUTTON;
-    gMain.heldKeys = DPAD_RIGHT;
+    gMain.heldKeys = gMain.heldKeysRaw = DPAD_RIGHT | A_BUTTON;
     NativeSpeed_ClearInputEdges();
     EXPECT_EQ(gMain.newKeys, 0);
     EXPECT_EQ(gMain.newKeysRaw, 0);
     EXPECT_EQ(gMain.newAndRepeatedKeys, 0);
     EXPECT_EQ(gMain.heldKeys, DPAD_RIGHT);
+    EXPECT_EQ(gMain.heldKeysRaw, DPAD_RIGHT);
     gMain.newKeys = savedNew;
     gMain.newKeysRaw = savedRaw;
     gMain.newAndRepeatedKeys = savedRepeated;
     gMain.heldKeys = savedHeld;
+    gMain.heldKeysRaw = savedHeldRaw;
 }
 #endif

@@ -21,7 +21,10 @@
 
 static EWRAM_DATA struct Pokemon sFamilyStarterPreview = {0};
 static EWRAM_DATA u16 sFamilyStarterPreviewSpecies = SPECIES_NONE;
+static EWRAM_DATA u16 sFamilyStarterPreviewPreference = SPECIES_NONE;
 static EWRAM_DATA bool8 sFamilyStarterPreviewIsEgg = FALSE;
+static EWRAM_DATA u16 sFamilyStarterPendingItem = ITEM_NONE;
+static EWRAM_DATA bool8 sFamilyStarterPendingItemInPC = FALSE;
 
 // Menu specification only. Existing starter, species, evolution and item
 // tables are deliberately not replaced or altered.
@@ -72,8 +75,27 @@ static const struct FamilyStarterEvolution sStarterEvolutions[] = {
     {SPECIES_EEVEE, SPECIES_LEAFEON, ITEM_LEAF_STONE},
     {SPECIES_EEVEE, SPECIES_GLACEON, ITEM_ICE_STONE},
     {SPECIES_EEVEE, SPECIES_SYLVEON, ITEM_SHINY_STONE},
-    {SPECIES_CHARCADET, SPECIES_ARMAROUGE, ITEM_FIRE_STONE},
-    {SPECIES_CHARCADET, SPECIES_CERULEDGE, ITEM_DUSK_STONE},
+    {SPECIES_CHARCADET, SPECIES_ARMAROUGE, ITEM_AUSPICIOUS_ARMOR},
+    {SPECIES_CHARCADET, SPECIES_CERULEDGE, ITEM_MALICIOUS_ARMOR},
+    {SPECIES_SNORUNT, SPECIES_GLALIE, ITEM_NONE},
+    {SPECIES_SNORUNT, SPECIES_FROSLASS, ITEM_DAWN_STONE},
+};
+
+struct FamilyStarterAutomaticItem
+{
+    u16 species;
+    u16 item;
+};
+
+// Linear evolution rewards do not ask a redundant evolution question.
+static const struct FamilyStarterAutomaticItem sStarterAutomaticItems[] = {
+    {SPECIES_HORSEA, ITEM_DRAGON_SCALE},
+    {SPECIES_ELEKID, ITEM_ELECTIRIZER},
+    {SPECIES_MAGNEMITE, ITEM_THUNDER_STONE},
+    {SPECIES_PICHU, ITEM_THUNDER_STONE},
+    {SPECIES_GLIGAR, ITEM_RAZOR_FANG},
+    {SPECIES_VULPIX_ALOLA, ITEM_ICE_STONE},
+    {SPECIES_DARUMAKA_GALAR, ITEM_ICE_STONE},
 };
 
 u16 FamilyStarter_GetCandidate(u32 category, u32 index)
@@ -116,12 +138,16 @@ void FamilyStarter_ClearPreview(void)
 {
     ZeroMonData(&sFamilyStarterPreview);
     sFamilyStarterPreviewSpecies = SPECIES_NONE;
+    sFamilyStarterPreviewPreference = SPECIES_NONE;
     sFamilyStarterPreviewIsEgg = FALSE;
+    sFamilyStarterPendingItem = ITEM_NONE;
+    sFamilyStarterPendingItemInPC = FALSE;
 }
 
-static void PreparePreview(u16 species, bool32 isEgg)
+static void PreparePreview(u16 species, u16 preference, bool32 isEgg)
 {
     u8 value;
+    bool32 forceFemale = species == SPECIES_SNORUNT && preference == SPECIES_FROSLASS;
 
     if (!FamilyStarter_IsAvailable(species))
     {
@@ -129,33 +155,39 @@ static void PreparePreview(u16 species, bool32 isEgg)
         return;
     }
     if (sFamilyStarterPreviewSpecies == species
+     && sFamilyStarterPreviewPreference == preference
      && sFamilyStarterPreviewIsEgg == isEgg)
         return;
 
-    if (isEgg)
+    do
     {
-        CreateEgg(&sFamilyStarterPreview, species, TRUE);
-        value = TRUE;
-        SetMonData(&sFamilyStarterPreview, MON_DATA_IS_EGG, &value);
+        if (isEgg)
+        {
+            CreateEgg(&sFamilyStarterPreview, species, TRUE);
+            value = TRUE;
+            SetMonData(&sFamilyStarterPreview, MON_DATA_IS_EGG, &value);
+        }
+        else
+        {
+            CreateRandomMon(&sFamilyStarterPreview, species, 5);
+            value = BALL_POKE;
+            SetMonData(&sFamilyStarterPreview, MON_DATA_POKEBALL, &value);
+        }
     }
-    else
-    {
-        CreateRandomMon(&sFamilyStarterPreview, species, 5);
-        value = BALL_POKE;
-        SetMonData(&sFamilyStarterPreview, MON_DATA_POKEBALL, &value);
-    }
+    while (forceFemale && GetMonGender(&sFamilyStarterPreview) != MON_FEMALE);
     sFamilyStarterPreviewSpecies = species;
+    sFamilyStarterPreviewPreference = preference;
     sFamilyStarterPreviewIsEgg = isEgg;
 }
 
 void FamilyStarter_PreparePreview(void)
 {
-    PreparePreview(gSpecialVar_0x8005, FlagGet(FLAG_SYS_POKEMON_GET));
+    PreparePreview(gSpecialVar_0x8005, gSpecialVar_0x8006, FlagGet(FLAG_SYS_POKEMON_GET));
 }
 
 void FamilyStarter_PrepareStarterPreview(u16 species)
 {
-    PreparePreview(species, FALSE);
+    PreparePreview(species, SPECIES_NONE, FALSE);
 }
 
 bool32 FamilyStarter_IsPreviewShiny(u16 species)
@@ -276,14 +308,40 @@ static u16 GetEvolutionItem(u16 species, u16 preference)
         if (sStarterEvolutions[i].species == species
          && sStarterEvolutions[i].target == preference)
             return sStarterEvolutions[i].item;
+    for (i = 0; i < ARRAY_COUNT(sStarterAutomaticItems); i++)
+        if (sStarterAutomaticItems[i].species == species)
+            return sStarterAutomaticItems[i].item;
     return ITEM_NONE;
 }
 
-static void UNUSED GiveEvolutionItem(u16 species, u16 preference)
+static void UNUSED QueueEvolutionItem(u16 species, u16 preference)
 {
     u16 item = GetEvolutionItem(species, preference);
-    if (item != ITEM_NONE && !AddBagItem(item, 1))
-        AddPCItem(item, 1);
+    if (item == ITEM_NONE)
+        return;
+    if (AddBagItem(item, 1))
+    {
+        sFamilyStarterPendingItem = item;
+        sFamilyStarterPendingItemInPC = FALSE;
+    }
+    else if (AddPCItem(item, 1))
+    {
+        sFamilyStarterPendingItem = item;
+        sFamilyStarterPendingItemInPC = TRUE;
+    }
+}
+
+void FamilyStarter_PreparePendingItemMessage(void)
+{
+    gSpecialVar_Result = FALSE;
+    if (sFamilyStarterPendingItem == ITEM_NONE)
+        return;
+    gSpecialVar_0x8000 = sFamilyStarterPendingItem;
+    gSpecialVar_0x8001 = 1;
+    gSpecialVar_0x8007 = TRUE;
+    gSpecialVar_Result = sFamilyStarterPendingItemInPC ? 2 : 1;
+    sFamilyStarterPendingItem = ITEM_NONE;
+    sFamilyStarterPendingItemInPC = FALSE;
 }
 
 void FamilyStarter_RecordPrimary(void)
@@ -296,7 +354,7 @@ void FamilyStarter_RecordPrimary(void)
         VarSet(VAR_FAMILY_STARTER_SPECIES, species);
         VarSet(VAR_FAMILY_STARTER_EVOLUTION, preference);
         SelectRivalStarter(species);
-        GiveEvolutionItem(species, preference);
+        QueueEvolutionItem(species, preference);
     }
 #endif
 }
@@ -416,7 +474,7 @@ void FamilyStarter_GiveEgg(void)
     VarSet(VAR_FAMILY_EGG_EVOLUTION, preference);
     FlagSet(FLAG_RECEIVED_TOGEPI_EGG);
     FlagClear(FLAG_HIDE_NEWBARKTOWN_LAB_AIDE);
-    GiveEvolutionItem(species, preference);
+    QueueEvolutionItem(species, preference);
     gSpecialVar_Result = result;
 #else
     gSpecialVar_Result = MON_CANT_GIVE;
