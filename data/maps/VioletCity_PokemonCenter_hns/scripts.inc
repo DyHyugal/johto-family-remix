@@ -9,6 +9,10 @@ VioletCity_Pokecenter_OnTransition::
 VioletCity_PokemonCenter_EventScript_Aide::
 	lock
 	faceplayer
+	goto_if_set FLAG_HIDE_VIOLET_CITY_AIDE, VioletCity_PokemonCenter_EventScript_Aide_Received
+	goto_if_ne VAR_FAMILY_EGG_SPECIES, SPECIES_NONE, VioletCity_PokemonCenter_FamilyEggReceived
+	checkitem ITEM_MYSTERY_EGG
+	goto_if_eq VAR_RESULT, TRUE, VioletCity_PokemonCenter_FamilyEggPending
 	goto_if_set FLAG_RECEIVED_TOGEPI_EGG, VioletCity_PokemonCenter_EventScript_Aide_Received
 	specialvar VAR_0x8004, GetMaxPartySize @ tx_randomizer_and_challenges
 	goto_if_eq VAR_0x8004, 1, VioletCity_PokemonCenter_EventScript_Aide_Offer @ party limit of 1: the Egg goes to the PC
@@ -56,6 +60,7 @@ VioletCity_PokemonCenter_EventScript_Aide_GiveEgg::
 	goto_if_eq VAR_RESULT, MON_CANT_GIVE, Common_EventScript_NoMoreRoomForPokemon @ party limit of 1 and every BOX full
 	call_if_eq VAR_RESULT, MON_GIVEN_TO_PC, VioletCity_PokemonCenter_EventScript_Aide_EggSentToPC
 	setflag FLAG_RECEIVED_TOGEPI_EGG
+VioletCity_PokemonCenter_FamilyEggExistingReward::
 	msgbox VioletCity_PokeCenter_Text_ElmsAideGiveItem, MSGBOX_DEFAULT
 	giveitem ITEM_EXP_SHARE_SMALL
 	setflag FLAG_HIDE_VIOLET_CITY_AIDE
@@ -176,3 +181,16 @@ VioletCity_PokeCenter_Text_Youngster:
 	.string "obey a trainer they don't respect.\p"
 	.string "Without the right GYM BADGES,\n"
 	.string "they will just do as they please.$"
+
+VioletCity_PokemonCenter_FamilyEggPending::
+	call NewBarkTown_Lab_FamilyEggChoice
+	goto_if_ne VAR_FAMILY_EGG_SPECIES, SPECIES_NONE, VioletCity_PokemonCenter_FamilyEggReceived
+	closemessage
+	release
+	end
+VioletCity_PokemonCenter_FamilyEggReceived::
+	msgbox VioletCity_PokemonCenter_FamilyEggText, MSGBOX_DEFAULT
+	goto VioletCity_PokemonCenter_FamilyEggExistingReward
+VioletCity_PokemonCenter_FamilyEggText:
+	.string "Le PROF. ORME m'a parlé de ton\n"
+	.string "œuf. Prends-en bien soin !$"

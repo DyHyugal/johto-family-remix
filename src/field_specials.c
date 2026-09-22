@@ -1,4 +1,5 @@
 #include "global.h"
+#include "family_starter.h"
 #include "debug.h"
 #include "malloc.h"
 #include "battle.h"
@@ -1565,7 +1566,7 @@ void LoadWallyZigzagoon(void)
 bool8 IsStarterInParty(void)
 {
     u8 i;
-    u16 starter = GetStarterPokemon(VarGet(VAR_STARTER_MON));
+    u16 starter = FamilyStarter_GetPrimarySpecies();
     u8 partyCount = CalculatePlayerPartyCount();
     for (i = 0; i < partyCount; i++)
     {

@@ -1,3 +1,5 @@
+.include "data/scripts/family_starter.inc"
+
 .set PLAYER_STARTER_SPECIES,  VAR_TEMP_2
 
 NewBarkTown_Lab_hns_MapScripts::
@@ -169,6 +171,9 @@ NewBarkTown_Lab_EventScript_ChikoritaBall::
 	end
 
 NewBarkTown_Lab_EventScript_ChikoritaBall_Choice::
+	setvar VAR_STARTER_MON, 0
+	callnative FamilyStarter_UseMenu
+	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_FamilyStarterChoice
 	@callnative DisableStaticRandomizer
 	setvar VAR_STARTER_MON, 0
 	setvar PLAYER_STARTER_SPECIES, SPECIES_CHIKORITA
@@ -191,6 +196,9 @@ NewBarkTown_Lab_EventScript_CyndaquilBall::
 	end
 
 NewBarkTown_Lab_EventScript_CyndaquilBall_Choice::
+	setvar VAR_STARTER_MON, 1
+	callnative FamilyStarter_UseMenu
+	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_FamilyStarterChoice
 	@callnative DisableStaticRandomizer
 	setvar VAR_STARTER_MON, 1
 	setvar PLAYER_STARTER_SPECIES, SPECIES_CYNDAQUIL
@@ -213,6 +221,9 @@ NewBarkTown_Lab_EventScript_TotodileBall::
 	end
 
 NewBarkTown_Lab_EventScript_TotodileBall_Choice::
+	setvar VAR_STARTER_MON, 2
+	callnative FamilyStarter_UseMenu
+	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_FamilyStarterChoice
 	@callnative DisableStaticRandomizer
 	setvar VAR_STARTER_MON, 2
 	setvar PLAYER_STARTER_SPECIES, SPECIES_TOTODILE
@@ -241,6 +252,7 @@ NewBarkTown_Lab_EventScript_ChoseStarter::
 	call_if_eq VAR_STARTER_MON, 0, NewBarkTown_Lab_EventScript_GiveStarter_Chikorita
 	call_if_eq VAR_STARTER_MON, 1, NewBarkTown_Lab_EventScript_GiveStarter_Cyndaquil
 	call_if_eq VAR_STARTER_MON, 2, NewBarkTown_Lab_EventScript_GiveStarter_Totodile
+	callnative FamilyStarter_RecordPrimary
 	setflag FLAG_SYS_POKEMON_GET
 	playfanfare MUS_OBTAIN_ITEM
 	bufferspeciesname STR_VAR_1, PLAYER_STARTER_SPECIES
@@ -428,13 +440,15 @@ NewBarkTown_Lab_EventScript_PoliceYes::
 	setflag FLAG_ADVENTURE_STARTED
 	setflag FLAG_START_NUZLOCKE
 	setflag FLAG_EXP_SHARE_ENABLED
-	removeitem ITEM_MYSTERY_EGG
+	call NewBarkTown_Lab_FamilyEggChoice
 	release
 	end
 
 NewBarkTown_Lab_EventScript_ElmState5::
 	lock
 	faceplayer
+	checkitem ITEM_MYSTERY_EGG
+	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_FamilyEggRetry
 	msgbox NewBarkTown_Lab_Text_ElmStudyingEgg, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_ELM Common_Movement_FaceOriginalDirection
@@ -514,6 +528,7 @@ NewBarkTown_Lab_EventScript_Elm_Check_WhereIsEgg::
 	end
 
 NewBarkTown_Lab_EventScript_Elm_Check_Togepi::
+	goto_if_ne VAR_FAMILY_EGG_SPECIES, SPECIES_NONE, NewBarkTown_Lab_FamilyEggHatched
 	checkspecies SPECIES_TOGEPI
 	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_Elm_Togepi_Seen
 	checkspecies SPECIES_TOGETIC
@@ -806,8 +821,8 @@ NewBarkTown_Lab_Text_ElmAfterTheft1:
 	.string "big discovery?$"
 
 NewBarkTown_Lab_Text_ElmAfterTheft2:
-	.string "{PLAYER} handed the MYSTERY EGG\n"
-	.string "to PROF.ELM.$"
+	.string "{PLAYER} montre l’œuf mystérieux\n"
+	.string "au PROF. ORME et le garde.$"
 
 NewBarkTown_Lab_Text_ElmAfterTheft3:
 	.string "ELM: This?$"
@@ -1036,3 +1051,73 @@ NewBarkTown_Lab_Text_Elm_CallMe:
 	.string "How's your POKéDEX coming along?\n"
 	.string "I'm busy now, but call me sometime\l"
 	.string "and I can check your progress!$"
+
+NewBarkTown_Lab_FamilyStarterChoice::
+	msgbox NewBarkTown_Lab_FamilyStarterPrompt, MSGBOX_DEFAULT
+	call FamilyStarter_Select
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_FamilyStarterCancel
+	copyvar PLAYER_STARTER_SPECIES, VAR_0x8005
+	goto NewBarkTown_Lab_EventScript_ChoseStarter
+
+NewBarkTown_Lab_FamilyStarterCancel::
+	closemessage
+	release
+	end
+
+NewBarkTown_Lab_FamilyEggRetry::
+	call NewBarkTown_Lab_FamilyEggChoice
+	closemessage
+	release
+	end
+
+NewBarkTown_Lab_FamilyEggChoice::
+	goto_if_ne VAR_FAMILY_EGG_SPECIES, SPECIES_NONE, NewBarkTown_Lab_FamilyEggReturn
+	checkitem ITEM_MYSTERY_EGG
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_FamilyEggReturn
+	msgbox NewBarkTown_Lab_FamilyEggPrompt, MSGBOX_DEFAULT
+	call FamilyStarter_Select
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_FamilyEggLater
+	callnative FamilyStarter_GiveEgg
+	goto_if_eq VAR_RESULT, MON_CANT_GIVE, NewBarkTown_Lab_FamilyEggNoRoom
+	copyvar VAR_0x8007, VAR_RESULT
+	bufferspeciesname STR_VAR_1, VAR_FAMILY_EGG_SPECIES
+	msgbox NewBarkTown_Lab_FamilyEggRecognized, MSGBOX_DEFAULT
+	call_if_eq VAR_0x8007, MON_GIVEN_TO_PC, NewBarkTown_Lab_FamilyEggPC
+NewBarkTown_Lab_FamilyEggReturn::
+	return
+
+NewBarkTown_Lab_FamilyEggPC::
+	msgbox NewBarkTown_Lab_FamilyEggSentPC, MSGBOX_DEFAULT
+	return
+
+NewBarkTown_Lab_FamilyEggLater::
+	msgbox NewBarkTown_Lab_FamilyEggKeep, MSGBOX_DEFAULT
+	return
+
+NewBarkTown_Lab_FamilyEggNoRoom::
+	msgbox NewBarkTown_Lab_FamilyEggFull, MSGBOX_DEFAULT
+	return
+
+NewBarkTown_Lab_FamilyEggHatched::
+	callnative FamilyStarter_HasHatchedEgg
+	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_Elm_Togepi_Seen
+	return
+
+NewBarkTown_Lab_FamilyStarterPrompt:
+	.string "Quel partenaire souhaites-tu ?$"
+NewBarkTown_Lab_FamilyEggPrompt:
+	.string "Reconnais-tu l'espèce\n"
+	.string "de cet œuf ?$"
+NewBarkTown_Lab_FamilyEggRecognized:
+	.string "Oui, tu as raison, c'est bien\n"
+	.string "un œuf de {STR_VAR_1}.\p"
+	.string "Garde-le et prends soin de lui !$"
+NewBarkTown_Lab_FamilyEggKeep:
+	.string "Garde l'œuf. Nous pourrons\n"
+	.string "en reparler quand tu voudras.$"
+NewBarkTown_Lab_FamilyEggFull:
+	.string "Ton équipe et ton PC sont pleins.\p"
+	.string "Garde l'œuf et reviens après\n"
+	.string "avoir fait de la place.$"
+NewBarkTown_Lab_FamilyEggSentPC:
+	.string "L'œuf a été envoyé dans ton PC.$"

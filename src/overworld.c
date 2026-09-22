@@ -1,4 +1,5 @@
 #include "global.h"
+#include "native_speed.h"
 #include "overworld.h"
 #include "constants/heal_locations.h"
 #include "battle_pyramid.h"
@@ -1922,9 +1923,28 @@ void CB2_OverworldBasic(void)
 void CB2_Overworld(void)
 {
     bool32 fading = (gPaletteFade.active != 0);
+    u32 tick;
+    u32 speed = GetNativeGameSpeed();
+    u32 frame = gMain.vblankCounter1;
     if (fading)
         SetVBlankCallback(NULL);
     OverworldBasic();
+    for (tick = 1; tick < speed; tick++)
+    {
+        // Keep scripts, menus, transitions, link play and saves at x1. Check
+        // after EVERY tick: walking can start an encounter or a warp.
+        if (fading || gMain.callback1 != CB1_Overworld
+         || gMain.callback2 != CB2_Overworld || ArePlayerFieldControlsLocked()
+         || !NativeSpeed_CanRunExtraTick() || gMain.vblankCounter1 != frame)
+            break;
+        NativeSpeed_ClearInputEdges();
+        ClearSpriteCopyRequests();
+        CB1_Overworld();
+        if (gMain.callback1 != CB1_Overworld || gMain.callback2 != CB2_Overworld
+         || ArePlayerFieldControlsLocked())
+            break;
+        OverworldBasic();
+    }
     if (fading)
     {
         SetFieldVBlankCallback();

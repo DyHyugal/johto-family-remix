@@ -5,8 +5,31 @@
 #include "load_save.h"
 #include "constants/vars.h"
 #include "test/test.h"
+#include "test/battle.h"
 
 #if IS_HNS
+SINGLE_BATTLE_TEST("Native speed: a battle turn completes at each multiplier")
+{
+    u32 speed = 1;
+    PARAMETRIZE { speed = 1; }
+    PARAMETRIZE { speed = 2; }
+    PARAMETRIZE { speed = 3; }
+    PARAMETRIZE { speed = 4; }
+    GIVEN {
+        SetNativeGameSpeed(speed);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_SPLASH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
+    } FINALLY {
+        SetNativeGameSpeed(1);
+    }
+}
+
 TEST("Native speed: legacy values, four multipliers and audio layout")
 {
     u16 old = VarGet(VAR_NATIVE_GAME_SPEED);

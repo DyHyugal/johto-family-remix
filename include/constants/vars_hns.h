@@ -22,6 +22,13 @@
 #define VAR_LILYCOVE_CONTEST_LOBBY_STATE                            0x4099
 
 // HnS-unique vars
+// Family Remix flow state, using HnS-free slots documented below.
+#define VAR_FAMILY_STARTER_SPECIES                       0x40C2
+#define VAR_FAMILY_EGG_SPECIES                           0x40C6
+#define VAR_FAMILY_STARTER_EVOLUTION                     0x40C9
+#define VAR_FAMILY_EGG_EVOLUTION                         0x40CA
+#define VAR_FAMILY_EGG_PERSONALITY_LO                     0x40D8
+#define VAR_FAMILY_EGG_PERSONALITY_HI                     0x40D9
 #define VAR_1                                            0x4050
 #define VAR_2                                            0x4051
 #define VAR_3                                            0x4052

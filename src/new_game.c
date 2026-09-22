@@ -1,4 +1,5 @@
 #include "global.h"
+#include "native_speed.h"
 #include "new_game.h"
 #include "random.h"
 #include "config/randomizer.h"
@@ -116,6 +117,7 @@ static void SetDefaultOptions(void)
 
 void SetDefaultChallengeSettings(void)
 {
+    SetNativeGameSpeed(1);
     gSaveblock3.challengeSettings.followerEnable = 0;
     gSaveblock3.challengeSettings.followerLargeEnable = 0;
     gSaveblock3.challengeSettings.autoRun = 1;
@@ -223,6 +225,7 @@ void NewGameInitData(void)
     u8 rivalName[PLAYER_NAME_LENGTH + 1];
 #endif
     struct ChallengeSettings savedChallenge = gSaveBlock3Ptr->challengeSettings;
+    u32 savedGameSpeed = GetNativeGameSpeed();
     if (gSaveFileStatus == SAVE_STATUS_EMPTY || gSaveFileStatus == SAVE_STATUS_CORRUPT)
         RtcReset();
 
@@ -248,6 +251,7 @@ void NewGameInitData(void)
     PlayTimeCounter_Reset();
     ClearPokedexFlags();
     InitEventData();
+    SetNativeGameSpeed(savedGameSpeed);
     ClearTVShowData();
     ResetGabbyAndTy();
     ClearSecretBases();

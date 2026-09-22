@@ -22,3 +22,5 @@ jobs:
         run: make check BUILD=hns TESTS=Settings -j2
       - name: Native speed tests
         run: make check BUILD=hns TESTS=Native -j2
+      - name: Starter and mystery egg tests
+        run: make check BUILD=hns TESTS=Family -j2

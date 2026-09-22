@@ -1,4 +1,5 @@
 #include "global.h"
+#include "native_speed.h"
 #include "bg.h"
 #include "event_data.h"
 #include "gpu_regs.h"
@@ -69,6 +70,7 @@ enum {
     ITEM_FEATURES_SHINY_COLOR,
     ITEM_FEATURES_ITEM_DROP,
     ITEM_FEATURES_FRONTIER_BANS,
+    ITEM_FEATURES_GAME_SPEED,
     ITEM_FEATURES_NEXT,
     ITEM_FEATURES_COUNT,
 };
@@ -688,6 +690,20 @@ static const struct ChallengeMenuItem sTabItems_Features[] = {
         .descriptions = sDesc_FrontierBans,
         .numChoices   = 2,
         .choiceNames  = sChoices_BanUnban,
+    },
+    [ITEM_FEATURES_GAME_SPEED] = {
+        .name = COMPOUND_STRING("GAME SPEED"),
+        .descriptions = (const u8 *const[]) {
+            COMPOUND_STRING("Normal game speed.\nMusic keeps its original tempo."),
+            COMPOUND_STRING("Up to x2 in field and battles.\nMenus, scenes and audio stay x1."),
+            COMPOUND_STRING("Up to x3 in field and battles.\nMenus, scenes and audio stay x1."),
+            COMPOUND_STRING("Up to x4 in field and battles.\nMenus, scenes and audio stay x1."),
+        },
+        .numChoices = 4,
+        .choiceNames = (const u8 *const[]) {
+            COMPOUND_STRING("x1"), COMPOUND_STRING("x2"),
+            COMPOUND_STRING("x3"), COMPOUND_STRING("x4"),
+        },
     },
     [ITEM_FEATURES_NEXT] = {
         .name         = COMPOUND_STRING("NEXT"),
@@ -1993,6 +2009,7 @@ static void Task_ConfirmSaveYes(u8 taskId)
     cs->genOneRecharge             = *GetSelectionPtr(TAB_MODE, ITEM_MODE_GEN_ONE_RECHARGE);
 
     // Features tab
+    SetNativeGameSpeed(*GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_GAME_SPEED) + 1);
     cs->tx_Features_RTCType        = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_RTC_TYPE);
     cs->tx_Features_ShinyChance    = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_SHINY_CHANCE);
     cs->tx_Features_WildMonDropItems = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_ITEM_DROP);
@@ -2232,6 +2249,7 @@ void CB2_InitChallengeMenu(void)
                 *GetSelectionPtr(TAB_MODE, ITEM_MODE_GAMEMODE) = 1; // CUSTOM
 
             // Features tab
+            *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_GAME_SPEED) = GetNativeGameSpeed() - 1;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_RTC_TYPE)     = cs->tx_Features_RTCType;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_SHINY_CHANCE) = cs->tx_Features_ShinyChance;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_ITEM_DROP)    = cs->tx_Features_WildMonDropItems;

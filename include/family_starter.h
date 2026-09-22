@@ -1,0 +1,14 @@
+#ifndef GUARD_FAMILY_STARTER_H
+#define GUARD_FAMILY_STARTER_H
+
+u16 FamilyStarter_GetCandidate(u32 category, u32 index);
+bool32 FamilyStarter_IsAvailable(u16 species);
+void FamilyStarter_UseMenu(void);
+void FamilyStarter_BuildSpeciesMenu(void);
+void FamilyStarter_BuildEeveeMenu(void);
+void FamilyStarter_RecordPrimary(void);
+void FamilyStarter_GiveEgg(void);
+void FamilyStarter_HasHatchedEgg(void);
+u16 FamilyStarter_GetPrimarySpecies(void);
+
+#endif

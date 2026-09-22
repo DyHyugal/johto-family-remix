@@ -15,7 +15,9 @@ VioletCity_OnTransition::
 
 VioletCity_EventScript_Trigger::
 	@LOCAL FLAGHEAP
+	goto_if_ne VAR_FAMILY_EGG_SPECIES, SPECIES_NONE, VioletCity_FamilyEggAlreadyReceived
 	clearflag FLAG_RECEIVED_TOGEPI_EGG
+VioletCity_FamilyEggAlreadyReceived:
 	clearflag FLAG_VIOLET_NPC_TRADE_COMPLETED
 	clearflag FLAG_HIDE_SPROUT_TOWER_SILVER
 	clearflag FLAG_HIDE_JOHTO_GYM_LEADERS
@@ -178,7 +180,8 @@ VioletCity_EventScript_Rattata::
 VioletCity_EventScript_ElmCall_Trigger::
 	lock
 	setspeaker VioletCity_Text_ElmName
-	pokenavcall VioletCity_Text_Elm_Call
+	call_if_eq VAR_FAMILY_EGG_SPECIES, SPECIES_NONE, VioletCity_FamilyEggOriginalCall
+	call_if_ne VAR_FAMILY_EGG_SPECIES, SPECIES_NONE, VioletCity_FamilyEggNewCall
 	waitmessage
 	delay 30
 	clearflag FLAG_HIDE_VIOLET_CITY_AIDE
@@ -495,3 +498,15 @@ VioletCity_Text_Kimono_Girl4:
 .string "I am counting on you.$"
 
 
+
+VioletCity_FamilyEggOriginalCall::
+	pokenavcall VioletCity_Text_Elm_Call
+	return
+VioletCity_FamilyEggNewCall::
+	pokenavcall VioletCity_FamilyEggCallText
+	return
+VioletCity_FamilyEggCallText:
+	.string "ORME: Comment va ton œuf ?\p"
+	.string "Mon assistant t'attend au\n"
+	.string "CENTRE POKéMON de MAUVILLE.\p"
+	.string "Il a quelque chose pour toi !$"

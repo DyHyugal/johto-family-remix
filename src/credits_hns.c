@@ -1,4 +1,5 @@
 #include "global.h"
+#include "family_starter.h"
 #include "palette.h"
 #include "main.h"
 #include "task.h"
@@ -1447,7 +1448,7 @@ static void SpriteCB_CreditsMonBg(struct Sprite *sprite)
 
 static void DeterminePokemonToShow(void)
 {
-    enum NationalDexOrder starter = SpeciesToNationalPokedexNum(GetStarterPokemon(VarGet(VAR_STARTER_MON)));
+    enum NationalDexOrder starter = SpeciesToNationalPokedexNum(FamilyStarter_GetPrimarySpecies());
     u16 page;
     u16 dexNum;
     u16 j;
