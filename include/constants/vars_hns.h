@@ -135,6 +135,7 @@
 #define VAR_UNUSED_HNS_0x40E3                            0x40E3 // Emerald VAR_GIFT_UNUSED_6 - see Mystery Gift block above
 #define VAR_UNUSED_HNS_0x40E4                            0x40E4 // Emerald VAR_GIFT_UNUSED_7 - see Mystery Gift block above
 
+#define VAR_NATIVE_GAME_SPEED                           0x40E5
 #define VAR_UNUSED_HNS_0x40E5                            0x40E5 // Emerald VAR_UNUSED_0x40E5 - no references in any build
 
 // !!! UNSAFE: daily counters. Written by universal engine code that runs during
