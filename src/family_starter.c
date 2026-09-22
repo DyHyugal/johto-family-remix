@@ -282,6 +282,7 @@ void FamilyStarter_GiveEgg(void)
 #if IS_HNS
     u16 species = gSpecialVar_0x8005;
     u16 preference = ValidEvolutionPreference(species, gSpecialVar_0x8006);
+    u32 hatchCycles = 0;
     u32 personality;
     u8 result;
     gSpecialVar_Result = MON_CANT_GIVE;
@@ -293,9 +294,20 @@ void FamilyStarter_GiveEgg(void)
     if (result == MON_CANT_GIVE)
         return;
     if (result == MON_GIVEN_TO_PC)
-        personality = GetBoxMonData(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), MON_DATA_PERSONALITY);
+    {
+        struct BoxPokemon *egg = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+        SetBoxMonData(egg, MON_DATA_FRIENDSHIP, &hatchCycles);
+        personality = GetBoxMonData(egg, MON_DATA_PERSONALITY);
+    }
     else
-        personality = GetMonData(&gPlayerParty[gPlayerPartyCount - 1], MON_DATA_PERSONALITY);
+    {
+        struct Pokemon *egg = &gPlayerParty[gPlayerPartyCount - 1];
+        SetMonData(egg, MON_DATA_FRIENDSHIP, &hatchCycles);
+        personality = GetMonData(egg, MON_DATA_PERSONALITY);
+        // Gen 3 checks Eggs every 256 steps. The next real player step now
+        // enters the existing hatch script; PID/shininess is already fixed.
+        gSaveBlock1Ptr->daycare.stepCounter = 255;
+    }
     // Conversion is committed only after the real egg has a party/PC slot.
     RemoveBagItem(ITEM_MYSTERY_EGG, 1);
     VarSet(VAR_FAMILY_EGG_SPECIES, species);

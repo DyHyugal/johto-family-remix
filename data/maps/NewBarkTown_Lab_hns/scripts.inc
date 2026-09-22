@@ -821,8 +821,8 @@ NewBarkTown_Lab_Text_ElmAfterTheft1:
 	.string "big discovery?$"
 
 NewBarkTown_Lab_Text_ElmAfterTheft2:
-	.string "{PLAYER} montre l’œuf mystérieux\n"
-	.string "au PROF. ORME et le garde.$"
+	.string "{PLAYER} handed the MYSTERY EGG\n"
+	.string "to PROF.ELM.$"
 
 NewBarkTown_Lab_Text_ElmAfterTheft3:
 	.string "ELM: This?$"
@@ -1106,8 +1106,10 @@ NewBarkTown_Lab_FamilyEggHatched::
 NewBarkTown_Lab_FamilyStarterPrompt:
 	.string "Quel partenaire souhaites-tu ?$"
 NewBarkTown_Lab_FamilyEggPrompt:
-	.string "Reconnais-tu l'espèce\n"
-	.string "de cet œuf ?$"
+	.string "Tu sembles vraiment doué\n"
+	.string "avec les POKéMON !\p"
+	.string "Si tu reconnais l'espèce de\n"
+	.string "cet œuf, tu peux le garder.$"
 NewBarkTown_Lab_FamilyEggRecognized:
 	.string "Oui, tu as raison, c'est bien\n"
 	.string "un œuf de {STR_VAR_1}.\p"

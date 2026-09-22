@@ -4,6 +4,7 @@
 #include "pokemon_storage_system.h"
 #include "event_data.h"
 #include "item.h"
+#include "daycare.h"
 #include "constants/vars.h"
 #include "constants/items.h"
 #include "constants/flags.h"
@@ -131,6 +132,8 @@ TEST("Family starter: the actual selected egg is granted exactly once")
     EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_CHARCADET);
     EXPECT(GetMonData(&gPlayerParty[1], MON_DATA_IS_EGG));
     EXPECT_EQ(VarGet(VAR_FAMILY_EGG_SPECIES), SPECIES_CHARCADET);
+    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_FRIENDSHIP), 0);
+    EXPECT_EQ(gSaveBlock1Ptr->daycare.stepCounter, 255);
     EXPECT(!CheckBagHasItem(ITEM_MYSTERY_EGG, 1));
     EXPECT(FlagGet(FLAG_RECEIVED_TOGEPI_EGG));
     FamilyStarter_HasHatchedEgg();
@@ -141,6 +144,14 @@ TEST("Family starter: the actual selected egg is granted exactly once")
     SetMonData(&gPlayerParty[1], MON_DATA_IS_EGG, &isEgg);
     FamilyStarter_HasHatchedEgg();
     EXPECT_EQ(gSpecialVar_Result, TRUE);
+}
+
+TEST("Family starter: selected party egg is ready to hatch on the next step")
+{
+    InitFamilyTest();
+    FamilyStarter_GiveEgg();
+    EXPECT(ShouldEggHatch());
+    EXPECT_EQ(gSpecialVar_0x8004, 1);
 }
 
 TEST("Family starter: party limit one sends the egg to the PC")
@@ -154,6 +165,7 @@ TEST("Family starter: party limit one sends the egg to the PC")
     egg = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
     EXPECT_EQ(GetBoxMonData(egg, MON_DATA_SPECIES), SPECIES_CHARCADET);
     EXPECT(GetBoxMonData(egg, MON_DATA_IS_EGG));
+    EXPECT_EQ(GetBoxMonData(egg, MON_DATA_FRIENDSHIP), 0);
 }
 
 TEST("Family starter: monotype restriction sends an incompatible egg to the PC")
