@@ -1415,8 +1415,13 @@ const u16 gDomeTourneyMatchCardBg_Pal[] = INCBIN_U16("graphics/battle_frontier/t
 const u32 gBattleArenaJudgmentSymbolsGfx[] = INCBIN_U32("graphics/battle_frontier/arena_judgment_symbols.4bpp.smol");
 const u16 gBattleArenaJudgmentSymbolsPalette[] = INCBIN_U16("graphics/battle_frontier/arena_judgment_symbols.gbapal");
 
+#if IS_HNS
+const u16 gBattleWindowTextPalette[] = INCBIN_U16("graphics/battle_interface/hns/text.gbapal");
+const u16 gPPTextPalette[] = INCBIN_U16("graphics/battle_interface/hns/text_pp.gbapal");
+#else
 const u16 gBattleWindowTextPalette[] = INCBIN_U16("graphics/battle_interface/text.gbapal");
 const u16 gPPTextPalette[] = INCBIN_U16("graphics/battle_interface/text_pp.gbapal");
+#endif
 
 const u16 gTilesetAnims_BattleDomePals0_0[] = INCBIN_U16("graphics/battle_frontier/dome_anim1.gbapal");
 const u16 gTilesetAnims_BattleDomePals0_1[] = INCBIN_U16("graphics/battle_frontier/dome_anim2.gbapal");

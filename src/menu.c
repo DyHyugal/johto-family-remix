@@ -75,7 +75,11 @@ static EWRAM_DATA bool8 sScheduledBgCopiesToVram[4] = {FALSE};
 static EWRAM_DATA u16 sTempTileDataBufferIdx = 0;
 static EWRAM_DATA void *sTempTileDataBuffer[0x20] = {NULL};
 
+#if IS_HNS
+const u16 gStandardMenuPalette[] = INCBIN_U16("graphics/interface/hns/std_menu.gbapal");
+#else
 const u16 gStandardMenuPalette[] = INCBIN_U16("graphics/interface/std_menu.gbapal");
+#endif
 
 static const struct WindowTemplate sStandardTextBox_WindowTemplates[] =
 {
