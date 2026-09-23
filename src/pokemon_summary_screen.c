@@ -804,6 +804,8 @@ static const u8 sText_SkillsModeButton[] = _("START");
 static const u8 sText_SkillsModeStats[] = _("STATS");
 static const u8 sText_SkillsModeIvs[] = _("IV");
 static const u8 sText_SkillsModeEvs[] = _("EV");
+static const u8 sText_HnsHeldItem[] = _("OBJET {STR_VAR_1}");
+static const u8 sText_HnsFriendship[] = _("BONHEUR {STR_VAR_1}");
 #endif
 static const u8 sMovesPPLayout[] = _("{PP}{DYNAMIC 0}/{DYNAMIC 1}");
 
@@ -4143,6 +4145,13 @@ static void PrintHeldItemName(void)
         text = gStringVar1;
     }
 
+#if IS_HNS
+    if (text != gStringVar1)
+        StringCopy(gStringVar1, text);
+    StringExpandPlaceholders(gStringVar4, sText_HnsHeldItem);
+    text = gStringVar4;
+#endif
+
     fontId = GetFontIdToFit(text, FONT_NORMAL, 0, WindowTemplateWidthPx(&sPageSkillsTemplate[PSS_DATA_WINDOW_SKILLS_HELD_ITEM]) - 8);
     x = GetStringCenterAlignXOffset(fontId, text, 72) + 6;
     PrintTextOnWindowWithFont(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_HELD_ITEM), text, x, 1, 0, 0, fontId);
@@ -4152,11 +4161,16 @@ static void PrintRibbonCount(void)
 {
 #if IS_HNS
     u32 friendship = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_FRIENDSHIP);
+    u32 fontId;
     int x;
 
     ConvertIntToDecimalStringN(gStringVar1, friendship, STR_CONV_MODE_RIGHT_ALIGN, 3);
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar1, 70) + 6;
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT), gStringVar1, x, 1, 0, 0);
+    StringExpandPlaceholders(gStringVar4, sText_HnsFriendship);
+    fontId = GetFontIdToFit(gStringVar4, FONT_NORMAL, 0,
+                            WindowTemplateWidthPx(&sPageSkillsTemplate[PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT]) - 8);
+    x = GetStringCenterAlignXOffset(fontId, gStringVar4, 72) + 6;
+    PrintTextOnWindowWithFont(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT),
+                              gStringVar4, x, 1, 0, 0, fontId);
 #else
     const u8 *text;
     int x;
