@@ -6760,6 +6760,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
     u32 gender = GetMonGender(mon);
     u32 friendship = GetMonData(mon, MON_DATA_FRIENDSHIP, 0);
+    u32 level = GetMonData(mon, MON_DATA_LEVEL, 0);
     u32 attack = GetMonData(mon, MON_DATA_ATK, 0);
     u32 defense = GetMonData(mon, MON_DATA_DEF, 0);
     u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, 0);
@@ -6809,6 +6810,10 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             break;
         case IF_MIN_FRIENDSHIP:
             if (friendship >= params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_MIN_LEVEL:
+            if (level >= params[i].arg1)
                 currentCondition = TRUE;
             break;
         case IF_ATK_GT_DEF:
