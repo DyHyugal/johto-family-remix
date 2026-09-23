@@ -1852,8 +1852,13 @@ const u16 gBattlePyramidBagInterface_Pal[] = INCBIN_U16("graphics/bag/menu_pyram
 const u32 gSwapLineGfx[] = INCBIN_U32("graphics/interface/swap_line.4bpp.smol");
 const u16 gSwapLinePal[] = INCBIN_U16("graphics/interface/swap_line.gbapal");
 
+#if IS_HNS
+const u32 gShopMenu_Gfx[] = INCBIN_U32("graphics/shop/hns/menu.4bpp.smol");
+const u16 gShopMenu_Pal[] = INCBIN_U16("graphics/shop/hns/menu.gbapal");
+#else
 const u32 gShopMenu_Gfx[] = INCBIN_U32("graphics/shop/menu.4bpp.smol");
 const u16 gShopMenu_Pal[] = INCBIN_U16("graphics/shop/menu.gbapal");
+#endif
 const u32 gShopMenu_Tilemap[] = INCBIN_U32("graphics/shop/menu.bin.smolTM");
 const u32 gShopMenuMoney_Gfx[] = INCBIN_U32("graphics/shop/money.4bpp.smol");
 const u32 gShopMenuBP_Gfx[] = INCBIN_U32("graphics/shop/bp.4bpp.smol");

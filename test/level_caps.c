@@ -42,13 +42,13 @@ static void SetLevelCapMode(u8 mode)
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap = mode;
 }
 
-TEST("Level cap: the opening rival is the first HnS milestone")
+TEST("Level cap: Falkner is the first HnS milestone")
 {
     SetLevelCapMode(1);
-    EXPECT_EQ(GetCurrentLevelCap(), 5);
+    EXPECT_EQ(GetCurrentLevelCap(), 11);
 
     SetLevelCapMode(2);
-    EXPECT_EQ(GetCurrentLevelCap(), 5);
+    EXPECT_EQ(GetCurrentLevelCap(), 8);
 }
 
 TEST("Level cap: defeating a major fight selects the next actual boss")
@@ -113,6 +113,6 @@ TEST("Level cap: EXP Training reads the live boss cap")
     TrainingNpc_ApplyExp();
 
     EXPECT_EQ(gSpecialVar_Result, TRAINING_RESULT_SUCCESS);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 5);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 11);
 }
 #endif
