@@ -22,4 +22,9 @@ u32 GetCurrentLevelCap(void);
 u32 GetSoftLevelCapExpValue(u32 level, u32 expValue);
 u32 GetCurrentEVCap(void);
 
+#if TESTING
+typedef u32 (*LevelCapTrainerLevelGetter)(u16 trainerId, bool8 useLowestLevel);
+void SetLevelCapTrainerLevelGetterForTesting(LevelCapTrainerLevelGetter getter);
+#endif
+
 #endif /* GUARD_CAPS_H */

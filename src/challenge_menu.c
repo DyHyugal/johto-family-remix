@@ -996,8 +996,8 @@ static const u8 *const sDesc_PartyLimit[] = {
 };
 static const u8 *const sDesc_LevelCap[] = {
     COMPOUND_STRING("No level cap. Overleveling possible."),
-    COMPOUND_STRING("Maximum level is based on the next\ngym's highest {PKMN} level."),
-    COMPOUND_STRING("Maximum level is based on the next\ngym's lowest {PKMN} level."),
+    COMPOUND_STRING("Maximum level is based on the next\nmajor boss's highest {PKMN} level."),
+    COMPOUND_STRING("Maximum level is based on the next\nmajor boss's lowest {PKMN} level."),
 };
 static const u8 *const sDesc_ExpMult[] = {
     COMPOUND_STRING("{PKMN} gain normal EXP. Points.\nStacks with HARD MODE EXP."),

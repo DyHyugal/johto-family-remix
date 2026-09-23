@@ -1,5 +1,7 @@
 #include "global.h"
 #include "battle.h"
+#include "battle_setup.h"
+#include "data.h"
 #include "event_data.h"
 #include "caps.h"
 #include "pokemon.h"
@@ -42,9 +44,201 @@ static const u8 sLevelCapTable_Hard[] =
     [8] = 54,
 };
 
-// Post-league caps, matching HnS: beating the Johto Elite Four raises the cap to
-// 70 for the Kanto half, and only beating the Kanto league removes it entirely.
-#define KANTO_MAX_LEVEL 70
+#if IS_HNS
+struct BossLevelCapMilestone
+{
+    u16 trainerIds[3];
+    u16 completionFlag;
+    u16 variantFlags[2];
+};
+
+#define BOSS_MILESTONE(trainerId) \
+    { .trainerIds = {trainerId} }
+#define BOSS_MILESTONE_FLAG(trainerId, flag) \
+    { .trainerIds = {trainerId}, .completionFlag = flag }
+#define BOSS_MILESTONE_VARIANTS(trainerId1, trainerId2, trainerId3) \
+    { .trainerIds = {trainerId1, trainerId2, trainerId3} }
+#define BOSS_MILESTONE_FLEXIBLE(trainerId1, trainerId2, trainerId3, flag, variantFlag1, variantFlag2) \
+    { .trainerIds = {trainerId1, trainerId2, trainerId3}, .completionFlag = flag, .variantFlags = {variantFlag1, variantFlag2} }
+
+// The order follows the mandatory HnS story. When the middle Johto gyms or
+// Kanto gyms are completed out of order, completed milestones establish a
+// floor so that the cap can never move backwards.
+static const struct BossLevelCapMilestone sJohtoBossMilestones[] =
+{
+    BOSS_MILESTONE_VARIANTS(TRAINER_RIVAL_CHIKORITA_1_HNS, TRAINER_RIVAL_CYNDAQUIL_1_HNS, TRAINER_RIVAL_TOTODILE_1_HNS),
+    BOSS_MILESTONE_FLAG(TRAINER_FALKNER_1_HNS, FLAG_DEFEATED_VIOLET_GYM),
+    BOSS_MILESTONE(TRAINER_PROTON_1_HNS),
+    BOSS_MILESTONE_VARIANTS(TRAINER_RIVAL_CHIKORITA_2_HNS, TRAINER_RIVAL_CYNDAQUIL_2_HNS, TRAINER_RIVAL_TOTODILE_2_HNS),
+    BOSS_MILESTONE_FLAG(TRAINER_BUGSY_1_HNS, FLAG_DEFEATED_AZALEA_TOWN_GYM),
+    BOSS_MILESTONE_FLAG(TRAINER_WHITNEY_1_HNS, FLAG_DEFEATED_GOLDENROD_CITY_GYM),
+    BOSS_MILESTONE_VARIANTS(TRAINER_RIVAL_CHIKORITA_3_HNS, TRAINER_RIVAL_CYNDAQUIL_3_HNS, TRAINER_RIVAL_TOTODILE_3_HNS),
+    BOSS_MILESTONE_FLAG(TRAINER_MORTY_1_HNS, FLAG_DEFEATED_ECRUTEAK_CITY_GYM),
+    BOSS_MILESTONE(TRAINER_PETREL_1_HNS),
+    BOSS_MILESTONE(TRAINER_ARIANA_1_HNS),
+    BOSS_MILESTONE_FLEXIBLE(TRAINER_CHUCK_1_HNS, TRAINER_CHUCK_1_2_HNS, TRAINER_CHUCK_1_3_HNS, FLAG_DEFEATED_CIANWOOD_GYM, FLAG_DEFEATED_OLIVINE_CITY_GYM, FLAG_DEFEATED_MAHOGANY_TOWN_GYM),
+    BOSS_MILESTONE_FLEXIBLE(TRAINER_PRYCE_1_HNS, TRAINER_PRYCE_1_2_HNS, TRAINER_PRYCE_1_3_HNS, FLAG_DEFEATED_MAHOGANY_TOWN_GYM, FLAG_DEFEATED_CIANWOOD_GYM, FLAG_DEFEATED_OLIVINE_CITY_GYM),
+    BOSS_MILESTONE_FLEXIBLE(TRAINER_JASMINE_1_HNS, TRAINER_JASMINE_1_2_HNS, TRAINER_JASMINE_1_3_HNS, FLAG_DEFEATED_OLIVINE_CITY_GYM, FLAG_DEFEATED_CIANWOOD_GYM, FLAG_DEFEATED_MAHOGANY_TOWN_GYM),
+    BOSS_MILESTONE(TRAINER_PETREL_2_HNS),
+    BOSS_MILESTONE_VARIANTS(TRAINER_RIVAL_CHIKORITA_4_HNS, TRAINER_RIVAL_CYNDAQUIL_4_HNS, TRAINER_RIVAL_TOTODILE_4_HNS),
+    BOSS_MILESTONE(TRAINER_PROTON_2_HNS),
+    BOSS_MILESTONE(TRAINER_ARIANA_2_HNS),
+    BOSS_MILESTONE(TRAINER_ARCHER_HNS),
+    BOSS_MILESTONE_FLAG(TRAINER_CLAIR_1_HNS, FLAG_DEFEATED_BLACKTHORN_GYM),
+    BOSS_MILESTONE_VARIANTS(TRAINER_RIVAL_CHIKORITA_5_HNS, TRAINER_RIVAL_CYNDAQUIL_5_HNS, TRAINER_RIVAL_TOTODILE_5_HNS),
+    BOSS_MILESTONE(TRAINER_WILL_1_HNS),
+    BOSS_MILESTONE(TRAINER_KOGA_1_HNS),
+    BOSS_MILESTONE(TRAINER_BRUNO_1_HNS),
+    BOSS_MILESTONE(TRAINER_KAREN_1_HNS),
+    BOSS_MILESTONE(TRAINER_LANCE_1_HNS),
+};
+
+static const struct BossLevelCapMilestone sKantoBossMilestones[] =
+{
+    BOSS_MILESTONE_FLAG(TRAINER_LTSURGE_HNS, FLAG_DEFEATED_VERMILION_GYM),
+    BOSS_MILESTONE_FLAG(TRAINER_ERIKA_HNS, FLAG_DEFEATED_CELADON_GYM),
+    BOSS_MILESTONE_FLAG(TRAINER_MISTY_HNS, FLAG_DEFEATED_CERULEAN_GYM),
+    BOSS_MILESTONE_VARIANTS(TRAINER_RIVAL_CHIKORITA_6_HNS, TRAINER_RIVAL_CYNDAQUIL_6_HNS, TRAINER_RIVAL_TOTODILE_6_HNS),
+    BOSS_MILESTONE_FLAG(TRAINER_JANINE_HNS, FLAG_DEFEATED_FUCHSIA_GYM),
+    BOSS_MILESTONE_FLAG(TRAINER_SABRINA_HNS, FLAG_DEFEATED_SAFFRON_GYM),
+    BOSS_MILESTONE_FLAG(TRAINER_BROCK_HNS, FLAG_DEFEATED_PEWTER_GYM),
+    BOSS_MILESTONE_FLAG(TRAINER_BLAINE_HNS, FLAG_DEFEATED_CINNABAR_ISLAND_GYM),
+    BOSS_MILESTONE_FLAG(TRAINER_BLUE_HNS, FLAG_DEFEATED_VIRIDIAN_GYM),
+    BOSS_MILESTONE(TRAINER_WILL_2_HNS),
+    BOSS_MILESTONE(TRAINER_KOGA_2_HNS),
+    BOSS_MILESTONE(TRAINER_BRUNO_2_HNS),
+    BOSS_MILESTONE(TRAINER_KAREN_2_HNS),
+    BOSS_MILESTONE(TRAINER_LANCE_2_HNS),
+};
+
+#if TESTING
+static LevelCapTrainerLevelGetter sLevelCapTrainerLevelGetter;
+
+void SetLevelCapTrainerLevelGetterForTesting(LevelCapTrainerLevelGetter getter)
+{
+    sLevelCapTrainerLevelGetter = getter;
+}
+#endif
+
+static u32 GetTrainerLevelCap(u16 trainerId, bool8 useLowestLevel)
+{
+    const struct Trainer *trainer;
+    const struct TrainerMon *party;
+    u32 levelCap = useLowestLevel ? MAX_LEVEL : 0;
+    u32 i;
+
+#if TESTING
+    if (sLevelCapTrainerLevelGetter != NULL)
+        return sLevelCapTrainerLevelGetter(trainerId, useLowestLevel);
+#endif
+
+    trainerId = SanitizeTrainerId(trainerId);
+    trainer = &gTrainers[GetTrainerDifficultyLevel(trainerId)][trainerId];
+    party = trainer->party;
+    if (party == NULL || trainer->partySize == 0)
+        return 0;
+
+    for (i = 0; i < trainer->partySize; i++)
+    {
+        if ((!useLowestLevel && party[i].lvl > levelCap)
+         || (useLowestLevel && party[i].lvl < levelCap))
+            levelCap = party[i].lvl;
+    }
+
+    return levelCap;
+}
+
+static u16 GetMilestoneTrainerId(const struct BossLevelCapMilestone *milestone)
+{
+    if (milestone->variantFlags[0] != 0)
+    {
+        u32 variant = FlagGet(milestone->variantFlags[0]) + FlagGet(milestone->variantFlags[1]);
+        return milestone->trainerIds[variant];
+    }
+
+    return milestone->trainerIds[0];
+}
+
+static u32 GetMilestoneLevelCap(const struct BossLevelCapMilestone *milestone, bool8 useLowestLevel)
+{
+    u32 levelCap = 0;
+    u32 i;
+
+    if (milestone->variantFlags[0] != 0)
+        return GetTrainerLevelCap(GetMilestoneTrainerId(milestone), useLowestLevel);
+
+    for (i = 0; i < ARRAY_COUNT(milestone->trainerIds); i++)
+    {
+        u32 trainerCap;
+
+        if (milestone->trainerIds[i] == 0)
+            break;
+        trainerCap = GetTrainerLevelCap(milestone->trainerIds[i], useLowestLevel);
+        if (trainerCap > levelCap)
+            levelCap = trainerCap;
+    }
+
+    return levelCap;
+}
+
+static bool32 IsMilestoneComplete(const struct BossLevelCapMilestone *milestone)
+{
+    u32 i;
+
+    if (milestone->completionFlag != 0 && FlagGet(milestone->completionFlag))
+        return TRUE;
+
+    for (i = 0; i < ARRAY_COUNT(milestone->trainerIds); i++)
+    {
+        if (milestone->trainerIds[i] == 0)
+            break;
+        if (HasTrainerBeenFought(milestone->trainerIds[i]))
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+static u32 GetBossProgressionLevelCap(const struct BossLevelCapMilestone *milestones, u32 count, bool8 useLowestLevel)
+{
+    u32 nextBossCap = 0;
+    u32 progressionFloor = 0;
+    u32 i;
+
+    for (i = 0; i < count; i++)
+    {
+        u32 milestoneCap = GetMilestoneLevelCap(&milestones[i], useLowestLevel);
+
+        if (IsMilestoneComplete(&milestones[i]))
+        {
+            if (milestoneCap > progressionFloor)
+                progressionFloor = milestoneCap;
+        }
+        else if (nextBossCap == 0)
+        {
+            nextBossCap = milestoneCap;
+        }
+    }
+
+    return max(nextBossCap, progressionFloor);
+}
+
+static u32 GetHnsLevelCap(u8 challengeLevelCap)
+{
+    bool8 useLowestLevel = challengeLevelCap == 2;
+
+    if (!FlagGet(FLAG_IS_CHAMPION))
+        return GetBossProgressionLevelCap(sJohtoBossMilestones, ARRAY_COUNT(sJohtoBossMilestones), useLowestLevel);
+
+    if (!FlagGet(FLAG_IS_KANTO_CHAMPION))
+        return GetBossProgressionLevelCap(sKantoBossMilestones, ARRAY_COUNT(sKantoBossMilestones), useLowestLevel);
+
+    if (!FlagGet(FLAG_DEFEATED_RED))
+        return GetTrainerLevelCap(TRAINER_RED_HNS, useLowestLevel);
+
+    return MAX_LEVEL;
+}
+#endif
 
 u32 GetCurrentLevelCap(void)
 {
@@ -70,11 +264,7 @@ u32 GetCurrentLevelCap(void)
             badgeCount = 8;
 
 #if IS_HNS
-        if (FlagGet(FLAG_IS_KANTO_CHAMPION))
-            return MAX_LEVEL;
-
-        if (FlagGet(FLAG_IS_CHAMPION))
-            return KANTO_MAX_LEVEL;
+        return GetHnsLevelCap(challengeLevelCap);
 #else
         if (FlagGet(FLAG_IS_CHAMPION))
             return MAX_LEVEL;
