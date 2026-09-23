@@ -1540,6 +1540,13 @@ static u8 sHnsMoveSelectionCursor;
 #define BATTLE_MOVE_MENU_SHADOW         12
 #define BATTLE_MOVE_PP_FOREGROUND       1
 #define BATTLE_MOVE_PP_SHADOW           12
+#define BATTLE_SECONDARY_FILL           PIXEL_FILL(0)
+#define BATTLE_SECONDARY_FOREGROUND     1
+#define BATTLE_SECONDARY_BACKGROUND     0
+#define BATTLE_SECONDARY_SHADOW         12
+#define BATTLE_DESCRIPTION_FOREGROUND   1
+#define BATTLE_DESCRIPTION_BACKGROUND   0
+#define BATTLE_DESCRIPTION_SHADOW       12
 #else
 #define BATTLE_ACTION_PROMPT_FILL       PIXEL_FILL(0xF)
 #define BATTLE_ACTION_PROMPT_BACKGROUND 15
@@ -1554,6 +1561,13 @@ static u8 sHnsMoveSelectionCursor;
 #define BATTLE_MOVE_MENU_SHADOW         15
 #define BATTLE_MOVE_PP_FOREGROUND       (B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 13 : 12)
 #define BATTLE_MOVE_PP_SHADOW           (B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 15 : 11)
+#define BATTLE_SECONDARY_FILL           PIXEL_FILL(0xE)
+#define BATTLE_SECONDARY_FOREGROUND     13
+#define BATTLE_SECONDARY_BACKGROUND     14
+#define BATTLE_SECONDARY_SHADOW         15
+#define BATTLE_DESCRIPTION_FOREGROUND   TEXT_DYNAMIC_COLOR_4
+#define BATTLE_DESCRIPTION_BACKGROUND   TEXT_DYNAMIC_COLOR_5
+#define BATTLE_DESCRIPTION_SHADOW       TEXT_DYNAMIC_COLOR_6
 #endif
 
 static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
@@ -1680,37 +1694,37 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_SWITCH_PROMPT] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_SECONDARY_FOREGROUND,
+        .color.background = BATTLE_SECONDARY_BACKGROUND,
+        .color.accent = BATTLE_SECONDARY_BACKGROUND,
+        .color.shadow = BATTLE_SECONDARY_SHADOW,
     },
     [B_WIN_YESNO] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NORMAL,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_SECONDARY_FOREGROUND,
+        .color.background = BATTLE_SECONDARY_BACKGROUND,
+        .color.accent = BATTLE_SECONDARY_BACKGROUND,
+        .color.shadow = BATTLE_SECONDARY_SHADOW,
     },
     [B_WIN_LEVEL_UP_BOX] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NORMAL,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_SECONDARY_FOREGROUND,
+        .color.background = BATTLE_SECONDARY_BACKGROUND,
+        .color.accent = BATTLE_SECONDARY_BACKGROUND,
+        .color.shadow = BATTLE_SECONDARY_SHADOW,
     },
     [B_WIN_LEVEL_UP_BANNER] = {
         .fillValue = PIXEL_FILL(0),
@@ -1815,17 +1829,17 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .color.shadow = 6,
     },
     [B_WIN_MOVE_DESCRIPTION] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .letterSpacing = 0,
         .lineSpacing = 0,
         .speed = 0,
-        .color.foreground = TEXT_DYNAMIC_COLOR_4,
-        .color.background = TEXT_DYNAMIC_COLOR_5,
-        .color.accent = TEXT_DYNAMIC_COLOR_5,
-        .color.shadow = TEXT_DYNAMIC_COLOR_6,
+        .color.foreground = BATTLE_DESCRIPTION_FOREGROUND,
+        .color.background = BATTLE_DESCRIPTION_BACKGROUND,
+        .color.accent = BATTLE_DESCRIPTION_BACKGROUND,
+        .color.shadow = BATTLE_DESCRIPTION_SHADOW,
     },
 };
 
@@ -1953,37 +1967,37 @@ static const struct BattleWindowText sTextOnWindowsInfo_KantoTutorial[] =
         .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_SWITCH_PROMPT] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_SECONDARY_FOREGROUND,
+        .color.background = BATTLE_SECONDARY_BACKGROUND,
+        .color.accent = BATTLE_SECONDARY_BACKGROUND,
+        .color.shadow = BATTLE_SECONDARY_SHADOW,
     },
     [B_WIN_YESNO] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NORMAL,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_SECONDARY_FOREGROUND,
+        .color.background = BATTLE_SECONDARY_BACKGROUND,
+        .color.accent = BATTLE_SECONDARY_BACKGROUND,
+        .color.shadow = BATTLE_SECONDARY_SHADOW,
     },
     [B_WIN_LEVEL_UP_BOX] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NORMAL,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_SECONDARY_FOREGROUND,
+        .color.background = BATTLE_SECONDARY_BACKGROUND,
+        .color.accent = BATTLE_SECONDARY_BACKGROUND,
+        .color.shadow = BATTLE_SECONDARY_SHADOW,
     },
     [B_WIN_LEVEL_UP_BANNER] = {
         .fillValue = PIXEL_FILL(0),
@@ -2088,17 +2102,17 @@ static const struct BattleWindowText sTextOnWindowsInfo_KantoTutorial[] =
         .color.shadow = 6,
     },
     [B_WIN_MOVE_DESCRIPTION] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .letterSpacing = 0,
         .lineSpacing = 0,
         .speed = 0,
-        .color.foreground = TEXT_DYNAMIC_COLOR_4,
-        .color.background = TEXT_DYNAMIC_COLOR_5,
-        .color.accent = TEXT_DYNAMIC_COLOR_5,
-        .color.shadow = TEXT_DYNAMIC_COLOR_6,
+        .color.foreground = BATTLE_DESCRIPTION_FOREGROUND,
+        .color.background = BATTLE_DESCRIPTION_BACKGROUND,
+        .color.accent = BATTLE_DESCRIPTION_BACKGROUND,
+        .color.shadow = BATTLE_DESCRIPTION_SHADOW,
     },
     [B_WIN_OAK_OLD_MAN] = {
         .fillValue = PIXEL_FILL(0x1),
@@ -2238,37 +2252,37 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_SWITCH_PROMPT] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_SECONDARY_FOREGROUND,
+        .color.background = BATTLE_SECONDARY_BACKGROUND,
+        .color.accent = BATTLE_SECONDARY_BACKGROUND,
+        .color.shadow = BATTLE_SECONDARY_SHADOW,
     },
     [B_WIN_YESNO] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NORMAL,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_SECONDARY_FOREGROUND,
+        .color.background = BATTLE_SECONDARY_BACKGROUND,
+        .color.accent = BATTLE_SECONDARY_BACKGROUND,
+        .color.shadow = BATTLE_SECONDARY_SHADOW,
     },
     [B_WIN_LEVEL_UP_BOX] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NORMAL,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_SECONDARY_FOREGROUND,
+        .color.background = BATTLE_SECONDARY_BACKGROUND,
+        .color.accent = BATTLE_SECONDARY_BACKGROUND,
+        .color.shadow = BATTLE_SECONDARY_SHADOW,
     },
     [B_WIN_LEVEL_UP_BANNER] = {
         .fillValue = PIXEL_FILL(0),
@@ -2368,17 +2382,17 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .color.shadow = 3,
     },
     [B_WIN_MOVE_DESCRIPTION] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_SECONDARY_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .letterSpacing = 0,
         .lineSpacing = 0,
         .speed = 0,
-        .color.foreground = TEXT_DYNAMIC_COLOR_4,
-        .color.background = TEXT_DYNAMIC_COLOR_5,
-        .color.accent = TEXT_DYNAMIC_COLOR_5,
-        .color.shadow = TEXT_DYNAMIC_COLOR_6,
+        .color.foreground = BATTLE_DESCRIPTION_FOREGROUND,
+        .color.background = BATTLE_DESCRIPTION_BACKGROUND,
+        .color.accent = BATTLE_DESCRIPTION_BACKGROUND,
+        .color.shadow = BATTLE_DESCRIPTION_SHADOW,
     },
 };
 
