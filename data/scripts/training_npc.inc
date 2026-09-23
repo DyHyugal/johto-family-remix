@@ -4,13 +4,14 @@ TrainingNpc_EventScript::
 	msgbox TrainingNpc_Text_Welcome, MSGBOX_DEFAULT
 TrainingNpc_MainMenu:
 	closemessage
-	dynmultichoice 1, 1, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, TrainingNpc_Text_IV, TrainingNpc_Text_EV, TrainingNpc_Text_Friendship, TrainingNpc_Text_Nature, TrainingNpc_Text_Ability, TrainingNpc_Text_Quit
+	dynmultichoice 1, 1, FALSE, 7, 0, DYN_MULTICHOICE_CB_NONE, TrainingNpc_Text_IV, TrainingNpc_Text_EV, TrainingNpc_Text_EXP, TrainingNpc_Text_Friendship, TrainingNpc_Text_Nature, TrainingNpc_Text_Ability, TrainingNpc_Text_Quit
 	switch VAR_RESULT
 	case 0, TrainingNpc_IV
 	case 1, TrainingNpc_EV
-	case 2, TrainingNpc_Friendship
-	case 3, TrainingNpc_Nature
-	case 4, TrainingNpc_Ability
+	case 2, TrainingNpc_EXP
+	case 3, TrainingNpc_Friendship
+	case 4, TrainingNpc_Nature
+	case 5, TrainingNpc_Ability
 	goto TrainingNpc_Exit
 
 TrainingNpc_ChooseMon:
@@ -61,6 +62,20 @@ TrainingNpc_EV:
 	msgbox TrainingNpc_Text_EVDone, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
 
+TrainingNpc_EXP:
+	call TrainingNpc_ChooseMon
+	goto_if_eq VAR_RESULT, FALSE, TrainingNpc_MainMenu
+	msgbox TrainingNpc_Text_ChooseExp, MSGBOX_DEFAULT
+	closemessage
+	dynmultichoice 1, 1, FALSE, 3, 0, DYN_MULTICHOICE_CB_NONE, TrainingNpc_Text_AddLevel1, TrainingNpc_Text_AddLevel10, TrainingNpc_Text_ToLevelCap, TrainingNpc_Text_Back
+	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, TrainingNpc_MainMenu
+	goto_if_eq VAR_RESULT, 3, TrainingNpc_MainMenu
+	copyvar VAR_0x8005, VAR_RESULT
+	callnative TrainingNpc_ApplyExp
+	goto_if_eq VAR_RESULT, 2, TrainingNpc_EXPAtCap
+	msgbox TrainingNpc_Text_EXPDone, MSGBOX_DEFAULT
+	goto TrainingNpc_MainMenu
+
 TrainingNpc_Friendship:
 	call TrainingNpc_ChooseMon
 	goto_if_eq VAR_RESULT, FALSE, TrainingNpc_MainMenu
@@ -109,6 +124,9 @@ TrainingNpc_AlreadyOptimized:
 TrainingNpc_EVAtCap:
 	msgbox TrainingNpc_Text_EVAtCap, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
+TrainingNpc_EXPAtCap:
+	msgbox TrainingNpc_Text_EXPAtCap, MSGBOX_DEFAULT
+	goto TrainingNpc_MainMenu
 TrainingNpc_NotEnoughMoney:
 	msgbox TrainingNpc_Text_NotEnoughMoney, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
@@ -123,6 +141,8 @@ TrainingNpc_Text_IV:
 	.string "IV$"
 TrainingNpc_Text_EV:
 	.string "EV$"
+TrainingNpc_Text_EXP:
+	.string "EXP$"
 TrainingNpc_Text_Friendship:
 	.string "Bonheur$"
 TrainingNpc_Text_Nature:
@@ -159,10 +179,18 @@ TrainingNpc_Text_ResetStat:
 	.string "RESET STAT$"
 TrainingNpc_Text_ResetAll:
 	.string "RESET ALL EVs$"
+TrainingNpc_Text_AddLevel1:
+	.string "+1 niveau$"
+TrainingNpc_Text_AddLevel10:
+	.string "+10 niveaux$"
+TrainingNpc_Text_ToLevelCap:
+	.string "Niveau plafond$"
 TrainingNpc_Text_ChooseStat:
 	.string "Quelle statistique ?$"
 TrainingNpc_Text_ChooseAction:
 	.string "Quelle action ?$"
+TrainingNpc_Text_ChooseExp:
+	.string "Combien de niveaux ?$"
 TrainingNpc_Text_ChooseNature:
 	.string "Choisis la nouvelle Nature.$"
 TrainingNpc_Text_ChooseAbility:
@@ -173,6 +201,8 @@ TrainingNpc_Text_IVDone:
 	.string "Les IV sélectionnés sont maintenant\nau maximum : 31 !$"
 TrainingNpc_Text_EVDone:
 	.string "Les EV ont été modifiés dans les\nlimites légales.$"
+TrainingNpc_Text_EXPDone:
+	.string "Ce Pokémon atteint maintenant le\nniveau {STR_VAR_1} !$"
 TrainingNpc_Text_FriendshipDone:
 	.string "Son Bonheur est maintenant au\nmaximum !$"
 TrainingNpc_Text_NatureDone:
@@ -183,6 +213,8 @@ TrainingNpc_Text_AlreadyOptimized:
 	.string "Ce Pokémon possède déjà ce réglage.$"
 TrainingNpc_Text_EVAtCap:
 	.string "Impossible : cette statistique ou le\ntotal des EV est déjà au maximum.$"
+TrainingNpc_Text_EXPAtCap:
+	.string "Ce Pokémon a déjà atteint le\nniveau plafond actuel.$"
 TrainingNpc_Text_NotEnoughMoney:
 	.string "Il faut 5 000 ¥ pour changer de\nNature.$"
 TrainingNpc_Text_NoEggs:

@@ -26,6 +26,13 @@ enum TrainingEVAction
     TRAINING_EV_RESET_ALL,
 };
 
+enum TrainingExpAction
+{
+    TRAINING_EXP_ADD_1,
+    TRAINING_EXP_ADD_10,
+    TRAINING_EXP_TO_CAP,
+};
+
 enum TrainingResult
 {
     TRAINING_RESULT_INVALID,
@@ -36,6 +43,7 @@ enum TrainingResult
 
 enum TrainingResult TrainingNpc_MaxIV(struct Pokemon *mon, u32 stat);
 enum TrainingResult TrainingNpc_ChangeEV(struct Pokemon *mon, u32 stat, u32 action);
+enum TrainingResult TrainingNpc_ChangeExp(struct Pokemon *mon, u32 action, u32 levelCap);
 enum TrainingResult TrainingNpc_MaxFriendship(struct Pokemon *mon);
 enum TrainingResult TrainingNpc_ChangeNature(struct Pokemon *mon, u32 nature, u32 *money);
 enum TrainingResult TrainingNpc_ChangeAbility(struct Pokemon *mon, u32 abilityNum);
@@ -43,6 +51,7 @@ bool32 TrainingNpc_IsAbilityAvailable(struct Pokemon *mon, u32 abilityNum);
 
 void TrainingNpc_ApplyIV(void);
 void TrainingNpc_ApplyEV(void);
+void TrainingNpc_ApplyExp(void);
 void TrainingNpc_ApplyFriendship(void);
 void TrainingNpc_BuildNatureMenu(void);
 void TrainingNpc_BufferNatureName(void);

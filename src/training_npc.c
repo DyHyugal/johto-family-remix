@@ -1,5 +1,6 @@
 #include "global.h"
 #include "training_npc.h"
+#include "caps.h"
 #include "event_data.h"
 #include "malloc.h"
 #include "money.h"
@@ -142,6 +143,42 @@ enum TrainingResult TrainingNpc_ChangeEV(struct Pokemon *mon, u32 stat, u32 acti
     return TRAINING_RESULT_SUCCESS;
 }
 
+enum TrainingResult TrainingNpc_ChangeExp(struct Pokemon *mon, u32 action, u32 levelCap)
+{
+    u32 species = GetMonData(mon, MON_DATA_SPECIES);
+    u32 currentLevel = GetMonData(mon, MON_DATA_LEVEL);
+    u32 targetLevel;
+    u32 exp;
+
+    if (action > TRAINING_EXP_TO_CAP || levelCap == 0)
+        return TRAINING_RESULT_INVALID;
+
+    levelCap = min(levelCap, MAX_LEVEL);
+    if (currentLevel >= levelCap)
+        return TRAINING_RESULT_NO_CHANGE;
+
+    switch (action)
+    {
+    case TRAINING_EXP_ADD_1:
+        targetLevel = currentLevel + 1;
+        break;
+    case TRAINING_EXP_ADD_10:
+        targetLevel = currentLevel + 10;
+        break;
+    case TRAINING_EXP_TO_CAP:
+        targetLevel = levelCap;
+        break;
+    default:
+        return TRAINING_RESULT_INVALID;
+    }
+
+    targetLevel = min(targetLevel, levelCap);
+    exp = gExperienceTables[gSpeciesInfo[species].growthRate][targetLevel];
+    SetMonData(mon, MON_DATA_EXP, &exp);
+    CalculateMonStats(mon);
+    return TRAINING_RESULT_SUCCESS;
+}
+
 enum TrainingResult TrainingNpc_MaxFriendship(struct Pokemon *mon)
 {
     u8 value = MAX_FRIENDSHIP;
@@ -206,6 +243,15 @@ void TrainingNpc_ApplyEV(void)
     gSpecialVar_Result = IsSelectedMonValid()
         ? TrainingNpc_ChangeEV(&gPlayerParty[gSpecialVar_0x8004], gSpecialVar_0x8005, gSpecialVar_0x8006)
         : TRAINING_RESULT_INVALID;
+}
+
+void TrainingNpc_ApplyExp(void)
+{
+    gSpecialVar_Result = IsSelectedMonValid()
+        ? TrainingNpc_ChangeExp(&gPlayerParty[gSpecialVar_0x8004], gSpecialVar_0x8005, GetCurrentLevelCap())
+        : TRAINING_RESULT_INVALID;
+    if (gSpecialVar_Result == TRAINING_RESULT_SUCCESS)
+        ConvertIntToDecimalStringN(gStringVar1, GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_LEVEL), STR_CONV_MODE_LEFT_ALIGN, 3);
 }
 
 void TrainingNpc_ApplyFriendship(void)

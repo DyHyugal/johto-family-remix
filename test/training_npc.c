@@ -70,6 +70,24 @@ TEST("Training NPC: EV reset clears one stat or the full spread")
         EXPECT_EQ(GetMonData(&mon, MON_DATA_HP_EV + i), 0);
 }
 
+TEST("Training NPC: EXP service obeys increments and the current level cap")
+{
+    struct Pokemon mon;
+
+    InitTrainingMon(&mon);
+    EXPECT_EQ(TrainingNpc_ChangeExp(&mon, TRAINING_EXP_ADD_1, 25), TRAINING_RESULT_SUCCESS);
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_LEVEL), 21);
+    EXPECT_EQ(TrainingNpc_ChangeExp(&mon, TRAINING_EXP_ADD_10, 25), TRAINING_RESULT_SUCCESS);
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_LEVEL), 25);
+    EXPECT_EQ(TrainingNpc_ChangeExp(&mon, TRAINING_EXP_TO_CAP, 25), TRAINING_RESULT_NO_CHANGE);
+
+    InitTrainingMon(&mon);
+    EXPECT_EQ(TrainingNpc_ChangeExp(&mon, TRAINING_EXP_TO_CAP, 1000), TRAINING_RESULT_SUCCESS);
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_LEVEL), MAX_LEVEL);
+    EXPECT_EQ(TrainingNpc_ChangeExp(&mon, TRAINING_EXP_ADD_1, MAX_LEVEL), TRAINING_RESULT_NO_CHANGE);
+    EXPECT_EQ(TrainingNpc_ChangeExp(&mon, TRAINING_EXP_TO_CAP + 1, 25), TRAINING_RESULT_INVALID);
+}
+
 TEST("Training NPC: friendship reaches the native maximum only")
 {
     struct Pokemon mon;
