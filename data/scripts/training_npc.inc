@@ -67,7 +67,7 @@ TrainingNpc_EXP:
 	goto_if_eq VAR_RESULT, FALSE, TrainingNpc_MainMenu
 	msgbox TrainingNpc_Text_ChooseExp, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 3, 0, DYN_MULTICHOICE_CB_NONE, TrainingNpc_Text_AddLevel1, TrainingNpc_Text_AddLevel10, TrainingNpc_Text_ToLevelCap, TrainingNpc_Text_Back
+	dynmultichoice 1, 1, FALSE, 4, 0, DYN_MULTICHOICE_CB_NONE, TrainingNpc_Text_AddLevel1, TrainingNpc_Text_AddLevel10, TrainingNpc_Text_ToLevelCap, TrainingNpc_Text_Back
 	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, TrainingNpc_MainMenu
 	goto_if_eq VAR_RESULT, 3, TrainingNpc_MainMenu
 	copyvar VAR_0x8005, VAR_RESULT
