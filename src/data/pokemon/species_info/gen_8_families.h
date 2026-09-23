@@ -6323,9 +6323,9 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     [SPECIES_DRACOVISH] =
     {
         .baseHP        = 90,
-        .baseAttack    = 90,
+        .baseAttack    = 100,
         .baseDefense   = 100,
-        .baseSpeed     = 75,
+        .baseSpeed     = 95,
         .baseSpAttack  = 70,
         .baseSpDefense = 80,
         .types = MON_TYPES(TYPE_WATER, TYPE_DRAGON),
