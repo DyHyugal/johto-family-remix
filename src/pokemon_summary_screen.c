@@ -337,6 +337,7 @@ static void BufferLeftColumnIvEvStats(void);
 static void ShowUtilityPrompt(s16 mode);
 static void ShowMonSkillsInfo(u8 taskId, s16 mode);
 static void PrintSkillsModeTabs(void);
+static void DrawSkillsModeBars(void);
 void ExtractMonSkillStatsData(struct Pokemon *mon, struct PokeSummary *sum);
 void ExtractMonSkillIvData(struct Pokemon *mon, struct PokeSummary *sum);
 void ExtractMonSkillEvData(struct Pokemon *mon, struct PokeSummary *sum);
@@ -2044,6 +2045,7 @@ static void ShowMonSkillsInfo(u8 taskId, s16 mode)
     BufferRightColumnStats();
     PrintRightColumnStats();
     PrintSkillsModeTabs();
+    DrawSkillsModeBars();
     gTasks[taskId].func = Task_HandleInput;
 }
 
@@ -2061,6 +2063,55 @@ static void PrintSkillsModeTabs(void)
     PrintTextOnWindow(windowId, sText_SkillsModeEvs, 113, 1, 0,
                       sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_EVS ? 2 : 1);
     CopyWindowToVram(windowId, COPYWIN_FULL);
+#endif
+}
+
+
+static void DrawSkillsModeBars(void)
+{
+#if IS_HNS
+    static const u8 sBarY[] = {14, 30, 46};
+    const struct PokeSummary *sum = &sMonSummaryScreen->summary;
+    const u16 stats[][3] =
+    {
+        {sum->currentHP, sum->atk, sum->def},
+        {sum->spatk, sum->spdef, sum->speed},
+    };
+    const u8 windowIds[] =
+    {
+        PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT,
+        PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT,
+    };
+    const u8 barWidths[] = {42, 34};
+    const u8 barX[] = {3, 2};
+    u32 maxValue;
+    u32 column;
+    u32 stat;
+
+    if (sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_IVS)
+        maxValue = MAX_PER_STAT_IVS;
+    else if (sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_EVS)
+        maxValue = MAX_PER_STAT_EVS;
+    else
+        maxValue = 0;
+
+    for (column = 0; column < ARRAY_COUNT(windowIds); column++)
+    {
+        for (stat = 0; stat < ARRAY_COUNT(sBarY); stat++)
+        {
+            u32 filledWidth = 0;
+
+            FillWindowPixelRect(windowIds[column], PIXEL_FILL(0), barX[column], sBarY[stat], barWidths[column], 2);
+            if (maxValue != 0)
+            {
+                filledWidth = (min(stats[column][stat], maxValue) * barWidths[column] + maxValue - 1) / maxValue;
+                FillWindowPixelRect(windowIds[column], PIXEL_FILL(2), barX[column], sBarY[stat], barWidths[column], 2);
+                if (filledWidth != 0)
+                    FillWindowPixelRect(windowIds[column], PIXEL_FILL(5), barX[column], sBarY[stat], filledWidth, 2);
+            }
+        }
+        CopyWindowToVram(windowIds[column], COPYWIN_GFX);
+    }
 #endif
 }
 
@@ -3578,6 +3629,7 @@ static void PrintPageNamesAndStats(void)
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP, gText_NextLv, 6, 17, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS, gText_Status, 2, 1, 0, 1);
     PrintSkillsModeTabs();
+    DrawSkillsModeBars();
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, gText_Power, 0, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, gText_Accuracy2, 0, 17, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM, gText_Appeal, 0, 1, 0, 1);
