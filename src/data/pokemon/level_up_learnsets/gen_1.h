@@ -77,6 +77,7 @@ static const struct LevelUpMove sCharmeleonLevelUpLearnset[] = {
 };
 
 static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 0, MOVE_DRAGON_PULSE),
     LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
     LEVEL_UP_MOVE( 1, MOVE_GROWL),
     LEVEL_UP_MOVE( 1, MOVE_EMBER),
@@ -2633,6 +2634,7 @@ static const struct LevelUpMove sElekidLevelUpLearnset[] = {
 #endif //P_GEN_2_CROSS_EVOS
 
 static const struct LevelUpMove sElectabuzzLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 0, MOVE_BRICK_BREAK),
     LEVEL_UP_MOVE( 1, MOVE_QUICK_ATTACK),
     LEVEL_UP_MOVE( 1, MOVE_LEER),
     LEVEL_UP_MOVE(34, MOVE_THUNDER_SHOCK),
