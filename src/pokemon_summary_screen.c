@@ -64,7 +64,7 @@
 #define PSS_LABEL_WINDOW_PROMPT_UTILITY 4
 #define PSS_LABEL_WINDOW_PROMPT_INFO 5 // unused
 #define PSS_LABEL_WINDOW_PROMPT_SWITCH 6 // unused
-#define PSS_LABEL_WINDOW_UNUSED1 7
+#define PSS_LABEL_WINDOW_SKILLS_MODE 7
 
 // Info screen
 #define PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL 8
@@ -336,6 +336,7 @@ static bool32 ShouldShowMoveRelearner(void);
 static void BufferLeftColumnIvEvStats(void);
 static void ShowUtilityPrompt(s16 mode);
 static void ShowMonSkillsInfo(u8 taskId, s16 mode);
+static void PrintSkillsModeTabs(void);
 void ExtractMonSkillStatsData(struct Pokemon *mon, struct PokeSummary *sum);
 void ExtractMonSkillIvData(struct Pokemon *mon, struct PokeSummary *sum);
 void ExtractMonSkillEvData(struct Pokemon *mon, struct PokeSummary *sum);
@@ -501,14 +502,23 @@ static const struct WindowTemplate sSummaryTemplate[] =
         .paletteNum = 7,
         .baseBlock = 121,
     },
-    [PSS_LABEL_WINDOW_UNUSED1] = {
+    [PSS_LABEL_WINDOW_SKILLS_MODE] = {
         .bg = 0,
+#if IS_HNS
+        .tilemapLeft = 11,
+        .tilemapTop = 2,
+        .width = 18,
+        .height = 2,
+        .paletteNum = 6,
+        .baseBlock = 760,
+#else
         .tilemapLeft = 11,
         .tilemapTop = 4,
         .width = 0,
         .height = 2,
         .paletteNum = 6,
         .baseBlock = 137,
+#endif
     },
     [PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL] = {
         .bg = 0,
@@ -788,6 +798,12 @@ static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // 
 static const u8 sStatsLeftColumnLayout[] = _("{DYNAMIC 0}/{DYNAMIC 1}\n{DYNAMIC 2}\n{DYNAMIC 3}");
 static const u8 sStatsLeftIVEVColumnLayout[] = _("{DYNAMIC 0}\n{DYNAMIC 1}\n{DYNAMIC 2}");
 static const u8 sStatsRightColumnLayout[] = _("{DYNAMIC 0}\n{DYNAMIC 1}\n{DYNAMIC 2}");
+#if IS_HNS
+static const u8 sText_SkillsModeButton[] = _("START");
+static const u8 sText_SkillsModeStats[] = _("STATS");
+static const u8 sText_SkillsModeIvs[] = _("IV");
+static const u8 sText_SkillsModeEvs[] = _("EV");
+#endif
 static const u8 sMovesPPLayout[] = _("{PP}{DYNAMIC 0}/{DYNAMIC 1}");
 
 #define TAG_MOVE_SELECTOR 30000
@@ -1968,8 +1984,14 @@ static void Task_HandleInput(u8 taskId)
         {
             if (sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
             {
-                ShowMonSkillsInfo(taskId, SUMMARY_SKILLS_MODE_STATS);
+#if IS_HNS
+                sMonSummaryScreen->skillsPageMode++;
+                if (sMonSummaryScreen->skillsPageMode > SUMMARY_SKILLS_MODE_EVS)
+                    sMonSummaryScreen->skillsPageMode = SUMMARY_SKILLS_MODE_STATS;
+#else
                 sMonSummaryScreen->skillsPageMode = SUMMARY_SKILLS_MODE_STATS;
+#endif
+                ShowMonSkillsInfo(taskId, sMonSummaryScreen->skillsPageMode);
                 PlaySE(SE_SELECT);
             }
         }
@@ -1978,7 +2000,6 @@ static void Task_HandleInput(u8 taskId)
             if (sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
             {
                 ShowMonSkillsInfo(taskId, SUMMARY_SKILLS_MODE_IVS);
-                sMonSummaryScreen->skillsPageMode = SUMMARY_SKILLS_MODE_IVS;
                 PlaySE(SE_SELECT);
             }
         }
@@ -1987,7 +2008,6 @@ static void Task_HandleInput(u8 taskId)
             if (sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
             {
                 ShowMonSkillsInfo(taskId, SUMMARY_SKILLS_MODE_EVS);
-                sMonSummaryScreen->skillsPageMode = SUMMARY_SKILLS_MODE_EVS;
                 PlaySE(SE_SELECT);
             }
         }
@@ -1998,6 +2018,8 @@ static void ShowMonSkillsInfo(u8 taskId, s16 mode)
 {
     struct PokeSummary *sum = &sMonSummaryScreen->summary;
     struct Pokemon *mon = &sMonSummaryScreen->currentMon;
+
+    sMonSummaryScreen->skillsPageMode = mode;
 
     FillWindowPixelBuffer(sMonSummaryScreen->windowIds[PSS_DATA_WINDOW_SKILLS_STATS_LEFT], 0);
     FillWindowPixelBuffer(sMonSummaryScreen->windowIds[PSS_DATA_WINDOW_SKILLS_STATS_RIGHT], 0);
@@ -2021,7 +2043,25 @@ static void ShowMonSkillsInfo(u8 taskId, s16 mode)
     PrintLeftColumnStats();
     BufferRightColumnStats();
     PrintRightColumnStats();
+    PrintSkillsModeTabs();
     gTasks[taskId].func = Task_HandleInput;
+}
+
+static void PrintSkillsModeTabs(void)
+{
+#if IS_HNS
+    u8 windowId = PSS_LABEL_WINDOW_SKILLS_MODE;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+    PrintTextOnWindow(windowId, sText_SkillsModeButton, 0, 1, 0, 1);
+    PrintTextOnWindow(windowId, sText_SkillsModeStats, 43, 1, 0,
+                      sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_STATS ? 2 : 1);
+    PrintTextOnWindow(windowId, sText_SkillsModeIvs, 89, 1, 0,
+                      sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_IVS ? 2 : 1);
+    PrintTextOnWindow(windowId, sText_SkillsModeEvs, 113, 1, 0,
+                      sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_EVS ? 2 : 1);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+#endif
 }
 
 void ExtractMonSkillStatsData(struct Pokemon *mon, struct PokeSummary *sum)
@@ -3537,6 +3577,7 @@ static void PrintPageNamesAndStats(void)
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP, gText_ExpPoints, 6, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP, gText_NextLv, 6, 17, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS, gText_Status, 2, 1, 0, 1);
+    PrintSkillsModeTabs();
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, gText_Power, 0, 1, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_POWER_ACC, gText_Accuracy2, 0, 17, 0, 1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_MOVES_APPEAL_JAM, gText_Appeal, 0, 1, 0, 1);
@@ -3571,6 +3612,7 @@ static void PutPageWindowTilemaps(u8 page)
         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE);
         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT);
         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_RIGHT);
+        PutWindowTilemap(PSS_LABEL_WINDOW_SKILLS_MODE);
         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_EXP);
         break;
     case PSS_PAGE_BATTLE_MOVES:
