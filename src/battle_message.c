@@ -1524,6 +1524,7 @@ static const u8 sText_Opposing1[] = _("The opposing");
 static const u8 sText_Your2[] = _("your");
 static const u8 sText_Opposing2[] = _("the opposing");
 static const u8 sText_EmptyStatus[] = _("$$$$$$$");
+static u8 sHnsMoveSelectionCursor;
 
 #if IS_HNS
 #define BATTLE_ACTION_PROMPT_FILL       PIXEL_FILL(0)
@@ -1533,6 +1534,12 @@ static const u8 sText_EmptyStatus[] = _("$$$$$$$");
 #define BATTLE_ACTION_MENU_FOREGROUND   1
 #define BATTLE_ACTION_MENU_BACKGROUND   0
 #define BATTLE_ACTION_MENU_SHADOW       12
+#define BATTLE_MOVE_MENU_FILL           PIXEL_FILL(0)
+#define BATTLE_MOVE_MENU_FOREGROUND     1
+#define BATTLE_MOVE_MENU_BACKGROUND     0
+#define BATTLE_MOVE_MENU_SHADOW         12
+#define BATTLE_MOVE_PP_FOREGROUND       1
+#define BATTLE_MOVE_PP_SHADOW           12
 #else
 #define BATTLE_ACTION_PROMPT_FILL       PIXEL_FILL(0xF)
 #define BATTLE_ACTION_PROMPT_BACKGROUND 15
@@ -1541,6 +1548,12 @@ static const u8 sText_EmptyStatus[] = _("$$$$$$$");
 #define BATTLE_ACTION_MENU_FOREGROUND   13
 #define BATTLE_ACTION_MENU_BACKGROUND   14
 #define BATTLE_ACTION_MENU_SHADOW       15
+#define BATTLE_MOVE_MENU_FILL           PIXEL_FILL(0xE)
+#define BATTLE_MOVE_MENU_FOREGROUND     13
+#define BATTLE_MOVE_MENU_BACKGROUND     14
+#define BATTLE_MOVE_MENU_SHADOW         15
+#define BATTLE_MOVE_PP_FOREGROUND       (B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 13 : 12)
+#define BATTLE_MOVE_PP_SHADOW           (B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 15 : 11)
 #endif
 
 static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
@@ -1579,59 +1592,59 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .color.shadow = BATTLE_ACTION_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_1] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_2] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_3] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_4] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_PP] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 13 : 12,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 15 : 11,
+        .color.foreground = BATTLE_MOVE_PP_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_PP_SHADOW,
     },
     [B_WIN_DUMMY] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1645,26 +1658,26 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .color.shadow = 15,
     },
     [B_WIN_PP_REMAINING] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NORMAL,
         .x = 2,
         .y = 1,
         .speed = 0,
         .color.foreground = 12,
-        .color.background = 14,
-        .color.accent = 14,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
         .color.shadow = 11,
     },
     [B_WIN_MOVE_TYPE] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_SWITCH_PROMPT] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1852,59 +1865,59 @@ static const struct BattleWindowText sTextOnWindowsInfo_KantoTutorial[] =
         .color.shadow = BATTLE_ACTION_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_1] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_2] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_3] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_4] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_PP] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 13 : 12,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 15 : 11,
+        .color.foreground = BATTLE_MOVE_PP_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_PP_SHADOW,
     },
     [B_WIN_DUMMY] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1918,26 +1931,26 @@ static const struct BattleWindowText sTextOnWindowsInfo_KantoTutorial[] =
         .color.shadow = 15,
     },
     [B_WIN_PP_REMAINING] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NORMAL,
         .x = 2,
         .y = 1,
         .speed = 0,
         .color.foreground = 12,
-        .color.background = 14,
-        .color.accent = 14,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
         .color.shadow = 11,
     },
     [B_WIN_MOVE_TYPE] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_SWITCH_PROMPT] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -2137,59 +2150,59 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .color.shadow = BATTLE_ACTION_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_1] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_2] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_3] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_4] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_PP] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 13 : 12,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 15 : 11,
+        .color.foreground = BATTLE_MOVE_PP_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_PP_SHADOW,
     },
     [B_WIN_DUMMY] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -2203,26 +2216,26 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .color.shadow = 15,
     },
     [B_WIN_PP_REMAINING] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NORMAL,
         .x = 2,
         .y = 1,
         .speed = 0,
         .color.foreground = 12,
-        .color.background = 14,
-        .color.accent = 14,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
         .color.shadow = 11,
     },
     [B_WIN_MOVE_TYPE] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_MOVE_MENU_FILL,
         .fontId = FONT_NARROW,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_MOVE_MENU_FOREGROUND,
+        .color.background = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.accent = BATTLE_MOVE_MENU_BACKGROUND,
+        .color.shadow = BATTLE_MOVE_MENU_SHADOW,
     },
     [B_WIN_SWITCH_PROMPT] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -3942,6 +3955,21 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     printerTemplate.lineSpacing = textInfo[windowId].lineSpacing;
     printerTemplate.color = textInfo[windowId].color;
 
+#if IS_HNS
+    if (!gBattleStruct->zmove.viewing
+     && B_WIN_MOVE_NAME_1 <= windowId
+     && windowId <= B_WIN_MOVE_NAME_4
+     && windowId - B_WIN_MOVE_NAME_1 == sHnsMoveSelectionCursor)
+    {
+        FillWindowPixelBuffer(windowId, PIXEL_FILL(2));
+        FillWindowPixelRect(windowId, PIXEL_FILL(3), 0, 0, 3, 16);
+        printerTemplate.x += 4;
+        printerTemplate.currentX = printerTemplate.x;
+        printerTemplate.color.background = 2;
+        printerTemplate.color.accent = 2;
+    }
+#endif
+
     if (B_WIN_MOVE_NAME_1 <= windowId && windowId <= B_WIN_MOVE_NAME_4)
     {
         // We cannot check the actual width of the window because
@@ -3994,6 +4022,11 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
         PutWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
+}
+
+void SetHnsBattleMoveSelectionCursor(u8 cursorPosition)
+{
+    sHnsMoveSelectionCursor = cursorPosition;
 }
 
 void SetPpNumbersPaletteInMoveSelection(enum BattlerId battler)

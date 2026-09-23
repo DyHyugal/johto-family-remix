@@ -83,6 +83,9 @@ static void MoveSelectionDisplayPpNumber(enum BattlerId battler);
 static void MoveSelectionDisplayPpString(enum BattlerId battler);
 static void MoveSelectionDisplayMoveType(enum BattlerId battler);
 static void MoveSelectionDisplayMoveNames(enum BattlerId battler);
+#if IS_HNS
+static enum BattlerId sHnsMoveSelectionBattler;
+#endif
 static void TryMoveSelectionDisplayMoveDescription(enum BattlerId battler);
 static void MoveSelectionDisplayMoveDescription(enum BattlerId battler);
 static void WaitForMonSelection(enum BattlerId battler);
@@ -1657,6 +1660,9 @@ static void PlayerHandleYesNoInput(enum BattlerId battler)
 static void MoveSelectionDisplayMoveNames(enum BattlerId battler)
 {
     s32 i;
+#if IS_HNS
+    sHnsMoveSelectionBattler = battler;
+#endif
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     gNumberOfMovesToChoose = 0;
 
@@ -1804,6 +1810,15 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
 
 void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
 {
+#if IS_HNS
+    if (baseTileNum == 0)
+    {
+        SetHnsBattleMoveSelectionCursor(cursorPosition);
+        MoveSelectionDisplayMoveNames(sHnsMoveSelectionBattler);
+        return;
+    }
+#endif
+
     u16 src[2];
     src[0] = baseTileNum + 1;
     src[1] = baseTileNum + 2;
