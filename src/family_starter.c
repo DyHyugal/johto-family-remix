@@ -305,6 +305,26 @@ void FamilyStarter_SaveSpeciesCursor(void)
     }
 }
 
+void FamilyStarter_SaveEvolutionCursor(void)
+{
+    u32 i;
+    u32 row = 0;
+
+    gSpecialVar_0x8008 = 0;
+    for (i = 0; i < ARRAY_COUNT(sStarterEvolutions); i++)
+    {
+        if (sStarterEvolutions[i].species != gSpecialVar_0x8005
+         || !FamilyStarter_IsAvailable(sStarterEvolutions[i].target))
+            continue;
+        if (sStarterEvolutions[i].target == gSpecialVar_Result)
+        {
+            gSpecialVar_0x8008 = row;
+            return;
+        }
+        row++;
+    }
+}
+
 void FamilyStarter_HasEvolutionChoices(void)
 {
     u32 i;

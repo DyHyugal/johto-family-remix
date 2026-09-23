@@ -7,6 +7,7 @@ void FamilyStarter_UseMenu(void);
 void FamilyStarter_BuildCategoryMenu(void);
 void FamilyStarter_BuildSpeciesMenu(void);
 void FamilyStarter_SaveSpeciesCursor(void);
+void FamilyStarter_SaveEvolutionCursor(void);
 void FamilyStarter_HasEvolutionChoices(void);
 void FamilyStarter_BuildEvolutionMenu(void);
 void FamilyStarter_PreparePreview(void);

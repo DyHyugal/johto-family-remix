@@ -41,6 +41,24 @@ TEST("Family starter: species cursor uses the selected row rather than the speci
     EXPECT_EQ(gSpecialVar_0x8007, 0);
 }
 
+TEST("Family starter: evolution cursor uses the selected row rather than the species id")
+{
+    InitFamilyTest();
+    gSpecialVar_0x8005 = SPECIES_EEVEE;
+    gSpecialVar_Result = SPECIES_GLACEON;
+    FamilyStarter_SaveEvolutionCursor();
+    EXPECT_EQ(gSpecialVar_0x8008, 6);
+
+    gSpecialVar_0x8005 = SPECIES_CHARCADET;
+    gSpecialVar_Result = SPECIES_CERULEDGE;
+    FamilyStarter_SaveEvolutionCursor();
+    EXPECT_EQ(gSpecialVar_0x8008, 1);
+
+    gSpecialVar_Result = SPECIES_NONE;
+    FamilyStarter_SaveEvolutionCursor();
+    EXPECT_EQ(gSpecialVar_0x8008, 0);
+}
+
 TEST("Family starter: previewed primary is the exact Pokemon received")
 {
     u32 personality;

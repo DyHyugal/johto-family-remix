@@ -1,10 +1,12 @@
 @ Shared, reversible menu flow. Results are temporary until the caller commits.
-@ 8004: category, 8005: species, 8006: optional evolution preference, 8007: species cursor.
+@ 8004: category, 8005: species, 8006: optional evolution preference.
+@ 8007: species cursor, 8008: evolution cursor.
 FamilyStarter_Select::
 	setvar VAR_0x8004, 0
 	setvar VAR_0x8005, SPECIES_NONE
 	setvar VAR_0x8006, SPECIES_NONE
 	setvar VAR_0x8007, 0
+	setvar VAR_0x8008, 0
 FamilyStarter_Category::
 	closemessage
 	callnative FamilyStarter_BuildCategoryMenu
@@ -14,6 +16,7 @@ FamilyStarter_Category::
 	setvar VAR_0x8005, SPECIES_NONE
 	setvar VAR_0x8006, SPECIES_NONE
 	setvar VAR_0x8007, 0
+	setvar VAR_0x8008, 0
 	goto_if_eq VAR_0x8004, 6, FamilyStarter_EeveeEvolution
 FamilyStarter_Species::
 	callnative FamilyStarter_BuildSpeciesMenu
@@ -49,8 +52,9 @@ FamilyStarter_Evolution::
 	msgbox FamilyStarter_EvolutionPrompt, MSGBOX_DEFAULT
 	closemessage
 	callnative FamilyStarter_BuildEvolutionMenu
-	dynmultistack 1, 1, FALSE, 6, FALSE, VAR_0x8006, DYN_MULTICHOICE_CB_NONE
+	dynmultistack 1, 1, FALSE, 6, FALSE, VAR_0x8008, DYN_MULTICHOICE_CB_NONE
 	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, FamilyStarter_EvolutionBack
+	callnative FamilyStarter_SaveEvolutionCursor
 	copyvar VAR_0x8006, VAR_RESULT
 	goto FamilyStarter_ConfirmChoice
 FamilyStarter_EvolutionBack::
