@@ -1863,6 +1863,7 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 .if IS_HNS
 
 @ HnS scripts
+	.include "data/scripts/tm_shop.inc"
 	.include "data/scripts/training_npc.inc"
 	.include "data/maps/TestMap2_hns/scripts.inc"
 
