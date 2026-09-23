@@ -2554,6 +2554,8 @@ static const struct LevelUpMove sSeadraLevelUpLearnset[] = {
 
 #if P_GEN_2_CROSS_EVOS
 static const struct LevelUpMove sKingdraLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 0, MOVE_LIQUIDATION),
+    LEVEL_UP_MOVE( 0, MOVE_DRAGON_CLAW),
     LEVEL_UP_MOVE( 1, MOVE_BUBBLE),
     LEVEL_UP_MOVE( 1, MOVE_SMOKESCREEN),
     LEVEL_UP_MOVE( 1, MOVE_LEER),
@@ -2563,7 +2565,11 @@ static const struct LevelUpMove sKingdraLevelUpLearnset[] = {
     LEVEL_UP_MOVE(22, MOVE_WATER_GUN),
     LEVEL_UP_MOVE(29, MOVE_TWISTER),
     LEVEL_UP_MOVE(40, MOVE_AGILITY),
+    LEVEL_UP_MOVE(45, MOVE_WAVE_CRASH),
     LEVEL_UP_MOVE(51, MOVE_HYDRO_PUMP),
+    LEVEL_UP_MOVE(52, MOVE_DRAGON_RUSH),
+    LEVEL_UP_MOVE(52, MOVE_DRAGON_DANCE),
+    LEVEL_UP_MOVE(56, MOVE_FLIP_TURN),
     LEVEL_UP_END
 };
 #endif //P_GEN_2_CROSS_EVOS
@@ -3615,6 +3621,7 @@ static const struct LevelUpMove sQuilavaLevelUpLearnset[] = {
 };
 
 static const struct LevelUpMove sTyphlosionLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 0, MOVE_EARTH_POWER),
     LEVEL_UP_MOVE( 1, MOVE_TACKLE),
     LEVEL_UP_MOVE( 1, MOVE_LEER),
     LEVEL_UP_MOVE( 1, MOVE_SMOKESCREEN),
