@@ -230,6 +230,9 @@ static EWRAM_DATA u16 sPartyMenuItemId = 0;
 EWRAM_DATA u8 gBattlePartyCurrentOrder[PARTY_SIZE / 2] = {0}; // bits 0-3 are the current pos of Slot 1, 4-7 are Slot 2, and so on
 static EWRAM_DATA u8 sInitialLevel = 0;
 static EWRAM_DATA u8 sFinalLevel = 0;
+static EWRAM_DATA bool8 sTrainingNpcLevelUpActive = FALSE;
+static EWRAM_DATA u8 sTrainingNpcPartyIndex = 0;
+static EWRAM_DATA u16 sTrainingNpcEvolutionSpecies = SPECIES_NONE;
 
 // IWRAM common
 COMMON_DATA void (*gItemUseCB)(u8, TaskFunc) = NULL;
@@ -455,6 +458,9 @@ static void Task_PartyMenuWaitForFade(u8 taskId);
 static void Task_ChooseContestMon(u8 taskId);
 static void CB2_ChooseContestMon(void);
 static void Task_ChoosePartyMon(u8 taskId);
+static void Task_OpenTrainingNpcLevelUp(u8 taskId);
+static void Task_ApplyTrainingNpcLevelUp(u8 taskId);
+static void CB2_ContinueTrainingNpcEvolution(void);
 static void Task_ChooseMonForMoveRelearner(u8);
 static void CB2_ChooseMonForMoveRelearner(void);
 static void Task_BattlePyramidChooseMonHeldItems(u8);
@@ -6089,15 +6095,25 @@ static void PartyMenuTryEvolution(u8 taskId)
     {
         GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, DO_EVO);
         FreePartyPointers();
-        if (GetItemFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_RareCandy && gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
+        if (sTrainingNpcLevelUpActive)
+        {
+            sTrainingNpcEvolutionSpecies = GetMonData(mon, MON_DATA_SPECIES);
+            gCB2_AfterEvolution = CB2_ContinueTrainingNpcEvolution;
+        }
+        else if (GetItemFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_RareCandy && gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
+        {
             gCB2_AfterEvolution = CB2_ReturnToPartyMenuUsingRareCandy;
+        }
         else
+        {
             gCB2_AfterEvolution = gPartyMenu.exitCallback;
+        }
         BeginEvolutionScene(mon, targetSpecies, canStopEvo, gPartyMenu.slotId);
         DestroyTask(taskId);
     }
     else
     {
+        sTrainingNpcLevelUpActive = FALSE;
         if (gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
             gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
         else
@@ -8105,6 +8121,90 @@ void ChoosePartyMon(void)
     LockPlayerFieldControls();
     FadeScreen(FADE_TO_BLACK, 0);
     CreateTask(Task_ChoosePartyMon, 10);
+}
+
+void StartTrainingNpcLevelUp(u8 partyIndex, u8 targetLevel)
+{
+    if (partyIndex >= gPlayerPartyCount
+     || targetLevel <= GetMonData(&gPlayerParty[partyIndex], MON_DATA_LEVEL)
+     || targetLevel > MAX_LEVEL)
+    {
+        return;
+    }
+
+    gPartyMenu.slotId = partyIndex;
+    sTrainingNpcPartyIndex = partyIndex;
+    sTrainingNpcLevelUpActive = TRUE;
+    sTrainingNpcEvolutionSpecies = SPECIES_NONE;
+    sFinalLevel = targetLevel;
+    LockPlayerFieldControls();
+    FadeScreen(FADE_TO_BLACK, 0);
+    CreateTask(Task_OpenTrainingNpcLevelUp, 10);
+}
+
+static void Task_OpenTrainingNpcLevelUp(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        CleanupOverworldWindowsAndTilemaps();
+        InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_CHOOSE_MON, TRUE,
+                      PARTY_MSG_NONE, Task_ApplyTrainingNpcLevelUp, CB2_ReturnToFieldContinueScript);
+        DestroyTask(taskId);
+    }
+}
+
+static void Task_ApplyTrainingNpcLevelUp(u8 taskId)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    s16 *stats = sPartyMenuInternal->data;
+    u32 species = GetMonData(mon, MON_DATA_SPECIES);
+    u32 exp;
+
+    sInitialLevel = GetMonData(mon, MON_DATA_LEVEL);
+    BufferMonStatsToTaskData(mon, stats);
+    exp = gExperienceTables[gSpeciesInfo[species].growthRate][sFinalLevel];
+    SetMonData(mon, MON_DATA_EXP, &exp);
+    CalculateMonStats(mon);
+    BufferMonStatsToTaskData(mon, &stats[NUM_STATS]);
+    UpdateMonDisplayInfoAfterRareCandy(gPartyMenu.slotId, mon);
+
+    GetMonNickname(mon, gStringVar1);
+    ConvertIntToDecimalStringN(gStringVar2, sFinalLevel, STR_CONV_MODE_LEFT_ALIGN, 3);
+    StringExpandPlaceholders(gStringVar4, gText_PkmnElevatedToLvVar2);
+    PlayFanfareByFanfareNum(FANFARE_LEVEL_UP);
+    DisplayPartyMenuMessage(gStringVar4, TRUE);
+    ScheduleBgCopyTilemapToVram(2);
+    gSpecialVar_ItemId = ITEM_NONE;
+    gPartyMenuUseExitCallback = TRUE;
+    gTasks[taskId].func = Task_DisplayLevelUpStatsPg1;
+}
+
+static void CB2_ContinueTrainingNpcEvolution(void)
+{
+    struct Pokemon *mon = &gPlayerParty[sTrainingNpcPartyIndex];
+    u32 currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
+    u32 targetSpecies;
+    bool32 canStopEvo = TRUE;
+
+    if (currentSpecies == sTrainingNpcEvolutionSpecies)
+    {
+        sTrainingNpcLevelUpActive = FALSE;
+        SetMainCallback2(CB2_ReturnToFieldContinueScript);
+        return;
+    }
+
+    targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, CHECK_EVO);
+    if (targetSpecies == SPECIES_NONE)
+    {
+        sTrainingNpcLevelUpActive = FALSE;
+        SetMainCallback2(CB2_ReturnToFieldContinueScript);
+        return;
+    }
+
+    GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, DO_EVO);
+    sTrainingNpcEvolutionSpecies = currentSpecies;
+    gCB2_AfterEvolution = CB2_ContinueTrainingNpcEvolution;
+    BeginEvolutionScene(mon, targetSpecies, canStopEvo, sTrainingNpcPartyIndex);
 }
 
 static void Task_ChoosePartyMon(u8 taskId)

@@ -71,9 +71,9 @@ TrainingNpc_EXP:
 	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, TrainingNpc_MainMenu
 	goto_if_eq VAR_RESULT, 3, TrainingNpc_MainMenu
 	copyvar VAR_0x8005, VAR_RESULT
-	callnative TrainingNpc_ApplyExp
+	callnative TrainingNpc_StartExpTraining
 	goto_if_eq VAR_RESULT, 2, TrainingNpc_EXPAtCap
-	msgbox TrainingNpc_Text_EXPDone, MSGBOX_DEFAULT
+	waitstate
 	goto TrainingNpc_MainMenu
 
 TrainingNpc_Friendship:

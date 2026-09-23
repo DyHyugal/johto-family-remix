@@ -100,6 +100,7 @@ bool8 CB2_FadeFromPartyMenu(void);
 void CB2_ReturnToPartyMenuFromSummaryScreen(void);
 void ChooseContestMon(void);
 void ChoosePartyMon(void);
+void StartTrainingNpcLevelUp(u8 partyIndex, u8 targetLevel);
 void ChooseMonForMoveRelearner(void);
 void BattlePyramidChooseMonHeldItems(void);
 void DoBattlePyramidMonsHaveHeldItem(void);

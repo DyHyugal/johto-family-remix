@@ -1,21 +1,26 @@
 @ Shared, reversible menu flow. Results are temporary until the caller commits.
-@ 8004: category, 8005: species, 8006: optional evolution preference.
+@ 8004: category, 8005: species, 8006: optional evolution preference, 8007: species cursor.
 FamilyStarter_Select::
+	setvar VAR_0x8004, 0
 	setvar VAR_0x8005, SPECIES_NONE
 	setvar VAR_0x8006, SPECIES_NONE
+	setvar VAR_0x8007, 0
 FamilyStarter_Category::
 	closemessage
-	dynmultichoice 1, 1, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, FamilyStarter_Fire, FamilyStarter_Water, FamilyStarter_Grass, FamilyStarter_Electric, FamilyStarter_Ground, FamilyStarter_Ice, FamilyStarter_Eevee
+	callnative FamilyStarter_BuildCategoryMenu
+	dynmultistack 1, 1, FALSE, 6, FALSE, VAR_0x8004, DYN_MULTICHOICE_CB_NONE
 	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, FamilyStarter_Cancel
 	copyvar VAR_0x8004, VAR_RESULT
 	setvar VAR_0x8005, SPECIES_NONE
 	setvar VAR_0x8006, SPECIES_NONE
+	setvar VAR_0x8007, 0
 	goto_if_eq VAR_0x8004, 6, FamilyStarter_EeveeEvolution
 FamilyStarter_Species::
 	callnative FamilyStarter_BuildSpeciesMenu
-	dynmultistack 1, 1, FALSE, 6, FALSE, VAR_0x8005, DYN_MULTICHOICE_CB_NONE
+	dynmultistack 1, 1, FALSE, 6, FALSE, VAR_0x8007, DYN_MULTICHOICE_CB_NONE
 	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, FamilyStarter_Category
 	goto_if_eq VAR_RESULT, SPECIES_NONE, FamilyStarter_Category
+	callnative FamilyStarter_SaveSpeciesCursor
 	copyvar VAR_0x8005, VAR_RESULT
 	setvar VAR_0x8006, SPECIES_NONE
 	callnative FamilyStarter_HasEvolutionChoices

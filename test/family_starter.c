@@ -28,6 +28,19 @@ static void InitFamilyTest(void)
     AddBagItem(ITEM_MYSTERY_EGG, 1);
 }
 
+TEST("Family starter: species cursor uses the selected row rather than the species id")
+{
+    InitFamilyTest();
+    gSpecialVar_0x8004 = 2;
+    gSpecialVar_Result = SPECIES_SNIVY;
+    FamilyStarter_SaveSpeciesCursor();
+    EXPECT_EQ(gSpecialVar_0x8007, 2);
+
+    gSpecialVar_Result = SPECIES_NONE;
+    FamilyStarter_SaveSpeciesCursor();
+    EXPECT_EQ(gSpecialVar_0x8007, 0);
+}
+
 TEST("Family starter: previewed primary is the exact Pokemon received")
 {
     u32 personality;

@@ -4,7 +4,9 @@
 u16 FamilyStarter_GetCandidate(u32 category, u32 index);
 bool32 FamilyStarter_IsAvailable(u16 species);
 void FamilyStarter_UseMenu(void);
+void FamilyStarter_BuildCategoryMenu(void);
 void FamilyStarter_BuildSpeciesMenu(void);
+void FamilyStarter_SaveSpeciesCursor(void);
 void FamilyStarter_HasEvolutionChoices(void);
 void FamilyStarter_BuildEvolutionMenu(void);
 void FamilyStarter_PreparePreview(void);

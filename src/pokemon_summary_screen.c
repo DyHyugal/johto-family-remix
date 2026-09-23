@@ -4056,22 +4056,12 @@ static void PrintHeldItemName(void)
 
 static void PrintRibbonCount(void)
 {
-    const u8 *text;
+    u32 friendship = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_FRIENDSHIP);
     int x;
 
-    if (sMonSummaryScreen->summary.ribbonCount == 0)
-    {
-        text = gText_None;
-    }
-    else
-    {
-        ConvertIntToDecimalStringN(gStringVar1, sMonSummaryScreen->summary.ribbonCount, STR_CONV_MODE_RIGHT_ALIGN, 2);
-        StringExpandPlaceholders(gStringVar4, gText_RibbonsVar1);
-        text = gStringVar4;
-    }
-
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 70) + 6;
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT), text, x, 1, 0, 0);
+    ConvertIntToDecimalStringN(gStringVar1, friendship, STR_CONV_MODE_RIGHT_ALIGN, 3);
+    x = GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar1, 70) + 6;
+    PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT), gStringVar1, x, 1, 0, 0);
 }
 
 static void BufferStat(u8 *dst, enum Stat statIndex, u32 stat, u32 strId, u32 n)

@@ -52,6 +52,7 @@ bool32 TrainingNpc_IsAbilityAvailable(struct Pokemon *mon, u32 abilityNum);
 void TrainingNpc_ApplyIV(void);
 void TrainingNpc_ApplyEV(void);
 void TrainingNpc_ApplyExp(void);
+void TrainingNpc_StartExpTraining(void);
 void TrainingNpc_ApplyFriendship(void);
 void TrainingNpc_BuildNatureMenu(void);
 void TrainingNpc_BufferNatureName(void);

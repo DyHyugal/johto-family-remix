@@ -267,6 +267,17 @@ static void PushChoice(const u8 *text, u16 id)
     MultichoiceDynamic_PushElement(item);
 }
 
+void FamilyStarter_BuildCategoryMenu(void)
+{
+    PushChoice(COMPOUND_STRING("Feu"), FAMILY_FIRE);
+    PushChoice(COMPOUND_STRING("Eau"), FAMILY_WATER);
+    PushChoice(COMPOUND_STRING("Plante"), FAMILY_GRASS);
+    PushChoice(COMPOUND_STRING("Électrik"), FAMILY_ELECTRIC);
+    PushChoice(COMPOUND_STRING("Sol"), FAMILY_GROUND);
+    PushChoice(COMPOUND_STRING("Glace"), FAMILY_ICE);
+    PushChoice(COMPOUND_STRING("Évoli"), FAMILY_EEVEE);
+}
+
 void FamilyStarter_BuildSpeciesMenu(void)
 {
     u32 index;
@@ -277,6 +288,21 @@ void FamilyStarter_BuildSpeciesMenu(void)
             PushChoice(GetSpeciesName(species), species);
     }
     PushChoice(COMPOUND_STRING("Retour"), SPECIES_NONE);
+}
+
+void FamilyStarter_SaveSpeciesCursor(void)
+{
+    u32 index;
+
+    gSpecialVar_0x8007 = 0;
+    for (index = 0; index < ARRAY_COUNT(sMenuSpecies[0]); index++)
+    {
+        if (FamilyStarter_GetCandidate(gSpecialVar_0x8004, index) == gSpecialVar_Result)
+        {
+            gSpecialVar_0x8007 = index;
+            break;
+        }
+    }
 }
 
 void FamilyStarter_HasEvolutionChoices(void)

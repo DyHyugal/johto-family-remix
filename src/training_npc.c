@@ -4,6 +4,7 @@
 #include "event_data.h"
 #include "malloc.h"
 #include "money.h"
+#include "party_menu.h"
 #include "script.h"
 #include "script_menu.h"
 #include "string_util.h"
@@ -179,6 +180,28 @@ enum TrainingResult TrainingNpc_ChangeExp(struct Pokemon *mon, u32 action, u32 l
     return TRAINING_RESULT_SUCCESS;
 }
 
+static enum TrainingResult GetExpTargetLevel(struct Pokemon *mon, u32 action, u32 levelCap, u8 *targetLevel)
+{
+    u32 currentLevel = GetMonData(mon, MON_DATA_LEVEL);
+    u32 target;
+
+    if (action > TRAINING_EXP_TO_CAP || levelCap == 0)
+        return TRAINING_RESULT_INVALID;
+    levelCap = min(levelCap, MAX_LEVEL);
+    if (currentLevel >= levelCap)
+        return TRAINING_RESULT_NO_CHANGE;
+
+    if (action == TRAINING_EXP_ADD_1)
+        target = currentLevel + 1;
+    else if (action == TRAINING_EXP_ADD_10)
+        target = currentLevel + 10;
+    else
+        target = levelCap;
+
+    *targetLevel = min(target, levelCap);
+    return TRAINING_RESULT_SUCCESS;
+}
+
 enum TrainingResult TrainingNpc_MaxFriendship(struct Pokemon *mon)
 {
     u8 value = MAX_FRIENDSHIP;
@@ -252,6 +275,17 @@ void TrainingNpc_ApplyExp(void)
         : TRAINING_RESULT_INVALID;
     if (gSpecialVar_Result == TRAINING_RESULT_SUCCESS)
         ConvertIntToDecimalStringN(gStringVar1, GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_LEVEL), STR_CONV_MODE_LEFT_ALIGN, 3);
+}
+
+void TrainingNpc_StartExpTraining(void)
+{
+    u8 targetLevel = 0;
+
+    gSpecialVar_Result = IsSelectedMonValid()
+        ? GetExpTargetLevel(&gPlayerParty[gSpecialVar_0x8004], gSpecialVar_0x8005, GetCurrentLevelCap(), &targetLevel)
+        : TRAINING_RESULT_INVALID;
+    if (gSpecialVar_Result == TRAINING_RESULT_SUCCESS)
+        StartTrainingNpcLevelUp(gSpecialVar_0x8004, targetLevel);
 }
 
 void TrainingNpc_ApplyFriendship(void)
