@@ -75,6 +75,7 @@ static void PlayerHandleEndBounceEffect(enum BattlerId battler);
 static void PlayerHandleLinkStandbyMsg(enum BattlerId battler);
 static void PlayerHandleResetActionMoveSelection(enum BattlerId battler);
 static void PlayerHandleEndLinkBattle(enum BattlerId battler);
+static void DrawHnsBattleActionMenu(u8 cursorPosition);
 static void PlayerHandleBattleDebug(enum BattlerId battler);
 
 static void PlayerBufferRunCommand(enum BattlerId battler);
@@ -1821,24 +1822,74 @@ void MoveSelectionDestroyCursorAt(u8 cursorPosition)
     CopyBgTilemapBufferToVram(0);
 }
 
+static void DrawHnsBattleActionMenu(u8 cursorPosition)
+{
+#if IS_HNS
+    static const u8 sText_Attack[] = _("ATTAQUE");
+    static const u8 sText_Bag[] = _("SAC");
+    static const u8 sText_Team[] = _("EQUIPE");
+    static const u8 sText_Run[] = _("FUITE");
+    static const u8 sText_Ball[] = _("BALL");
+    static const u8 sText_Bait[] = _("APPAT");
+    static const u8 sText_Near[] = _("APPROCHE");
+    static const u8 *const sBattleActions[] = {sText_Attack, sText_Bag, sText_Team, sText_Run};
+    static const u8 *const sSafariActions[] = {sText_Ball, sText_Bait, sText_Near, sText_Run};
+    static const u8 sNormalColors[] = {0, 1, 12};
+    static const u8 sSelectedColors[] = {2, 1, 12};
+    const u8 *const *actions = (gBattleTypeFlags & BATTLE_TYPE_SAFARI) ? sSafariActions : sBattleActions;
+    u32 i;
+
+    FillWindowPixelBuffer(B_WIN_ACTION_MENU, PIXEL_FILL(0));
+    for (i = 0; i < ARRAY_COUNT(sBattleActions); i++)
+    {
+        u32 x = (i & 1) * 48;
+        u32 y = (i >> 1) * 16;
+        const u8 *colors = sNormalColors;
+
+        if (i == cursorPosition)
+        {
+            FillWindowPixelRect(B_WIN_ACTION_MENU, PIXEL_FILL(2), x, y, 48, 16);
+            FillWindowPixelRect(B_WIN_ACTION_MENU, PIXEL_FILL(3), x, y, 3, 16);
+            colors = sSelectedColors;
+        }
+        else
+        {
+            FillWindowPixelRect(B_WIN_ACTION_MENU, PIXEL_FILL(13), x, y, 1, 16);
+        }
+
+        FillWindowPixelRect(B_WIN_ACTION_MENU, PIXEL_FILL(13), x, y, 48, 1);
+        AddTextPrinterParameterized4(B_WIN_ACTION_MENU, FONT_SMALL, x + 5, y + 2, 0, 0,
+                                     colors, TEXT_SKIP_DRAW, actions[i]);
+    }
+    PutWindowTilemap(B_WIN_ACTION_MENU);
+    CopyWindowToVram(B_WIN_ACTION_MENU, COPYWIN_FULL);
+#endif
+}
+
 void ActionSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
 {
+#if IS_HNS
+    DrawHnsBattleActionMenu(cursorPosition);
+#else
     u16 src[2];
     src[0] = 1;
     src[1] = 2;
 
     CopyToBgTilemapBufferRect_ChangePalette(0, src, 7 * (cursorPosition & 1) + 16, 35 + (cursorPosition & 2), 1, 2, 0x11);
     CopyBgTilemapBufferToVram(0);
+#endif
 }
 
 void ActionSelectionDestroyCursorAt(u8 cursorPosition)
 {
+#if !IS_HNS
     u16 src[2];
     src[0] = 0x1016;
     src[1] = 0x1016;
 
     CopyToBgTilemapBufferRect_ChangePalette(0, src, 7 * (cursorPosition & 1) + 16, 35 + (cursorPosition & 2), 1, 2, 0x11);
     CopyBgTilemapBufferToVram(0);
+#endif
 }
 
 void CB2_SetUpReshowBattleScreenAfterMenu(void)

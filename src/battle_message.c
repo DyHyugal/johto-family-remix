@@ -1525,6 +1525,24 @@ static const u8 sText_Your2[] = _("your");
 static const u8 sText_Opposing2[] = _("the opposing");
 static const u8 sText_EmptyStatus[] = _("$$$$$$$");
 
+#if IS_HNS
+#define BATTLE_ACTION_PROMPT_FILL       PIXEL_FILL(0)
+#define BATTLE_ACTION_PROMPT_BACKGROUND 0
+#define BATTLE_ACTION_PROMPT_SHADOW     12
+#define BATTLE_ACTION_MENU_FILL         PIXEL_FILL(0)
+#define BATTLE_ACTION_MENU_FOREGROUND   1
+#define BATTLE_ACTION_MENU_BACKGROUND   0
+#define BATTLE_ACTION_MENU_SHADOW       12
+#else
+#define BATTLE_ACTION_PROMPT_FILL       PIXEL_FILL(0xF)
+#define BATTLE_ACTION_PROMPT_BACKGROUND 15
+#define BATTLE_ACTION_PROMPT_SHADOW     6
+#define BATTLE_ACTION_MENU_FILL         PIXEL_FILL(0xE)
+#define BATTLE_ACTION_MENU_FOREGROUND   13
+#define BATTLE_ACTION_MENU_BACKGROUND   14
+#define BATTLE_ACTION_MENU_SHADOW       15
+#endif
+
 static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
 {
     [B_WIN_MSG] = {
@@ -1539,26 +1557,26 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
         .color.shadow = 6,
     },
     [B_WIN_ACTION_PROMPT] = {
-        .fillValue = PIXEL_FILL(0xF),
+        .fillValue = BATTLE_ACTION_PROMPT_FILL,
         .fontId = FONT_NORMAL,
         .x = 1,
         .y = 1,
         .speed = 0,
         .color.foreground = 1,
-        .color.background = 15,
-        .color.accent = 15,
-        .color.shadow = 6,
+        .color.background = BATTLE_ACTION_PROMPT_BACKGROUND,
+        .color.accent = BATTLE_ACTION_PROMPT_BACKGROUND,
+        .color.shadow = BATTLE_ACTION_PROMPT_SHADOW,
     },
     [B_WIN_ACTION_MENU] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_ACTION_MENU_FILL,
         .fontId = FONT_NORMAL,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_ACTION_MENU_FOREGROUND,
+        .color.background = BATTLE_ACTION_MENU_BACKGROUND,
+        .color.accent = BATTLE_ACTION_MENU_BACKGROUND,
+        .color.shadow = BATTLE_ACTION_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_1] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -1812,26 +1830,26 @@ static const struct BattleWindowText sTextOnWindowsInfo_KantoTutorial[] =
         .color.shadow = 6,
     },
     [B_WIN_ACTION_PROMPT] = {
-        .fillValue = PIXEL_FILL(0xF),
+        .fillValue = BATTLE_ACTION_PROMPT_FILL,
         .fontId = FONT_NORMAL,
         .x = 1,
         .y = 1,
         .speed = 0,
         .color.foreground = 1,
-        .color.background = 15,
-        .color.accent = 15,
-        .color.shadow = 6,
+        .color.background = BATTLE_ACTION_PROMPT_BACKGROUND,
+        .color.accent = BATTLE_ACTION_PROMPT_BACKGROUND,
+        .color.shadow = BATTLE_ACTION_PROMPT_SHADOW,
     },
     [B_WIN_ACTION_MENU] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_ACTION_MENU_FILL,
         .fontId = FONT_NORMAL,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_ACTION_MENU_FOREGROUND,
+        .color.background = BATTLE_ACTION_MENU_BACKGROUND,
+        .color.accent = BATTLE_ACTION_MENU_BACKGROUND,
+        .color.shadow = BATTLE_ACTION_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_1] = {
         .fillValue = PIXEL_FILL(0xE),
@@ -2097,26 +2115,26 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
         .color.shadow = 6,
     },
     [B_WIN_ACTION_PROMPT] = {
-        .fillValue = PIXEL_FILL(0xF),
+        .fillValue = BATTLE_ACTION_PROMPT_FILL,
         .fontId = FONT_NORMAL,
         .x = 1,
         .y = 1,
         .speed = 0,
         .color.foreground = 1,
-        .color.background = 15,
-        .color.accent = 15,
-        .color.shadow = 6,
+        .color.background = BATTLE_ACTION_PROMPT_BACKGROUND,
+        .color.accent = BATTLE_ACTION_PROMPT_BACKGROUND,
+        .color.shadow = BATTLE_ACTION_PROMPT_SHADOW,
     },
     [B_WIN_ACTION_MENU] = {
-        .fillValue = PIXEL_FILL(0xE),
+        .fillValue = BATTLE_ACTION_MENU_FILL,
         .fontId = FONT_NORMAL,
         .x = 0,
         .y = 1,
         .speed = 0,
-        .color.foreground = 13,
-        .color.background = 14,
-        .color.accent = 14,
-        .color.shadow = 15,
+        .color.foreground = BATTLE_ACTION_MENU_FOREGROUND,
+        .color.background = BATTLE_ACTION_MENU_BACKGROUND,
+        .color.accent = BATTLE_ACTION_MENU_BACKGROUND,
+        .color.shadow = BATTLE_ACTION_MENU_SHADOW,
     },
     [B_WIN_MOVE_NAME_1] = {
         .fillValue = PIXEL_FILL(0xE),
