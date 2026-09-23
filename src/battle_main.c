@@ -3,6 +3,7 @@
 #include "family_starter.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_bg.h"
 #include "challenge_menu.h"
 #include "battle_ai_main.h"
 #include "battle_ai_util.h"
@@ -4230,6 +4231,7 @@ void BattleTurnPassed(void)
     {
         gBattleResults.battleTurnCounter++;
         gBattleStruct->eventState.arenaTurn++;
+        UpdateBattleTurnCounterWindow();
     }
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)

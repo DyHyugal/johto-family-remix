@@ -11,6 +11,7 @@
 #include "decompress.h"
 #include "gpu_regs.h"
 #include "graphics.h"
+#include "international_string_util.h"
 #include "link.h"
 #include "load_save.h"
 #include "main.h"
@@ -19,6 +20,7 @@
 #include "palette.h"
 #include "sound.h"
 #include "sprite.h"
+#include "string_util.h"
 #include "task.h"
 #include "test_runner.h"
 #include "text_window.h"
@@ -153,6 +155,65 @@ const struct BgTemplate gBattleBgTemplates[] =
         .baseTile = 0
     },
 };
+
+#if IS_HNS
+#define HNS_TURN_WINDOW_COUNT 3
+
+static const struct WindowTemplate sHnsTurnWindowTemplates[HNS_TURN_WINDOW_COUNT] =
+{
+    { .bg = 0, .tilemapLeft = 23, .tilemapTop = 0,  .width = 7, .height = 2, .paletteNum = 5, .baseBlock = 0x3C0 },
+    { .bg = 0, .tilemapLeft = 23, .tilemapTop = 20, .width = 7, .height = 2, .paletteNum = 5, .baseBlock = 0x3D0 },
+    { .bg = 0, .tilemapLeft = 23, .tilemapTop = 40, .width = 7, .height = 2, .paletteNum = 5, .baseBlock = 0x3E0 },
+};
+
+static EWRAM_DATA u8 sHnsTurnWindowIds[HNS_TURN_WINDOW_COUNT];
+static EWRAM_DATA bool8 sHnsTurnWindowsCreated;
+static const u8 sText_HnsBattleTurn[] = _("TOUR ");
+static const u8 sHnsTurnTextColors[] = {0, 1, 2};
+
+static void CreateBattleTurnCounterWindows(void)
+{
+    u32 i;
+
+    sHnsTurnWindowsCreated = FALSE;
+    for (i = 0; i < HNS_TURN_WINDOW_COUNT; i++)
+    {
+        sHnsTurnWindowIds[i] = AddWindow(&sHnsTurnWindowTemplates[i]);
+        if (sHnsTurnWindowIds[i] != WINDOW_NONE)
+            PutWindowTilemap(sHnsTurnWindowIds[i]);
+    }
+    sHnsTurnWindowsCreated = TRUE;
+}
+#endif
+
+void UpdateBattleTurnCounterWindow(void)
+{
+#if IS_HNS
+    u8 text[16];
+    u8 number[4];
+    u32 turn = min(gBattleResults.battleTurnCounter + 1, 255);
+    u32 i;
+    u32 x;
+
+    if (!sHnsTurnWindowsCreated)
+        return;
+
+    StringCopy(text, sText_HnsBattleTurn);
+    ConvertIntToDecimalStringN(number, turn, STR_CONV_MODE_LEFT_ALIGN, 3);
+    StringAppend(text, number);
+    x = GetStringRightAlignXOffset(FONT_SMALL, text, 54);
+
+    for (i = 0; i < HNS_TURN_WINDOW_COUNT; i++)
+    {
+        if (sHnsTurnWindowIds[i] == WINDOW_NONE)
+            continue;
+        FillWindowPixelBuffer(sHnsTurnWindowIds[i], PIXEL_FILL(0));
+        AddTextPrinterParameterized3(sHnsTurnWindowIds[i], FONT_SMALL, x, 1, sHnsTurnTextColors, TEXT_SKIP_DRAW, text);
+        CopyWindowToVram(sHnsTurnWindowIds[i], COPYWIN_FULL);
+    }
+    ScheduleBgCopyTilemapToVram(0);
+#endif
+}
 
 static const struct WindowTemplate sStandardBattleWindowTemplates[] =
 {
@@ -1022,6 +1083,9 @@ void BattleInitBgsAndWindows(void)
 
     InitWindows(gBattleWindowTemplates[gBattleScripting.windowsType]);
     DeactivateAllTextPrinters();
+#if IS_HNS
+    CreateBattleTurnCounterWindows();
+#endif
 }
 
 void InitBattleBgsVideo(void)
@@ -1050,6 +1114,7 @@ void LoadBattleMenuWindowGfx(void)
         gPlttBufferUnfaded[BG_PLTT_ID(7) + 6] = 0;
         CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(7) + 6], &gPlttBufferFaded[BG_PLTT_ID(7) + 6], PLTT_SIZEOF(1));
     }
+    UpdateBattleTurnCounterWindow();
 }
 
 void DrawMainBattleBackground(void)

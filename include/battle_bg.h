@@ -16,6 +16,7 @@ struct BattleBackgroundEntry
 void BattleInitBgsAndWindows(void);
 void InitBattleBgsVideo(void);
 void LoadBattleMenuWindowGfx(void);
+void UpdateBattleTurnCounterWindow(void);
 void DrawMainBattleBackground(void);
 void LoadBattleTextboxAndBackground(void);
 void InitLinkBattleVsScreen(u8 taskId);
