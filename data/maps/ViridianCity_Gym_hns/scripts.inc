@@ -100,22 +100,32 @@ ViridianCity_Gym_Text_LeaderBlue_Epilogue:
 
 
 ViridianCity_Gym_EventScript_GymGuy::
+	lock
+	faceplayer
 	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_Gym_EventScript_GymGuyAfter
-	msgbox ViridianCity_Gym_Text_Guide, MSGBOX_NPC
+	msgbox ViridianCity_Gym_Text_Guide, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_VIRIDIAN, ViridianCity_Gym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_VIRIDIAN
+ViridianCity_Gym_EventScript_GymGuyDone::
+	release
 	end
+ViridianCity_Gym_EventScript_GymGuyBagFull::
+	msgbox ViridianCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	goto ViridianCity_Gym_EventScript_GymGuyDone
 
 ViridianCity_Gym_EventScript_GymGuyAfter::
 	msgbox ViridianCity_Gym_Text_Guide_Win, MSGBOX_NPC
 	end
 
 ViridianCity_Gym_Text_Guide:
-	.string "Yo, CHAMP in making!\p"
-	.string "How's it going? Looks like you're on\n"
-	.string "a roll.\p"
-	.string "The GYM LEADER is a guy who battled\n"
-	.string "the CHAMPION three years ago.\p"
-	.string "He's no pushover.\p"
-	.string "Give it everything you've got!$"
+	.string "BLUE gives you almost no breathing\n"
+	.string "room: hard hits, pivots and setup.\p"
+	.string "Don't play too passively. Keep bulky\n"
+	.string "answers or priority ready to take\l"
+	.string "momentum back after a KO.\p"
+	.string "Take this FRESH WATER. Good luck!$"
 
 ViridianCity_Gym_Text_Guide_Win:
 	.string "Man, you are truly tough…\p"
@@ -147,3 +157,7 @@ ViridianCity_Gym_Text_GymStatuePlayerWon::
     .string "WINNING TRAINERS:\n"
 	.string "BLUE, RED, {PLAYER}$"
 
+
+ViridianCity_Gym_Text_FamilyGuideBagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
