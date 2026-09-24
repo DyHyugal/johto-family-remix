@@ -173,9 +173,17 @@ OlivineCity_Gym_EventScript_GymGuide::
 	goto_if_lt VAR_OLIVINE_CITY_STATE, 5, OlivineCity_Gym_EventScript_GymGuideSick
 	goto_if_set FLAG_DEFEATED_OLIVINE_CITY_GYM, OlivineCity_Gym_EventScript_GymGuideAfter
 	msgbox OlivineCity_Gym_Text_GymGuideText, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_OLIVINE, OlivineCity_Gym_EventScript_GymGuideDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, OlivineCity_Gym_EventScript_GymGuideBagFull
+	setflag FLAG_FAMILY_GYM_WATER_OLIVINE
+OlivineCity_Gym_EventScript_GymGuideDone::
 	closemessage
 	release
 	end
+OlivineCity_Gym_EventScript_GymGuideBagFull::
+	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	goto OlivineCity_Gym_EventScript_GymGuideDone
 
 OlivineCity_Gym_EventScript_GymGuideSick::
 	msgbox OlivineCity_Gym_Text_GymGuidePreText, MSGBOX_DEFAULT
@@ -190,20 +198,12 @@ OlivineCity_Gym_EventScript_GymGuideAfter::
 	end
 
 OlivineCity_Gym_Text_GymGuideText:
-	.string "JASMINE uses the newly discovered\n"
-	.string "STEEL-type.\p"
-	.string "She's known for having not one,\n"
-	.string "but two aces.\p"
-	.string "The first is a metal bug that can\n"
-	.string "use a technique to boost its ATTACK.\p"
-	.string "While fire will hurt it, it can\n"
-	.string "sometimes endure powerful blows.\p"
-	.string "The second is a giant iron snake\n"
-	.string "with lots of powerful moves.\p"
-	.string "Approach it with caution.\p"
-	.string "It may look slow, but I've seen it\n"
-	.string "strike first with shocking displays\l"
-	.string "of SPEED.$"
+	.string "JASMINE mixes entry hazards with\n"
+	.string "POKéMON that turn defense into offense.\p"
+	.string "Don't let FERROTHORN settle in. Hit\n"
+	.string "her bulky setup users from the\l"
+	.string "special side when you can.\p"
+	.string "Take this FRESH WATER. Good luck!$"
 
 OlivineCity_Gym_Text_GymGuideWinText:
 	.string "That was awesome.\p"
@@ -389,3 +389,7 @@ OlivineCity_Gym_Text_JasmineDeclineTrade:
 OlivineCity_Gym_Text_JasmineTradeCompleted:
 	.string "…How is RUSTY doing?\n"
 	.string "I hope you're taking good care…$"
+
+FamilyGymGuide_Text_BagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
