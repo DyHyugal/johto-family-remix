@@ -307,7 +307,13 @@ void NewGameInitData(void)
     ResetTrainerHillResults();
     ResetTrainerTowerResults();
     ResetContestLinkResults();
+#if IS_HNS
+    // Family Remix defaults to HARD. NORMAL remains selectable through the
+    // existing difficulty controls.
+    SetCurrentDifficultyLevel(DIFFICULTY_HARD);
+#else
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
+#endif
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
