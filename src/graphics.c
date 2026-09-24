@@ -1807,8 +1807,13 @@ const u32 gCategoryIcons_Gfx[] = INCBIN_U32("graphics/interface/category_icons.4
 const u32 gMoveTypes_Gfx[] = INCBIN_U32("graphics/types/move_types.4bpp.smol");
 const u16 gMoveTypes_Pal[] = INCBIN_U16("graphics/types/move_types.gbapal");
 
+#if IS_HNS
+const u32 gSummaryMoveSelect_Gfx[] = INCBIN_U32("graphics/summary_screen/hns/move_select.4bpp.smol");
+const u16 gSummaryMoveSelect_Pal[] = INCBIN_U16("graphics/summary_screen/hns/move_select.gbapal");
+#else
 const u32 gSummaryMoveSelect_Gfx[] = INCBIN_U32("graphics/summary_screen/move_select.4bpp.smol");
 const u16 gSummaryMoveSelect_Pal[] = INCBIN_U16("graphics/summary_screen/move_select.gbapal");
+#endif
 
 #if IS_HNS
 const u32 gSummaryScreen_Gfx[]                = INCBIN_U32("graphics/summary_screen/hns/tiles.4bpp.smol");
