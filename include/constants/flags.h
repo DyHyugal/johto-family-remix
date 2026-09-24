@@ -87,22 +87,24 @@
 #define FLAG_UNUSED_0x03D    0x3D // Unused Flag
 #define FLAG_UNUSED_0x03E    0x3E // Unused Flag
 #define FLAG_UNUSED_0x03F    0x3F // Unused Flag
-#define FLAG_UNUSED_0x040    0x40 // Unused Flag
-#define FLAG_UNUSED_0x041    0x41 // Unused Flag
-#define FLAG_UNUSED_0x042    0x42 // Unused Flag
-#define FLAG_UNUSED_0x043    0x43 // Unused Flag
-#define FLAG_UNUSED_0x044    0x44 // Unused Flag
-#define FLAG_UNUSED_0x045    0x45 // Unused Flag
-#define FLAG_UNUSED_0x046    0x46 // Unused Flag
-#define FLAG_UNUSED_0x047    0x47 // Unused Flag
-#define FLAG_UNUSED_0x048    0x48 // Unused Flag
-#define FLAG_UNUSED_0x049    0x49 // Unused Flag
-#define FLAG_UNUSED_0x04A    0x4A // Unused Flag
-#define FLAG_UNUSED_0x04B    0x4B // Unused Flag
-#define FLAG_UNUSED_0x04C    0x4C // Unused Flag
-#define FLAG_UNUSED_0x04D    0x4D // Unused Flag
-#define FLAG_UNUSED_0x04E    0x4E // Unused Flag
-#define FLAG_UNUSED_0x04F    0x4F // Unused Flag
+// Family Remix - one-time Fresh Water gifts from Gym Guides.
+// These 16 flags intentionally reuse a contiguous block that was unused.
+#define FLAG_FAMILY_GYM_WATER_VIOLET       0x40
+#define FLAG_FAMILY_GYM_WATER_AZALEA       0x41
+#define FLAG_FAMILY_GYM_WATER_GOLDENROD    0x42
+#define FLAG_FAMILY_GYM_WATER_ECRUTEAK     0x43
+#define FLAG_FAMILY_GYM_WATER_CIANWOOD     0x44
+#define FLAG_FAMILY_GYM_WATER_OLIVINE      0x45
+#define FLAG_FAMILY_GYM_WATER_MAHOGANY     0x46
+#define FLAG_FAMILY_GYM_WATER_BLACKTHORN   0x47
+#define FLAG_FAMILY_GYM_WATER_PEWTER       0x48
+#define FLAG_FAMILY_GYM_WATER_CERULEAN     0x49
+#define FLAG_FAMILY_GYM_WATER_VERMILION    0x4A
+#define FLAG_FAMILY_GYM_WATER_CELADON      0x4B
+#define FLAG_FAMILY_GYM_WATER_FUCHSIA      0x4C
+#define FLAG_FAMILY_GYM_WATER_SAFFRON      0x4D
+#define FLAG_FAMILY_GYM_WATER_SEAFOAM      0x4E
+#define FLAG_FAMILY_GYM_WATER_VIRIDIAN     0x4F
 
 // Scripts
 #define FLAG_HIDE_SKY_PILLAR_TOP_RAYQUAZA_STILL  0x50
