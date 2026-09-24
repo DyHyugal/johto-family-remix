@@ -483,9 +483,17 @@ AzaleaTown_Gym_EventScript_GymGuy::
 	faceplayer
 	goto_if_set FLAG_BADGE02_GET, AzaleaTown_Gym_EventScript_GymGuy2
 	msgbox AzaleaTown_Gym_Text_GymGuide, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_AZALEA, AzaleaTown_Gym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, AzaleaTown_Gym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_AZALEA
+AzaleaTown_Gym_EventScript_GymGuyDone::
 	closemessage
 	release
 	end
+AzaleaTown_Gym_EventScript_GymGuyBagFull::
+	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	goto AzaleaTown_Gym_EventScript_GymGuyDone
 
 AzaleaTown_Gym_EventScript_GymGuy2::
 	msgbox AzaleaTown_Gym_Text_GymGuideWin, MSGBOX_DEFAULT
@@ -791,19 +799,19 @@ AzaleaTown_Gym_Text_TwinsAmyMay2After:
 	.string "of ROCK-type POKéMON!$"
 
 AzaleaTown_Gym_Text_GymGuide:
-	.string "Yo, challenger!\p"
-	.string "BUGSY's young, but his knowledge\n"
-	.string "of bug POKéMON is for real.\p"
-	.string "It's going to be tough\n"
-	.string "without my advice.\p"
-	.string "Let's see… BUGSY's bagworm POKéMON\n"
-	.string "knows a move that covers its\l"
-	.string "ROCK-type weakness.\p"
-	.string "Oh, and don't forget about those\n"
-	.string "nasty critical hits! Good luck!$"
+	.string "BUGSY likes to stack STEALTH ROCK\n"
+	.string "and SPIKES to punish every switch.\p"
+	.string "Avoid needless switching and clear\n"
+	.string "hazards if you can. Watch PINECO\l"
+	.string "once its setup job is finished!\p"
+	.string "Take this FRESH WATER. Good luck!$"
 
 AzaleaTown_Gym_Text_GymGuideWin:
 	.string "Well done! That was a great\n"
 	.string "clash of talented young trainers.\p"
 	.string "With people like you, the\n"
 	.string "future of POKéMON is bright!$"
+
+FamilyGymGuide_Text_BagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
