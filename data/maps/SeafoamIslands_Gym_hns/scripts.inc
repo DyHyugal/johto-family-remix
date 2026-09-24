@@ -35,12 +35,23 @@ SeafoamIslands_Gym_EventScript_Blaine_Defeated::
 	end
 
 SeafomIslands2_EventScript_GymGuide::
-	goto_if_set FLAG_TEMP_2, SeafomIslands2_EventScript_GymGuide2
-	msgbox SeafoamIslands_Gym_Text_GymGuideWin, MSGBOX_NPC
-	setflag FLAG_TEMP_2
+	lock
+	faceplayer
+	goto_if_set FLAG_DEFEATED_CINNABAR_ISLAND_GYM, SeafomIslands2_EventScript_GymGuide2
+	msgbox SeafoamIslands_Gym_Text_GymGuideAdvice, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_SEAFOAM, SeafomIslands2_EventScript_GymGuideDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, SeafomIslands2_EventScript_GymGuideBagFull
+	setflag FLAG_FAMILY_GYM_WATER_SEAFOAM
+SeafomIslands2_EventScript_GymGuideDone::
+	release
 	end
+SeafomIslands2_EventScript_GymGuideBagFull::
+	msgbox SeafoamIslands_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	goto SeafomIslands2_EventScript_GymGuideDone
 SeafomIslands2_EventScript_GymGuide2::
-	msgbox SeafoamIslands_Gym_Text_GymGuideWin2, MSGBOX_NPC
+	msgbox SeafoamIslands_Gym_Text_GymGuideWin2, MSGBOX_DEFAULT
+	release
 	end
 
 SeafoamIslands_Gym_EventScript_GymStatue::
@@ -121,6 +132,18 @@ SeafoamIslands_Gym_Text_BlaineRematchDefeat:
 	.string "BLAINE: Your skills are truly fiery!\p"
 	.string "You've burned right through my\n"
 	.string "defenses.$"
+
+SeafoamIslands_Gym_Text_GymGuideAdvice:
+	.string "BLAINE fights under SUN. FIRE moves\n"
+	.string "hit harder and CHLOROPHYLL users get\l"
+	.string "dangerously fast.\p"
+	.string "Change the weather if you can, and\n"
+	.string "don't give his sweepers free setup.\p"
+	.string "Take this FRESH WATER. Keep cool!$"
+
+SeafoamIslands_Gym_Text_FamilyGuideBagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
 
 SeafoamIslands_Gym_Text_GymGuideWin:
 	.string "Yo!\p"
