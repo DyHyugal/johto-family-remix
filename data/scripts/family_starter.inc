@@ -93,7 +93,7 @@ FamilyStarter_ShowPendingItem::
 	goto_if_eq VAR_RESULT, FALSE, FamilyStarter_ShowPendingItemReturn
 	goto_if_eq VAR_RESULT, 2, FamilyStarter_ShowPendingPCItem
 	call EventScript_ObtainItemMessage
-	return
+	goto FamilyStarter_ShowPendingItem
 FamilyStarter_ShowPendingPCItem:
 	bufferitemnameplural STR_VAR_2, VAR_0x8000, VAR_0x8001
 	checkitemtype VAR_0x8000
@@ -104,6 +104,7 @@ FamilyStarter_ShowPendingPCItem:
 	waitfanfare
 	msgbox FamilyStarter_ItemSentPC, MSGBOX_DEFAULT
 	hideitemdescription
+	goto FamilyStarter_ShowPendingItem
 FamilyStarter_ShowPendingItemReturn:
 	return
 FamilyStarter_ItemSentPC:
