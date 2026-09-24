@@ -151,9 +151,20 @@ CeruleanGym_EventScript_Parker::
 	end
 
 CeruleanCity_Gym_EventScript_GymGuy::
+	lock
+	faceplayer
 	goto_if_set FLAG_DEFEATED_CERULEAN_GYM, CeruleanCity_Gym_EventScript_GymGuyAfter
-	msgbox CeruleanGym_Text_GuideIntro, MSGBOX_NPC
+	msgbox CeruleanGym_Text_GuideIntro, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_CERULEAN, CeruleanCity_Gym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, CeruleanCity_Gym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_CERULEAN
+CeruleanCity_Gym_EventScript_GymGuyDone::
+	release
 	end
+CeruleanCity_Gym_EventScript_GymGuyBagFull::
+	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	goto CeruleanCity_Gym_EventScript_GymGuyDone
 
 CeruleanCity_Gym_EventScript_GymGuyAfter::
 	msgbox CeruleanGym_Text_GuideWin, MSGBOX_NPC
@@ -310,9 +321,12 @@ CeruleanGym_Text_SwimmermParkerAfter:
 	.string "you'll be crushed!$"
 
 CeruleanGym_Text_GuideIntro:
-	.string "Yo! CHAMP in making!\p"
-	.string "Since MISTY was away, I went out\p"
-	.string "for some fun too. He-he-he.$"
+	.string "MISTY fights under RAIN. Her WATER\n"
+	.string "moves hit harder and SWIFT SWIM can\l"
+	.string "make her team extremely fast.\p"
+	.string "Change the weather or stall out RAIN\n"
+	.string "before committing your best answers.\p"
+	.string "Take this FRESH WATER. Good luck!$"
 
 CeruleanGym_Text_GuideWin:
 	.string "Hoo, you showed me how tough you\n"
@@ -327,3 +341,7 @@ CeruleanGym_Text_Misty_ExplainTM:
 	.string "It's the WATER PULSE TM.\p"
 	.string "It causes damage and sometimes\n"
 	.string "causes confusion as well!$"
+
+FamilyGymGuide_Text_BagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
