@@ -15,7 +15,7 @@ EcruteakCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 EcruteakCity_Gym_EventScript_GymGuyBagFull::
-	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	msgbox EcruteakCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
 	goto EcruteakCity_Gym_EventScript_GymGuyDone
 	
 EcruteakCity_Gym_EventScript_GymGuy2::
@@ -226,6 +226,6 @@ EcruteakCity_GymClosedText:
 	.string "leave.\p"
 	.string "Hohohoho.$"
 
-FamilyGymGuide_Text_BagFull:
+EcruteakCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
