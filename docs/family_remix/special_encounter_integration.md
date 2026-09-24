@@ -1,3 +1,5 @@
+> **REV8 NOTICE — historical document.** For current Family Remix V1 encounter architecture and production status, use `PFR_V1_CAHIER_DES_CHARGES_FINAL_REV8.md`, `PFR_V1_AUDIT_REV8.md` and `data/family_remix/PFR_V1_ENCOUNTERS_FINAL_REV8.json`. Any instruction below that requires inherited HnS 12/5/10-slot layouts, five-slot water tables, 9%+1% splitting or native rod probability arrays is superseded and must not be used as a Family Remix design constraint.
+
 # Family Remix special encounters — integration notes
 
 This file documents the 57 encounter tables intentionally **not** flattened into `src/data/wild_encounters.json`.
