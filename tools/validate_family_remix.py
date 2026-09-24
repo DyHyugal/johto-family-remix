@@ -81,17 +81,31 @@ def validate_encounters():
         if audit.get(key) != value:
             fail(f"encounter audit {key}: expected {value}, got {audit.get(key)}")
 
-    for group in wild["wild_encounter_groups"]:
-        for encounter in group.get("encounters", []):
-            for method in ("land_mons", "water_mons", "rock_smash_mons", "fishing_mons"):
-                if method not in encounter:
-                    continue
-                mons = encounter[method]["mons"]
-                for mon in mons:
-                    if not (1 <= mon["min_level"] <= mon["max_level"] <= 100):
-                        fail(f"invalid wild level range in {encounter.get('map', encounter.get('base_label'))}")
-                    if not mon["species"].startswith("SPECIES_"):
-                        fail("wild species constant is malformed")
+    # Family Remix ships the HnS world as its playable base.  Validate every
+    # active HnS encounter table, including inherited HnS data: inherited does
+    # not mean exempt when a malformed table affects the Family Remix ROM.
+    map_group = next(group for group in wild["wild_encounter_groups"] if group.get("for_maps"))
+    expected_slots = {field["type"]: len(field["encounter_rates"]) for field in map_group["fields"]}
+
+    for encounter in map_group.get("encounters", []):
+        map_name = encounter.get("map", "")
+        if not map_name.endswith("_HNS"):
+            continue
+        for method in ("land_mons", "water_mons", "rock_smash_mons", "fishing_mons"):
+            if method not in encounter:
+                continue
+            mons = encounter[method]["mons"]
+            expected = expected_slots[method]
+            if len(mons) != expected:
+                fail(
+                    f"{encounter.get('base_label', map_name)} {method}: "
+                    f"expected {expected} engine slots, got {len(mons)}"
+                )
+            for mon in mons:
+                if not (1 <= mon["min_level"] <= mon["max_level"] <= 100):
+                    fail(f"invalid wild level range in {map_name}")
+                if not mon["species"].startswith("SPECIES_"):
+                    fail("wild species constant is malformed")
 
     special = json.loads((ROOT / "data/family_remix/special_encounter_pools.json").read_text())
     headbutt = [table for table in special["tables"] if table["method"] == "headbutt_mons"]
