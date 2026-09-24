@@ -37,7 +37,7 @@ GoldenrodCity_Gym_EventScript_Gym_Guy_Done::
 	release
 	end
 GoldenrodCity_Gym_EventScript_Gym_Guy_BagFull::
-	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	msgbox GoldenrodCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
 	goto GoldenrodCity_Gym_EventScript_Gym_Guy_Done
 
 GoldenrodCity_Gym_EventScript_Gym_Guy_After::
@@ -250,6 +250,6 @@ GoldenrodCity_Gym_Text_GymGuideWin:
     .string "the ladies here.$"
 
 
-FamilyGymGuide_Text_BagFull:
+GoldenrodCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
