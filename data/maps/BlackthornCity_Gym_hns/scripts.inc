@@ -371,7 +371,13 @@ BlackthornGym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_BLACKTHORN_GYM, BlackthornGym_EventScript_GymGuy2
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, BlackthornGym_EventScript_GymGuyAdviceFr
 	msgbox BlackthornGym_Text_GuideText, MSGBOX_DEFAULT
+	goto BlackthornGym_EventScript_GymGuyAdviceFr_Done
+BlackthornGym_EventScript_GymGuyAdviceFr:
+	msgbox BlackthornGym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+BlackthornGym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_BLACKTHORN, BlackthornGym_EventScript_GymGuyDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, BlackthornGym_EventScript_GymGuyBagFull
@@ -381,7 +387,9 @@ BlackthornGym_EventScript_GymGuyDone::
 	release
 	end
 BlackthornGym_EventScript_GymGuyBagFull::
-	msgbox BlackthornCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto BlackthornGym_EventScript_GymGuyDone
 	
 BlackthornGym_EventScript_GymGuy2::
@@ -443,3 +451,8 @@ BlackthornGym_Text_GymStatueCertified:
 BlackthornCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+BlackthornGym_EventScript_GymGuyAdviceFr_Text:
+	.string "CLAIR mise sur la paralysie, le\n"
+	.string "placement et les coups critiques.\pGarde une réponse saine à KINGDRA\n"
+	.string "et ne lui offre aucun tour gratuit.\pPrends cette EAU FRAÎCHE. Bonne chance !$"

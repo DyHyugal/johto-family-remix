@@ -27,7 +27,13 @@ GoldenrodCity_Gym_EventScript_Gym_Guy::
 	lock
 	faceplayer
 	goto_if_set FLAG_BADGE03_GET, GoldenrodCity_Gym_EventScript_Gym_Guy_After
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, GoldenrodCity_Gym_EventScript_GymGuyAdviceFr
 	msgbox GoldenrodCity_Gym_Text_GymGuide, MSGBOX_DEFAULT
+	goto GoldenrodCity_Gym_EventScript_GymGuyAdviceFr_Done
+GoldenrodCity_Gym_EventScript_GymGuyAdviceFr:
+	msgbox GoldenrodCity_Gym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+GoldenrodCity_Gym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_GOLDENROD, GoldenrodCity_Gym_EventScript_Gym_Guy_Done
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_Gym_EventScript_Gym_Guy_BagFull
@@ -37,7 +43,9 @@ GoldenrodCity_Gym_EventScript_Gym_Guy_Done::
 	release
 	end
 GoldenrodCity_Gym_EventScript_Gym_Guy_BagFull::
-	msgbox GoldenrodCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto GoldenrodCity_Gym_EventScript_Gym_Guy_Done
 
 GoldenrodCity_Gym_EventScript_Gym_Guy_After::
@@ -253,3 +261,8 @@ GoldenrodCity_Gym_Text_GymGuideWin:
 GoldenrodCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+GoldenrodCity_Gym_EventScript_GymGuyAdviceFr_Text:
+	.string "BLANCHE peut se placer puis transmettre\n"
+	.string "ses bonus avec RELAIS.\pEmpêche ÉVOLI de se placer ou de\n"
+	.string "passer ses bonus pour briser son plan.\pPrends cette EAU FRAÎCHE !$"

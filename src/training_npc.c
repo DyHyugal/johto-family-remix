@@ -1,5 +1,6 @@
 #include "global.h"
 #include "training_npc.h"
+#include "family_language.h"
 #include "caps.h"
 #include "event_data.h"
 #include "malloc.h"
@@ -48,6 +49,65 @@ static void PushChoice(const u8 *text, u32 id)
     item.name = name;
     item.id = id;
     MultichoiceDynamic_PushElement(item);
+}
+
+
+static void PushLocalizedChoice(const u8 *english, const u8 *french, u32 id)
+{
+    PushChoice(FamilyLanguage_Select(english, french), id);
+}
+
+void TrainingNpc_BuildMainMenu(void)
+{
+    PushLocalizedChoice(COMPOUND_STRING("IV"), COMPOUND_STRING("IV"), 0);
+    PushLocalizedChoice(COMPOUND_STRING("EV"), COMPOUND_STRING("EV"), 1);
+    PushLocalizedChoice(COMPOUND_STRING("EXP"), COMPOUND_STRING("EXP"), 2);
+    PushLocalizedChoice(COMPOUND_STRING("Friendship"), COMPOUND_STRING("Bonheur"), 3);
+    PushLocalizedChoice(COMPOUND_STRING("Nature"), COMPOUND_STRING("Nature"), 4);
+    PushLocalizedChoice(COMPOUND_STRING("Ability"), COMPOUND_STRING("Talent"), 5);
+    PushLocalizedChoice(COMPOUND_STRING("Quit"), COMPOUND_STRING("Quitter"), 6);
+}
+
+void TrainingNpc_BuildStatMenu(void)
+{
+    PushLocalizedChoice(COMPOUND_STRING("HP"), COMPOUND_STRING("PV"), 0);
+    PushLocalizedChoice(COMPOUND_STRING("Attack"), COMPOUND_STRING("Attaque"), 1);
+    PushLocalizedChoice(COMPOUND_STRING("Defense"), COMPOUND_STRING("Défense"), 2);
+    PushLocalizedChoice(COMPOUND_STRING("Sp. Attack"), COMPOUND_STRING("Atq. Spé."), 3);
+    PushLocalizedChoice(COMPOUND_STRING("Sp. Defense"), COMPOUND_STRING("Déf. Spé."), 4);
+    PushLocalizedChoice(COMPOUND_STRING("Speed"), COMPOUND_STRING("Vitesse"), 5);
+}
+
+void TrainingNpc_BuildIVMenu(void)
+{
+    TrainingNpc_BuildStatMenu();
+    PushLocalizedChoice(COMPOUND_STRING("Maximize all"), COMPOUND_STRING("Tout maximiser"), 6);
+    PushLocalizedChoice(COMPOUND_STRING("Back"), COMPOUND_STRING("Retour"), 7);
+}
+
+void TrainingNpc_BuildEVStatMenu(void)
+{
+    TrainingNpc_BuildStatMenu();
+    PushLocalizedChoice(COMPOUND_STRING("Back"), COMPOUND_STRING("Retour"), 6);
+}
+
+void TrainingNpc_BuildEVActionMenu(void)
+{
+    PushChoice(COMPOUND_STRING("+4"), 0);
+    PushChoice(COMPOUND_STRING("+16"), 1);
+    PushChoice(COMPOUND_STRING("+64"), 2);
+    PushLocalizedChoice(COMPOUND_STRING("MAX POSSIBLE"), COMPOUND_STRING("MAX POSSIBLE"), 3);
+    PushLocalizedChoice(COMPOUND_STRING("RESET STAT"), COMPOUND_STRING("RESET STAT"), 4);
+    PushLocalizedChoice(COMPOUND_STRING("RESET ALL EVs"), COMPOUND_STRING("RESET ALL EVs"), 5);
+    PushLocalizedChoice(COMPOUND_STRING("Back"), COMPOUND_STRING("Retour"), 6);
+}
+
+void TrainingNpc_BuildExpMenu(void)
+{
+    PushLocalizedChoice(COMPOUND_STRING("+1 level"), COMPOUND_STRING("+1 niveau"), 0);
+    PushLocalizedChoice(COMPOUND_STRING("+10 levels"), COMPOUND_STRING("+10 niveaux"), 1);
+    PushLocalizedChoice(COMPOUND_STRING("Current level cap"), COMPOUND_STRING("Niveau plafond"), 2);
+    PushLocalizedChoice(COMPOUND_STRING("Back"), COMPOUND_STRING("Retour"), 3);
 }
 
 static u32 GetTotalEVs(struct Pokemon *mon)

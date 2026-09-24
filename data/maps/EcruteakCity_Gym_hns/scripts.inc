@@ -5,7 +5,13 @@ EcruteakCity_Gym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_ECRUTEAK_CITY_GYM, EcruteakCity_Gym_EventScript_GymGuy2
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, EcruteakCity_Gym_EventScript_GymGuyAdviceFr
 	msgbox EcruteakCity_GymGuideText, MSGBOX_DEFAULT
+	goto EcruteakCity_Gym_EventScript_GymGuyAdviceFr_Done
+EcruteakCity_Gym_EventScript_GymGuyAdviceFr:
+	msgbox EcruteakCity_Gym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+EcruteakCity_Gym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_ECRUTEAK, EcruteakCity_Gym_EventScript_GymGuyDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Gym_EventScript_GymGuyBagFull
@@ -15,7 +21,9 @@ EcruteakCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 EcruteakCity_Gym_EventScript_GymGuyBagFull::
-	msgbox EcruteakCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto EcruteakCity_Gym_EventScript_GymGuyDone
 	
 EcruteakCity_Gym_EventScript_GymGuy2::
@@ -229,3 +237,8 @@ EcruteakCity_GymClosedText:
 EcruteakCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+EcruteakCity_Gym_EventScript_GymGuyAdviceFr_Text:
+	.string "MORTIMER brûle les attaquants\n"
+	.string "physiques avant de se placer.\pNe compte pas seulement sur les\n"
+	.string "attaques physiques et reste actif.\pPrends cette EAU FRAÎCHE !$"

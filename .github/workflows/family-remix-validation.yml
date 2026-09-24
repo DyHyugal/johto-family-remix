@@ -26,6 +26,8 @@ jobs:
         run: make check BUILD=hns TESTS='*Training NPC:' -j2
       - name: Family Safari tests
         run: make check BUILD=hns TESTS='*Family Safari:' -j2
+      - name: Family localization tests
+        run: make check BUILD=hns TESTS='*Family localization:' -j2
       - name: Existing audio regression tests
         run: make check BUILD=hns TESTS=Audio -j2
       - name: Existing Settings regression tests

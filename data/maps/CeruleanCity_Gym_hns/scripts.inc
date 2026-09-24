@@ -154,7 +154,13 @@ CeruleanCity_Gym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_CERULEAN_GYM, CeruleanCity_Gym_EventScript_GymGuyAfter
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, CeruleanCity_Gym_EventScript_GymGuyAdviceFr
 	msgbox CeruleanGym_Text_GuideIntro, MSGBOX_DEFAULT
+	goto CeruleanCity_Gym_EventScript_GymGuyAdviceFr_Done
+CeruleanCity_Gym_EventScript_GymGuyAdviceFr:
+	msgbox CeruleanCity_Gym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+CeruleanCity_Gym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_CERULEAN, CeruleanCity_Gym_EventScript_GymGuyDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, CeruleanCity_Gym_EventScript_GymGuyBagFull
@@ -163,7 +169,9 @@ CeruleanCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 CeruleanCity_Gym_EventScript_GymGuyBagFull::
-	msgbox CeruleanCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto CeruleanCity_Gym_EventScript_GymGuyDone
 
 CeruleanCity_Gym_EventScript_GymGuyAfter::
@@ -345,3 +353,8 @@ CeruleanGym_Text_Misty_ExplainTM:
 CeruleanCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+CeruleanCity_Gym_EventScript_GymGuyAdviceFr_Text:
+	.string "ONDINE combat sous la PLUIE. Ses\n"
+	.string "attaques EAU frappent plus fort.\pChange le climat ou temporise la\n"
+	.string "PLUIE avant d'engager tes atouts.\pPrends cette EAU FRAÎCHE. Bonne chance !$"

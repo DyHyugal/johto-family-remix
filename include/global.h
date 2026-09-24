@@ -344,6 +344,7 @@ struct ChallengeSettings
     u8 audioVolumeInitialized:1;
     u8 musicVolume:3; // 0 = muted, 1..5 = 20%..100%
     u8 sfxVolume:3;   // 0 = muted, 1..5 = 20%..100%
+    u8 familyLanguage:1; // FamilyLanguage; uses the final spare bit in this byte
 };
 
 struct SaveBlock3

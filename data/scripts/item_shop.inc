@@ -1,17 +1,23 @@
 ItemShop_EventScript::
 	lock
 	faceplayer
-	msgbox ItemShop_Text_Welcome, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 33
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 ItemShop_MainMenu:
 	closemessage
-	dynmultichoice 1, 1, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, ItemShop_Text_Buy, ItemShop_Text_Quit
+	callnative FamilyLanguage_BuildItemShopMainMenu
+	dynmultistack 1, 1, FALSE, 2, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	goto_if_eq VAR_RESULT, 0, ItemShop_CategoryMenu
 	goto ItemShop_Exit
 
 ItemShop_CategoryMenu:
-	msgbox ItemShop_Text_ChooseCategory, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 34
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 4, 0, DYN_MULTICHOICE_CB_NONE, ItemShop_Text_Evolution, ItemShop_Text_Strategic, ItemShop_Text_Other, ItemShop_Text_Back
+	callnative FamilyLanguage_BuildItemShopCategoryMenu
+	dynmultistack 1, 1, FALSE, 4, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	switch VAR_RESULT
 	case 0, ItemShop_EvolutionMenu
 	case 1, ItemShop_StrategicMenu
@@ -19,9 +25,12 @@ ItemShop_CategoryMenu:
 	goto ItemShop_MainMenu
 
 ItemShop_EvolutionMenu:
-	msgbox ItemShop_Text_ChooseSubcategory, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 35
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, ItemShop_Text_Stones, ItemShop_Text_TradeHeld, ItemShop_Text_SpecialRegional, ItemShop_Text_Back
+	callnative FamilyLanguage_BuildItemShopEvolutionMenu
+	dynmultistack 1, 1, FALSE, 4, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	switch VAR_RESULT
 	case 0, ItemShop_OpenStones
 	case 1, ItemShop_OpenTradeHeld
@@ -41,9 +50,12 @@ ItemShop_OpenSpecialRegional:
 	goto ItemShop_EvolutionMenu
 
 ItemShop_StrategicMenu:
-	msgbox ItemShop_Text_ChooseSubcategory, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 35
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, ItemShop_Text_TypeBoosters, ItemShop_Text_ChoiceOffensive, ItemShop_Text_DefenseSustain, ItemShop_Text_WeatherTerrain, ItemShop_Text_ActivationUtility, ItemShop_Text_CompetitiveBerries, ItemShop_Text_Back
+	callnative FamilyLanguage_BuildItemShopStrategicMenu
+	dynmultistack 1, 1, FALSE, 7, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	switch VAR_RESULT
 	case 0, ItemShop_OpenTypeBoosters
 	case 1, ItemShop_OpenChoiceOffensive
@@ -78,9 +90,12 @@ ItemShop_OpenCompetitiveBerries:
 	goto ItemShop_StrategicMenu
 
 ItemShop_OtherMenu:
-	msgbox ItemShop_Text_ChooseSubcategory, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 35
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, ItemShop_Text_Training, ItemShop_Text_BreedingFriendship, ItemShop_Text_Useful, ItemShop_Text_Back
+	callnative FamilyLanguage_BuildItemShopOtherMenu
+	dynmultistack 1, 1, FALSE, 4, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	switch VAR_RESULT
 	case 0, ItemShop_OpenTraining
 	case 1, ItemShop_OpenBreedingFriendship

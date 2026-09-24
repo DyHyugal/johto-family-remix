@@ -33,7 +33,9 @@ FamilyStarter_ConfirmChoice::
 	showmonpic VAR_0x8005, 10, 3
 	bufferspeciesname STR_VAR_1, VAR_0x8005
 	goto_if_ne VAR_0x8006, SPECIES_NONE, FamilyStarter_ConfirmEvolution
-	msgbox FamilyStarter_ConfirmSpecies, MSGBOX_YESNO
+	setvar VAR_0x8000, 0
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_YESNO
 	hidemonpic
 	goto_if_ne VAR_RESULT, YES, FamilyStarter_Species
 FamilyStarter_Accept::
@@ -41,7 +43,9 @@ FamilyStarter_Accept::
 	return
 FamilyStarter_ConfirmEvolution::
 	bufferspeciesname STR_VAR_2, VAR_0x8006
-	msgbox FamilyStarter_ConfirmEvolutionText, MSGBOX_YESNO
+	setvar VAR_0x8000, 1
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_YESNO
 	hidemonpic
 	goto_if_ne VAR_RESULT, YES, FamilyStarter_Evolution
 	goto FamilyStarter_Accept
@@ -49,7 +53,9 @@ FamilyStarter_EeveeEvolution::
 	setvar VAR_0x8005, SPECIES_EEVEE
 	setvar VAR_0x8006, SPECIES_NONE
 FamilyStarter_Evolution::
-	msgbox FamilyStarter_EvolutionPrompt, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 2
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
 	callnative FamilyStarter_BuildEvolutionMenu
 	dynmultistack 1, 1, FALSE, 6, FALSE, VAR_0x8008, DYN_MULTICHOICE_CB_NONE
@@ -102,7 +108,9 @@ FamilyStarter_ShowPendingPCItem:
 	delay 10
 	showitemdescription
 	waitfanfare
-	msgbox FamilyStarter_ItemSentPC, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 3
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	hideitemdescription
 	goto FamilyStarter_ShowPendingItem
 FamilyStarter_ShowPendingItemReturn:

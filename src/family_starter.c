@@ -1,5 +1,6 @@
 #include "global.h"
 #include "family_starter.h"
+#include "family_language.h"
 #include "pokemon.h"
 #include "daycare.h"
 #include "pokemon_storage_system.h"
@@ -302,13 +303,13 @@ static void PushChoice(const u8 *text, u16 id)
 
 void FamilyStarter_BuildCategoryMenu(void)
 {
-    PushChoice(COMPOUND_STRING("Feu"), FAMILY_FIRE);
-    PushChoice(COMPOUND_STRING("Eau"), FAMILY_WATER);
-    PushChoice(COMPOUND_STRING("Plante"), FAMILY_GRASS);
-    PushChoice(COMPOUND_STRING("Électrik"), FAMILY_ELECTRIC);
-    PushChoice(COMPOUND_STRING("Sol"), FAMILY_GROUND);
-    PushChoice(COMPOUND_STRING("Glace"), FAMILY_ICE);
-    PushChoice(COMPOUND_STRING("Évoli"), FAMILY_EEVEE);
+    PushChoice(FamilyLanguage_Select(COMPOUND_STRING("Fire"), COMPOUND_STRING("Feu")), FAMILY_FIRE);
+    PushChoice(FamilyLanguage_Select(COMPOUND_STRING("Water"), COMPOUND_STRING("Eau")), FAMILY_WATER);
+    PushChoice(FamilyLanguage_Select(COMPOUND_STRING("Grass"), COMPOUND_STRING("Plante")), FAMILY_GRASS);
+    PushChoice(FamilyLanguage_Select(COMPOUND_STRING("Electric"), COMPOUND_STRING("Électrik")), FAMILY_ELECTRIC);
+    PushChoice(FamilyLanguage_Select(COMPOUND_STRING("Ground"), COMPOUND_STRING("Sol")), FAMILY_GROUND);
+    PushChoice(FamilyLanguage_Select(COMPOUND_STRING("Ice"), COMPOUND_STRING("Glace")), FAMILY_ICE);
+    PushChoice(FamilyLanguage_Select(COMPOUND_STRING("Eevee"), COMPOUND_STRING("Évoli")), FAMILY_EEVEE);
 }
 
 void FamilyStarter_BuildSpeciesMenu(void)
@@ -320,7 +321,7 @@ void FamilyStarter_BuildSpeciesMenu(void)
         if (FamilyStarter_IsAvailable(species))
             PushChoice(GetSpeciesName(species), species);
     }
-    PushChoice(COMPOUND_STRING("Retour"), SPECIES_NONE);
+    PushChoice(FamilyLanguage_Select(COMPOUND_STRING("Back"), COMPOUND_STRING("Retour")), SPECIES_NONE);
 }
 
 void FamilyStarter_SaveSpeciesCursor(void)

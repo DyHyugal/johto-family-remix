@@ -1,3 +1,35 @@
+CeladonCity_Gym_EventScript_GymGuy::
+	lock
+	faceplayer
+	goto_if_set FLAG_DEFEATED_CELADON_GYM, CeladonCity_Gym_EventScript_GymGuy_After
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, CeladonCity_Gym_EventScript_GymGuy_AdviceFr
+	msgbox CeladonCity_Gym_EventScript_GymGuy_AdviceEn, MSGBOX_DEFAULT
+	goto CeladonCity_Gym_EventScript_GymGuy_GiveWater
+CeladonCity_Gym_EventScript_GymGuy_AdviceFr:
+	msgbox CeladonCity_Gym_EventScript_GymGuy_AdviceFrText, MSGBOX_DEFAULT
+CeladonCity_Gym_EventScript_GymGuy_GiveWater:
+	goto_if_set FLAG_FAMILY_GYM_WATER_CELADON, CeladonCity_Gym_EventScript_GymGuy_Done
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, CeladonCity_Gym_EventScript_GymGuy_BagFull
+	setflag FLAG_FAMILY_GYM_WATER_CELADON
+CeladonCity_Gym_EventScript_GymGuy_Done:
+	release
+	end
+CeladonCity_Gym_EventScript_GymGuy_BagFull:
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
+	goto CeladonCity_Gym_EventScript_GymGuy_Done
+CeladonCity_Gym_EventScript_GymGuy_After:
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, CeladonCity_Gym_EventScript_GymGuy_WinFr
+	msgbox CeladonCity_Gym_EventScript_GymGuy_WinEn, MSGBOX_DEFAULT
+	goto CeladonCity_Gym_EventScript_GymGuy_Done
+CeladonCity_Gym_EventScript_GymGuy_WinFr:
+	msgbox CeladonCity_Gym_EventScript_GymGuy_WinFrText, MSGBOX_DEFAULT
+	goto CeladonCity_Gym_EventScript_GymGuy_Done
+
 CeladonCity_Gym_hns_MapScripts::
 	.byte 0
 
@@ -185,3 +217,15 @@ CeladonCity_Gym_Text_GymStatuePlayerWon::
     .string "LEADER: ERIKA\p"
     .string "WINNING TRAINERS:\n"
 	.string "BLUE, RED, {PLAYER}$"
+
+CeladonCity_Gym_EventScript_GymGuy_AdviceEn:
+	.string "ERIKA uses GRASSY TERRAIN, recovery\n"
+	.string "and several ways to gain momentum.\pChange the terrain and do not let her\n"
+	.string "defensive core settle in.\pTake this FRESH WATER. Good luck!$"
+CeladonCity_Gym_EventScript_GymGuy_AdviceFrText:
+	.string "ERIKA utilise le CHAMP HERBU, des\nsoins et plusieurs pivots.\pChange le terrain et ne laisse pas son\nnoyau défensif s'installer.\pPrends cette EAU FRAÎCHE !$"
+CeladonCity_Gym_EventScript_GymGuy_WinEn:
+	.string "You cut through ERIKA's strategy!\nThat was a beautiful victory!$"
+CeladonCity_Gym_EventScript_GymGuy_WinFrText:
+	.string "Tu as déjoué la stratégie d'ERIKA !\n"
+	.string "Quelle belle victoire !$"

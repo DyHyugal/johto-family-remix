@@ -503,7 +503,9 @@ VioletCity_FamilyEggOriginalCall::
 	pokenavcall VioletCity_Text_Elm_Call
 	return
 VioletCity_FamilyEggNewCall::
-	pokenavcall VioletCity_FamilyEggCallText
+	setvar VAR_0x8000, 29
+	callnative FamilyLanguage_BufferText
+	pokenavcall gStringVar4
 	return
 VioletCity_FamilyEggCallText:
 	.string "ORME: Comment va ton œuf ?\p"

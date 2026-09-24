@@ -277,12 +277,61 @@ def validate_shops():
             fail(f"progression-bypassing item in special shop: {item}")
 
 
+def validate_localization():
+    header = (ROOT / "include/family_language.h").read_text()
+    source = (ROOT / "src/family_language.c").read_text()
+    settings = (ROOT / "src/challenge_menu.c").read_text()
+    disclaimer = (ROOT / "src/oak_speech_hns.c").read_text()
+
+    for token in ("familyLanguage:1", "LANGUAGE / LANGUE", "SetFamilyLanguage",
+                  "FAMILY_LANGUAGE_ENGLISH", "FAMILY_LANGUAGE_FRENCH"):
+        if token not in (header + source + settings + (ROOT / "include/global.h").read_text()):
+            fail(f"localization persistence token is missing: {token}")
+    for text in (
+        "POKéMON FAMILY REMIX defaults to HARD difficulty.",
+        "This mode features more strategic and demanding boss battles.",
+        "POKéMON FAMILY REMIX est réglé par défaut sur HARD.",
+        "Ce mode propose des combats de boss plus stratégiques et exigeants.",
+    ):
+        if text not in disclaimer:
+            fail(f"required bilingual disclaimer text is missing: {text}")
+
+    tm_shop = (ROOT / "data/scripts/tm_shop.inc").read_text()
+    item_shop = (ROOT / "data/scripts/item_shop.inc").read_text()
+    for token in ("FamilyLanguage_BuildTmShopMainMenu", "FamilyLanguage_BuildTmShopCategoryMenu",
+                  "FamilyLanguage_BuildTmShopSupportTypeMenu", "FamilyLanguage_BuildTmShopWeakTypeMenu",
+                  "FamilyLanguage_BuildTmShopPowerfulTypeMenu", "FamilyLanguage_BuildTmShopUltimateTypeMenu"):
+        if token not in tm_shop:
+            fail(f"localized TM shop hook is missing: {token}")
+    for token in ("FamilyLanguage_BuildItemShopMainMenu", "FamilyLanguage_BuildItemShopCategoryMenu",
+                  "FamilyLanguage_BuildItemShopEvolutionMenu", "FamilyLanguage_BuildItemShopStrategicMenu",
+                  "FamilyLanguage_BuildItemShopOtherMenu"):
+        if token not in item_shop:
+            fail(f"localized item shop hook is missing: {token}")
+
+    gym_scripts = []
+    flags = set()
+    for path in (ROOT / "data/maps").glob("*/scripts.inc"):
+        map_text = path.read_text()
+        found = set(re.findall(r"FLAG_FAMILY_GYM_WATER_[A-Z]+", map_text))
+        if found:
+            gym_scripts.append(path)
+            flags.update(found)
+            if "FamilyLanguage_SetScriptResult" not in map_text:
+                fail(f"Gym Guide has no EN/FR selection: {path.parent.name}")
+            if "giveitem ITEM_FRESH_WATER" not in map_text:
+                fail(f"Gym Guide has no Fresh Water reward: {path.parent.name}")
+    if len(gym_scripts) != 16 or len(flags) != 16:
+        fail(f"expected 16 localized Gym Guides/flags, got {len(gym_scripts)}/{len(flags)}")
+
+
 def main():
     validate_bosses()
     validate_rockets()
     validate_encounters()
     validate_shops()
-    print("Family Remix data validation passed: bosses, Rockets, EVs, encounters, Safari and shops")
+    validate_localization()
+    print("Family Remix data validation passed: bosses, Rockets, EVs, encounters, Safari, shops and EN/FR")
 
 
 if __name__ == "__main__":

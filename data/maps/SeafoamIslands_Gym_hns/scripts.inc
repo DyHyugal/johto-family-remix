@@ -38,7 +38,13 @@ SeafomIslands2_EventScript_GymGuide::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_CINNABAR_ISLAND_GYM, SeafomIslands2_EventScript_GymGuide2
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, SeafomIslands2_EventScript_GymGuideAdviceFr
 	msgbox SeafoamIslands_Gym_Text_GymGuideAdvice, MSGBOX_DEFAULT
+	goto SeafomIslands2_EventScript_GymGuideAdviceFr_Done
+SeafomIslands2_EventScript_GymGuideAdviceFr:
+	msgbox SeafomIslands2_EventScript_GymGuideAdviceFr_Text, MSGBOX_DEFAULT
+SeafomIslands2_EventScript_GymGuideAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_SEAFOAM, SeafomIslands2_EventScript_GymGuideDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, SeafomIslands2_EventScript_GymGuideBagFull
@@ -47,7 +53,9 @@ SeafomIslands2_EventScript_GymGuideDone::
 	release
 	end
 SeafomIslands2_EventScript_GymGuideBagFull::
-	msgbox SeafoamIslands_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto SeafomIslands2_EventScript_GymGuideDone
 SeafomIslands2_EventScript_GymGuide2::
 	msgbox SeafoamIslands_Gym_Text_GymGuideWin2, MSGBOX_DEFAULT
@@ -158,3 +166,8 @@ SeafoamIslands_Gym_Text_GymGuideWin2:
 	.string "A POKéMON GYM can be anywhere as\n"
 	.string "long as the GYM LEADER is there.\p"
 	.string "There's no need for a building.$"
+
+SeafomIslands2_EventScript_GymGuideAdviceFr_Text:
+	.string "AUGUSTE combat sous le SOLEIL. Le FEU\n"
+	.string "frappe plus fort et CHLOROPHYLLE accélère.\pChange le climat et ne laisse pas ses\n"
+	.string "attaquants se placer gratuitement.\pPrends cette EAU FRAÎCHE !$"

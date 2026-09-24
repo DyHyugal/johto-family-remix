@@ -103,7 +103,13 @@ ViridianCity_Gym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_Gym_EventScript_GymGuyAfter
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, ViridianCity_Gym_EventScript_GymGuyAdviceFr
 	msgbox ViridianCity_Gym_Text_Guide, MSGBOX_DEFAULT
+	goto ViridianCity_Gym_EventScript_GymGuyAdviceFr_Done
+ViridianCity_Gym_EventScript_GymGuyAdviceFr:
+	msgbox ViridianCity_Gym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+ViridianCity_Gym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_VIRIDIAN, ViridianCity_Gym_EventScript_GymGuyDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_EventScript_GymGuyBagFull
@@ -112,7 +118,9 @@ ViridianCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 ViridianCity_Gym_EventScript_GymGuyBagFull::
-	msgbox ViridianCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto ViridianCity_Gym_EventScript_GymGuyDone
 
 ViridianCity_Gym_EventScript_GymGuyAfter::
@@ -161,3 +169,8 @@ ViridianCity_Gym_Text_GymStatuePlayerWon::
 ViridianCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+ViridianCity_Gym_EventScript_GymGuyAdviceFr_Text:
+	.string "BLUE ne laisse aucun répit : gros\n"
+	.string "dégâts, pivots et placement.\pReste actif et garde des réponses\n"
+	.string "solides ou de la priorité après un K.O.\pPrends cette EAU FRAÎCHE !$"

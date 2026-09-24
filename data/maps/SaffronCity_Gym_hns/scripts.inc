@@ -5,7 +5,13 @@ SaffronCity_Gym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_SAFFRON_GYM, SaffronCity_Gym_EventScript_GymGuy2
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, SaffronCity_Gym_EventScript_GymGuyAdviceFr
 	msgbox SaffronCity_Gym_Text_GymGuideIntro, MSGBOX_DEFAULT
+	goto SaffronCity_Gym_EventScript_GymGuyAdviceFr_Done
+SaffronCity_Gym_EventScript_GymGuyAdviceFr:
+	msgbox SaffronCity_Gym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+SaffronCity_Gym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_SAFFRON, SaffronCity_Gym_EventScript_GymGuyDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_Gym_EventScript_GymGuyBagFull
@@ -14,7 +20,9 @@ SaffronCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 SaffronCity_Gym_EventScript_GymGuyBagFull::
-	msgbox SaffronCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto SaffronCity_Gym_EventScript_GymGuyDone
 
 SaffronCity_Gym_EventScript_GymGuy2::
@@ -214,3 +222,8 @@ SaffronCity_Gym_Text_GymStatuePlayerWon::
 SaffronCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+SaffronCity_Gym_EventScript_GymGuyAdviceFr_Text:
+	.string "MORGANE utilise DISTORSION : les plus\n"
+	.string "lents attaquent alors en premier.\pTemporise, utilise la priorité et mets\n"
+	.string "la pression sur les poseurs.\pPrends cette EAU FRAÎCHE !$"

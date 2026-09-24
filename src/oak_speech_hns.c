@@ -1,4 +1,5 @@
 #include "global.h"
+#include "family_language.h"
 #include "trainer_pokemon_sprites.h"
 #include "bg.h"
 #include "constants/rgb.h"
@@ -349,12 +350,16 @@ static void Task_NewGameHnsSpeech_WaitForSpriteFadeInWelcome(u8 taskId)
 
 static void Task_NewGameHnsSpeech_FamilyRemixDisclaimer(u8 taskId)
 {
-    static const u8 sText_FamilyRemixDisclaimer[] = _(
-        "{COLOR RED}POKéMON FAMILY REMIX defaults to HARD.{COLOR DARK_GRAY}\p"
-        "Boss battles are more strategic and demanding.\p"
-        "NORMAL remains available in the settings if you prefer standard HEART & SOUL balance.");
+    static const u8 sText_FamilyRemixDisclaimerEn[] = _(
+        "{COLOR RED}POKéMON FAMILY REMIX defaults to HARD difficulty.{COLOR DARK_GRAY}\p"
+        "This mode features more strategic and demanding boss battles.\p"
+        "NORMAL mode remains available in Settings if you prefer the standard HEART & SOUL balance.");
+    static const u8 sText_FamilyRemixDisclaimerFr[] = _(
+        "{COLOR RED}POKéMON FAMILY REMIX est réglé par défaut sur HARD.{COLOR DARK_GRAY}\p"
+        "Ce mode propose des combats de boss plus stratégiques et exigeants.\p"
+        "Le mode NORMAL reste disponible dans les paramètres si tu préfères l'équilibrage standard de Heart & Soul.");
 
-    StringCopy(gStringVar4, sText_FamilyRemixDisclaimer);
+    StringCopy(gStringVar4, FamilyLanguage_Select(sText_FamilyRemixDisclaimerEn, sText_FamilyRemixDisclaimerFr));
     AddTextPrinterForMessage(TRUE);
     gTasks[taskId].func = Task_NewGameHnsSpeech_WaitFamilyRemixDisclaimer;
 }

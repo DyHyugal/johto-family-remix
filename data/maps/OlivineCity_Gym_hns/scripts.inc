@@ -172,7 +172,13 @@ OlivineCity_Gym_EventScript_GymGuide::
 	faceplayer
 	goto_if_lt VAR_OLIVINE_CITY_STATE, 5, OlivineCity_Gym_EventScript_GymGuideSick
 	goto_if_set FLAG_DEFEATED_OLIVINE_CITY_GYM, OlivineCity_Gym_EventScript_GymGuideAfter
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, OlivineCity_Gym_EventScript_GymGuideAdviceFr
 	msgbox OlivineCity_Gym_Text_GymGuideText, MSGBOX_DEFAULT
+	goto OlivineCity_Gym_EventScript_GymGuideAdviceFr_Done
+OlivineCity_Gym_EventScript_GymGuideAdviceFr:
+	msgbox OlivineCity_Gym_EventScript_GymGuideAdviceFr_Text, MSGBOX_DEFAULT
+OlivineCity_Gym_EventScript_GymGuideAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_OLIVINE, OlivineCity_Gym_EventScript_GymGuideDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, OlivineCity_Gym_EventScript_GymGuideBagFull
@@ -182,7 +188,9 @@ OlivineCity_Gym_EventScript_GymGuideDone::
 	release
 	end
 OlivineCity_Gym_EventScript_GymGuideBagFull::
-	msgbox OlivineCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto OlivineCity_Gym_EventScript_GymGuideDone
 
 OlivineCity_Gym_EventScript_GymGuideSick::
@@ -393,3 +401,8 @@ OlivineCity_Gym_Text_JasmineTradeCompleted:
 OlivineCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+OlivineCity_Gym_EventScript_GymGuideAdviceFr_Text:
+	.string "JASMINE combine les pièges avec des\n"
+	.string "POKéMON qui changent défense en force.\pNe laisse pas NOACIER s'installer et\n"
+	.string "frappe ses murs sur le spécial.\pPrends cette EAU FRAÎCHE !$"

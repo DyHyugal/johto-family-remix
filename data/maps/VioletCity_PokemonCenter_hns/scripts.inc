@@ -189,7 +189,9 @@ VioletCity_PokemonCenter_FamilyEggPending::
 	release
 	end
 VioletCity_PokemonCenter_FamilyEggReceived::
-	msgbox VioletCity_PokemonCenter_FamilyEggText, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 28
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto VioletCity_PokemonCenter_FamilyEggExistingReward
 VioletCity_PokemonCenter_FamilyEggText:
 	.string "Le PROF. ORME m'a parlé de ton\n"

@@ -1,3 +1,35 @@
+CianwoodGym_EventScript_GymGuy::
+	lock
+	faceplayer
+	goto_if_set FLAG_DEFEATED_CIANWOOD_GYM, CianwoodGym_EventScript_GymGuy_After
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, CianwoodGym_EventScript_GymGuy_AdviceFr
+	msgbox CianwoodGym_EventScript_GymGuy_AdviceEn, MSGBOX_DEFAULT
+	goto CianwoodGym_EventScript_GymGuy_GiveWater
+CianwoodGym_EventScript_GymGuy_AdviceFr:
+	msgbox CianwoodGym_EventScript_GymGuy_AdviceFrText, MSGBOX_DEFAULT
+CianwoodGym_EventScript_GymGuy_GiveWater:
+	goto_if_set FLAG_FAMILY_GYM_WATER_CIANWOOD, CianwoodGym_EventScript_GymGuy_Done
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, CianwoodGym_EventScript_GymGuy_BagFull
+	setflag FLAG_FAMILY_GYM_WATER_CIANWOOD
+CianwoodGym_EventScript_GymGuy_Done:
+	release
+	end
+CianwoodGym_EventScript_GymGuy_BagFull:
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
+	goto CianwoodGym_EventScript_GymGuy_Done
+CianwoodGym_EventScript_GymGuy_After:
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, CianwoodGym_EventScript_GymGuy_WinFr
+	msgbox CianwoodGym_EventScript_GymGuy_WinEn, MSGBOX_DEFAULT
+	goto CianwoodGym_EventScript_GymGuy_Done
+CianwoodGym_EventScript_GymGuy_WinFr:
+	msgbox CianwoodGym_EventScript_GymGuy_WinFrText, MSGBOX_DEFAULT
+	goto CianwoodGym_EventScript_GymGuy_Done
+
 CianwoodGym_hns_MapScripts::
 	.byte 0
 
@@ -248,3 +280,17 @@ CianwoodGym_Text_BlackbeltLungAfter:
 	.string "My POKéMON lost…\n"
 	.string "My… my pride is shattered…$"
 
+
+CianwoodGym_EventScript_GymGuy_AdviceEn:
+	.string "CHUCK attacks fast and uses priority.\pStop his setup before HAWLUCHA,\n"
+	.string "LUCARIO or POLIWRATH can sweep.\pTake this FRESH WATER. Good luck!$"
+CianwoodGym_EventScript_GymGuy_AdviceFrText:
+	.string "CHUCK attaque vite et utilise la\n"
+	.string "priorité.\pStoppe son placement avant que ses\n"
+	.string "combattants ne balaient ton équipe.\pPrends cette EAU FRAÎCHE !$"
+CianwoodGym_EventScript_GymGuy_WinEn:
+	.string "You beat CHUCK with real strength!\n"
+	.string "Keep that fighting spirit!$"
+CianwoodGym_EventScript_GymGuy_WinFrText:
+	.string "Tu as vaincu CHUCK avec force !\n"
+	.string "Garde cet esprit combatif !$"

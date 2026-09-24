@@ -111,7 +111,13 @@ PewterCity_Gym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_PEWTER_GYM, PewterCity_Gym_EventScript_GymGuyAfter
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, PewterCity_Gym_EventScript_GymGuyAdviceFr
 	msgbox PewterCity_Gym_Text_Guide, MSGBOX_DEFAULT
+	goto PewterCity_Gym_EventScript_GymGuyAdviceFr_Done
+PewterCity_Gym_EventScript_GymGuyAdviceFr:
+	msgbox PewterCity_Gym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+PewterCity_Gym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_PEWTER, PewterCity_Gym_EventScript_GymGuyDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, PewterCity_Gym_EventScript_GymGuyBagFull
@@ -120,7 +126,9 @@ PewterCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 PewterCity_Gym_EventScript_GymGuyBagFull::
-	msgbox PewterCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto PewterCity_Gym_EventScript_GymGuyDone
 
 PewterCity_Gym_EventScript_GymGuyAfter::
@@ -203,3 +211,8 @@ PewterCity_Gym_Text_BrockTradeCompleted:
 PewterCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+PewterCity_Gym_EventScript_GymGuyAdviceFr_Text:
+	.string "PIERRE utilise la TEMPÊTE DE SABLE\n"
+	.string "pour t'user et accélérer MINOTAUPE.\pChange le climat ou temporise, et ne\n"
+	.string "lui offre pas DANSE-LAMES.\pPrends cette EAU FRAÎCHE !$"

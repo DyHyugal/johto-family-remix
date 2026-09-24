@@ -142,6 +142,7 @@ void SetDefaultChallengeSettings(void)
     gSaveblock3.challengeSettings.audioVolumeInitialized = 1;
     gSaveblock3.challengeSettings.musicVolume = 1; // 20%
     gSaveblock3.challengeSettings.sfxVolume = 1;   // 20%
+    gSaveblock3.challengeSettings.familyLanguage = 0; // English
     gSaveblock3.challengeSettings.runType = 0;
 
     // Challenge menu — "RECOMMENDED" defaults

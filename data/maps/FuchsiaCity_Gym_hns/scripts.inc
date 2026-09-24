@@ -258,7 +258,13 @@ FuchsiaCity_Gym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_FUCHSIA_GYM, FuchsiaCity_Gym_EventScript_GymGuyAfter
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, FuchsiaCity_Gym_EventScript_GymGuyAdviceFr
 	msgbox FuchsiaCity_Gym_Text_Guide, MSGBOX_DEFAULT
+	goto FuchsiaCity_Gym_EventScript_GymGuyAdviceFr_Done
+FuchsiaCity_Gym_EventScript_GymGuyAdviceFr:
+	msgbox FuchsiaCity_Gym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+FuchsiaCity_Gym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_FUCHSIA, FuchsiaCity_Gym_EventScript_GymGuyDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, FuchsiaCity_Gym_EventScript_GymGuyBagFull
@@ -267,7 +273,9 @@ FuchsiaCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 FuchsiaCity_Gym_EventScript_GymGuyBagFull::
-	msgbox FuchsiaCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto FuchsiaCity_Gym_EventScript_GymGuyDone
 
 FuchsiaCity_Gym_EventScript_GymGuyAfter::
@@ -314,3 +322,8 @@ FuchsiaCity_Gym_Text_GuideWin:
 FuchsiaCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+FuchsiaCity_Gym_EventScript_GymGuyAdviceFr_Text:
+	.string "JEANNINE cherche un combat long avec\n"
+	.string "PICOTS TOXIK, soins et RÉGÉ-FORCE.\pRetire pièges et statuts, et empêche\n"
+	.string "son noyau défensif de se rétablir.\pPrends cette EAU FRAÎCHE !$"

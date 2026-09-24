@@ -212,7 +212,13 @@ VermilionCity_Gym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_VERMILION_GYM, VermilionCity_Gym_EventScript_GymGuyPostVictory
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, VermilionCity_Gym_EventScript_GymGuyAdviceFr
 	msgbox VermilionCity_Gym_Text_GymGuyAdvice, MSGBOX_DEFAULT
+	goto VermilionCity_Gym_EventScript_GymGuyAdviceFr_Done
+VermilionCity_Gym_EventScript_GymGuyAdviceFr:
+	msgbox VermilionCity_Gym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+VermilionCity_Gym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_VERMILION, VermilionCity_Gym_EventScript_GymGuyDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, VermilionCity_Gym_EventScript_GymGuyBagFull
@@ -221,7 +227,9 @@ VermilionCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 VermilionCity_Gym_EventScript_GymGuyBagFull::
-	msgbox VermilionCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto VermilionCity_Gym_EventScript_GymGuyDone
 
 VermilionCity_Gym_EventScript_GymGuyPostVictory::
@@ -438,3 +446,8 @@ VermilionCity_Gym_Text_OnlyTrashLocksWereReset::
 VermilionCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+VermilionCity_Gym_EventScript_GymGuyAdviceFr_Text:
+	.string "MAJOR BOB base son attaque sur le CHAMP\n"
+	.string "ÉLECTRIFIÉ. RAICHU d'ALOLA y est très rapide.\pRetire le terrain ou temporise-le pour\n"
+	.string "casser le rythme de son équipe.\pPrends cette EAU FRAÎCHE !$"

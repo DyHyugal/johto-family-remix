@@ -482,7 +482,13 @@ AzaleaTown_Gym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_BADGE02_GET, AzaleaTown_Gym_EventScript_GymGuy2
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, AzaleaTown_Gym_EventScript_GymGuyAdviceFr
 	msgbox AzaleaTown_Gym_Text_GymGuide, MSGBOX_DEFAULT
+	goto AzaleaTown_Gym_EventScript_GymGuyAdviceFr_Done
+AzaleaTown_Gym_EventScript_GymGuyAdviceFr:
+	msgbox AzaleaTown_Gym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+AzaleaTown_Gym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_AZALEA, AzaleaTown_Gym_EventScript_GymGuyDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, AzaleaTown_Gym_EventScript_GymGuyBagFull
@@ -492,7 +498,9 @@ AzaleaTown_Gym_EventScript_GymGuyDone::
 	release
 	end
 AzaleaTown_Gym_EventScript_GymGuyBagFull::
-	msgbox AzaleaTown_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto AzaleaTown_Gym_EventScript_GymGuyDone
 
 AzaleaTown_Gym_EventScript_GymGuy2::
@@ -815,3 +823,8 @@ AzaleaTown_Gym_Text_GymGuideWin:
 AzaleaTown_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+AzaleaTown_Gym_EventScript_GymGuyAdviceFr_Text:
+	.string "BUGSY accumule PIÈGE DE ROC et\n"
+	.string "les PICOTS à chaque changement.\pÉvite de changer sans raison et\n"
+	.string "retire les pièges si possible.\pPrends cette EAU FRAÎCHE. Bonne chance !$"

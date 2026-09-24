@@ -1057,7 +1057,9 @@ NewBarkTown_Lab_Text_Elm_CallMe:
 	.string "and I can check your progress!$"
 
 NewBarkTown_Lab_FamilyStarterChoice::
-	msgbox NewBarkTown_Lab_FamilyStarterPrompt, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 22
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	call FamilyStarter_Select
 	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_FamilyStarterCancel
 	copyvar PLAYER_STARTER_SPECIES, VAR_0x8005
@@ -1078,29 +1080,39 @@ NewBarkTown_Lab_FamilyEggChoice::
 	goto_if_ne VAR_FAMILY_EGG_SPECIES, SPECIES_NONE, NewBarkTown_Lab_FamilyEggReturn
 	checkitem ITEM_MYSTERY_EGG
 	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_FamilyEggReturn
-	msgbox NewBarkTown_Lab_FamilyEggPrompt, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 23
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	call FamilyStarter_Select
 	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_FamilyEggLater
 	callnative FamilyStarter_GiveEgg
 	goto_if_eq VAR_RESULT, MON_CANT_GIVE, NewBarkTown_Lab_FamilyEggNoRoom
 	copyvar VAR_0x8007, VAR_RESULT
 	bufferspeciesname STR_VAR_1, VAR_FAMILY_EGG_SPECIES
-	msgbox NewBarkTown_Lab_FamilyEggRecognized, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 24
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	call_if_eq VAR_0x8007, MON_GIVEN_TO_PC, NewBarkTown_Lab_FamilyEggPC
 	call FamilyStarter_ShowPendingItem
 NewBarkTown_Lab_FamilyEggReturn::
 	return
 
 NewBarkTown_Lab_FamilyEggPC::
-	msgbox NewBarkTown_Lab_FamilyEggSentPC, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 27
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	return
 
 NewBarkTown_Lab_FamilyEggLater::
-	msgbox NewBarkTown_Lab_FamilyEggKeep, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 25
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	return
 
 NewBarkTown_Lab_FamilyEggNoRoom::
-	msgbox NewBarkTown_Lab_FamilyEggFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 26
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	return
 
 NewBarkTown_Lab_FamilyEggHatched::

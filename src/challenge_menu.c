@@ -27,6 +27,7 @@
 #include "overworld.h"
 #include "script.h"
 #include "challenge_menu.h"
+#include "family_language.h"
 
 
 // =============================================================================
@@ -71,6 +72,7 @@ enum {
     ITEM_FEATURES_ITEM_DROP,
     ITEM_FEATURES_FRONTIER_BANS,
     ITEM_FEATURES_GAME_SPEED,
+    ITEM_FEATURES_LANGUAGE,
     ITEM_FEATURES_NEXT,
     ITEM_FEATURES_COUNT,
 };
@@ -360,6 +362,7 @@ static const u8 sText_TopBar_Left[]   = _("{L_BUTTON}PREVIOUS");
 static const u8 sText_TopBar_Right[]  = _("{R_BUTTON}NEXT");
 static const u8 sText_TopBar_Save[]   = _("{R_BUTTON}SAVE");
 static const u8 sText_TopBar_Cancel[] = _("{B_BUTTON}SAVE & EXIT");
+static const u8 sText_TopBar_CancelFr[] = _("{B_BUTTON}SAUVER & QUITTER");
 
 // =============================================================================
 // Tab item tables — skeleton placeholders
@@ -662,6 +665,14 @@ static const u8 *const sDesc_ShinyColor[] = {
     COMPOUND_STRING("Original shiny color palette for\nall {PKMN}. Default."),
     COMPOUND_STRING("Some shiny {PKMN} have brand new\ncolor palettes."),
 };
+static const u8 *const sDesc_Language[] = {
+    COMPOUND_STRING("Use English for Family Remix text."),
+    COMPOUND_STRING("Textes Family Remix en francais."),
+};
+static const u8 *const sChoices_Language[] = {
+    COMPOUND_STRING("ENGLISH"),
+    COMPOUND_STRING("FRANCAIS"),
+};
 static const u8 *const sDesc_FeaturesNext[] = {
     COMPOUND_STRING("Continue to Randomizer options."),
 };
@@ -710,6 +721,12 @@ static const struct ChallengeMenuItem sTabItems_Features[] = {
             COMPOUND_STRING("x1"), COMPOUND_STRING("x2"),
             COMPOUND_STRING("x3"), COMPOUND_STRING("x4"),
         },
+    },
+    [ITEM_FEATURES_LANGUAGE] = {
+        .name         = COMPOUND_STRING("LANGUAGE / LANGUE"),
+        .descriptions = sDesc_Language,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_Language,
     },
     [ITEM_FEATURES_NEXT] = {
         .name         = COMPOUND_STRING("NEXT"),
@@ -1677,8 +1694,9 @@ static void DrawTopBar(void)
     else if (sMenu->currentTab == TAB_COUNT - 1)
         AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, right, 1, color, 0, sText_TopBar_Save);
     {
-        int saveExitX = (120 + width + right) / 2 - GetStringWidth(FONT_SMALL, sText_TopBar_Cancel, 0) / 2;
-        AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, saveExitX, 1, color, 0, sText_TopBar_Cancel);
+        const u8 *saveExit = FamilyLanguage_Select(sText_TopBar_Cancel, sText_TopBar_CancelFr);
+        int saveExitX = (120 + width + right) / 2 - GetStringWidth(FONT_SMALL, saveExit, 0) / 2;
+        AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, saveExitX, 1, color, 0, saveExit);
     }
 
     PutWindowTilemap(WIN_TOPBAR);
@@ -2020,6 +2038,7 @@ static void Task_ConfirmSaveYes(u8 taskId)
 
     // Features tab
     SetNativeGameSpeed(*GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_GAME_SPEED) + 1);
+    SetFamilyLanguage(*GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_LANGUAGE));
     cs->tx_Features_RTCType        = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_RTC_TYPE);
     cs->tx_Features_ShinyChance    = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_SHINY_CHANCE);
     cs->tx_Features_WildMonDropItems = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_ITEM_DROP);
@@ -2260,6 +2279,7 @@ void CB2_InitChallengeMenu(void)
 
             // Features tab
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_GAME_SPEED) = GetNativeGameSpeed() - 1;
+            *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_LANGUAGE) = GetFamilyLanguage();
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_RTC_TYPE)     = cs->tx_Features_RTCType;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_SHINY_CHANCE) = cs->tx_Features_ShinyChance;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_ITEM_DROP)    = cs->tx_Features_WildMonDropItems;

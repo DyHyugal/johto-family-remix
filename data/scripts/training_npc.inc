@@ -1,10 +1,13 @@
 TrainingNpc_EventScript::
 	lock
 	faceplayer
-	msgbox TrainingNpc_Text_Welcome, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 4
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 TrainingNpc_MainMenu:
 	closemessage
-	dynmultichoice 1, 1, FALSE, 7, 0, DYN_MULTICHOICE_CB_NONE, TrainingNpc_Text_IV, TrainingNpc_Text_EV, TrainingNpc_Text_EXP, TrainingNpc_Text_Friendship, TrainingNpc_Text_Nature, TrainingNpc_Text_Ability, TrainingNpc_Text_Quit
+	callnative TrainingNpc_BuildMainMenu
+	dynmultistack 1, 1, FALSE, 7, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	switch VAR_RESULT
 	case 0, TrainingNpc_IV
 	case 1, TrainingNpc_EV
@@ -23,7 +26,9 @@ TrainingNpc_ChooseMon:
 	setvar VAR_RESULT, TRUE
 	return
 TrainingNpc_ChooseMonEgg:
-	msgbox TrainingNpc_Text_NoEggs, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 20
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 TrainingNpc_ChooseMonCancel:
 	setvar VAR_RESULT, FALSE
 	return
@@ -31,43 +36,59 @@ TrainingNpc_ChooseMonCancel:
 TrainingNpc_IV:
 	call TrainingNpc_ChooseMon
 	goto_if_eq VAR_RESULT, FALSE, TrainingNpc_MainMenu
-	msgbox TrainingNpc_Text_ChooseStat, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 5
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 7, 0, DYN_MULTICHOICE_CB_NONE, TrainingNpc_Text_HP, TrainingNpc_Text_Attack, TrainingNpc_Text_Defense, TrainingNpc_Text_SpAttack, TrainingNpc_Text_SpDefense, TrainingNpc_Text_Speed, TrainingNpc_Text_All, TrainingNpc_Text_Back
+	callnative TrainingNpc_BuildIVMenu
+	dynmultistack 1, 1, FALSE, 7, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, TrainingNpc_MainMenu
 	goto_if_eq VAR_RESULT, 7, TrainingNpc_MainMenu
 	copyvar VAR_0x8005, VAR_RESULT
 	callnative TrainingNpc_ApplyIV
 	goto_if_eq VAR_RESULT, 2, TrainingNpc_AlreadyOptimized
-	msgbox TrainingNpc_Text_IVDone, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 11
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
 
 TrainingNpc_EV:
 	call TrainingNpc_ChooseMon
 	goto_if_eq VAR_RESULT, FALSE, TrainingNpc_MainMenu
-	msgbox TrainingNpc_Text_ChooseStat, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 5
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, TrainingNpc_Text_HP, TrainingNpc_Text_Attack, TrainingNpc_Text_Defense, TrainingNpc_Text_SpAttack, TrainingNpc_Text_SpDefense, TrainingNpc_Text_Speed, TrainingNpc_Text_Back
+	callnative TrainingNpc_BuildEVStatMenu
+	dynmultistack 1, 1, FALSE, 7, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, TrainingNpc_MainMenu
 	goto_if_eq VAR_RESULT, 6, TrainingNpc_MainMenu
 	copyvar VAR_0x8005, VAR_RESULT
-	msgbox TrainingNpc_Text_ChooseAction, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 6
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 7, 0, DYN_MULTICHOICE_CB_NONE, TrainingNpc_Text_Add4, TrainingNpc_Text_Add16, TrainingNpc_Text_Add64, TrainingNpc_Text_Max, TrainingNpc_Text_ResetStat, TrainingNpc_Text_ResetAll, TrainingNpc_Text_Back
+	callnative TrainingNpc_BuildEVActionMenu
+	dynmultistack 1, 1, FALSE, 7, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, TrainingNpc_MainMenu
 	goto_if_eq VAR_RESULT, 6, TrainingNpc_MainMenu
 	copyvar VAR_0x8006, VAR_RESULT
 	callnative TrainingNpc_ApplyEV
 	goto_if_eq VAR_RESULT, 2, TrainingNpc_EVAtCap
-	msgbox TrainingNpc_Text_EVDone, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 12
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
 
 TrainingNpc_EXP:
 	call TrainingNpc_ChooseMon
 	goto_if_eq VAR_RESULT, FALSE, TrainingNpc_MainMenu
-	msgbox TrainingNpc_Text_ChooseExp, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 7
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 4, 0, DYN_MULTICHOICE_CB_NONE, TrainingNpc_Text_AddLevel1, TrainingNpc_Text_AddLevel10, TrainingNpc_Text_ToLevelCap, TrainingNpc_Text_Back
+	callnative TrainingNpc_BuildExpMenu
+	dynmultistack 1, 1, FALSE, 4, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, TrainingNpc_MainMenu
 	goto_if_eq VAR_RESULT, 3, TrainingNpc_MainMenu
 	copyvar VAR_0x8005, VAR_RESULT
@@ -81,13 +102,17 @@ TrainingNpc_Friendship:
 	goto_if_eq VAR_RESULT, FALSE, TrainingNpc_MainMenu
 	callnative TrainingNpc_ApplyFriendship
 	goto_if_eq VAR_RESULT, 2, TrainingNpc_AlreadyOptimized
-	msgbox TrainingNpc_Text_FriendshipDone, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 13
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
 
 TrainingNpc_Nature:
 	call TrainingNpc_ChooseMon
 	goto_if_eq VAR_RESULT, FALSE, TrainingNpc_MainMenu
-	msgbox TrainingNpc_Text_ChooseNature, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 8
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
 	callnative TrainingNpc_BuildNatureMenu
 	setvar VAR_0x8005, 0
@@ -95,18 +120,24 @@ TrainingNpc_Nature:
 	goto_if_eq VAR_RESULT, MULTI_B_PRESSED, TrainingNpc_MainMenu
 	copyvar VAR_0x8005, VAR_RESULT
 	callnative TrainingNpc_BufferNatureName
-	msgbox TrainingNpc_Text_ConfirmNature, MSGBOX_YESNO
+	setvar VAR_0x8000, 10
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_YESNO
 	goto_if_ne VAR_RESULT, YES, TrainingNpc_MainMenu
 	callnative TrainingNpc_ApplyNature
 	goto_if_eq VAR_RESULT, 2, TrainingNpc_AlreadyOptimized
 	goto_if_eq VAR_RESULT, 3, TrainingNpc_NotEnoughMoney
-	msgbox TrainingNpc_Text_NatureDone, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 14
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
 
 TrainingNpc_Ability:
 	call TrainingNpc_ChooseMon
 	goto_if_eq VAR_RESULT, FALSE, TrainingNpc_MainMenu
-	msgbox TrainingNpc_Text_ChooseAbility, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 9
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
 	callnative TrainingNpc_BuildAbilityMenu
 	dynmultistack 1, 1, FALSE, 3, FALSE, 0, DYN_MULTICHOICE_CB_NONE
@@ -115,23 +146,35 @@ TrainingNpc_Ability:
 	callnative TrainingNpc_BufferAbilityName
 	callnative TrainingNpc_ApplyAbility
 	goto_if_eq VAR_RESULT, 2, TrainingNpc_AlreadyOptimized
-	msgbox TrainingNpc_Text_AbilityDone, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 15
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
 
 TrainingNpc_AlreadyOptimized:
-	msgbox TrainingNpc_Text_AlreadyOptimized, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 16
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
 TrainingNpc_EVAtCap:
-	msgbox TrainingNpc_Text_EVAtCap, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 17
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
 TrainingNpc_EXPAtCap:
-	msgbox TrainingNpc_Text_EXPAtCap, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 18
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
 TrainingNpc_NotEnoughMoney:
-	msgbox TrainingNpc_Text_NotEnoughMoney, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 19
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto TrainingNpc_MainMenu
 TrainingNpc_Exit:
-	msgbox TrainingNpc_Text_Goodbye, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 21
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	release
 	end
 

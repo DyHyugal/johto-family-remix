@@ -1,17 +1,23 @@
 TmShop_EventScript::
 	lock
 	faceplayer
-	msgbox TmShop_Text_Welcome, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 30
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 TmShop_MainMenu:
 	closemessage
-	dynmultichoice 1, 1, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, TmShop_Text_Buy, TmShop_Text_Quit
+	callnative FamilyLanguage_BuildTmShopMainMenu
+	dynmultistack 1, 1, FALSE, 2, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	goto_if_eq VAR_RESULT, 0, TmShop_CategoryMenu
 	goto TmShop_Exit
 
 TmShop_CategoryMenu:
-	msgbox TmShop_Text_ChooseCategory, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 31
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 5, 0, DYN_MULTICHOICE_CB_NONE, TmShop_Text_Support, TmShop_Text_Weak, TmShop_Text_Powerful, TmShop_Text_Ultimate, TmShop_Text_Back
+	callnative FamilyLanguage_BuildTmShopCategoryMenu
+	dynmultistack 1, 1, FALSE, 5, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	switch VAR_RESULT
 	case 0, TmShop_SupportTypeMenu
 	case 1, TmShop_WeakTypeMenu
@@ -20,9 +26,12 @@ TmShop_CategoryMenu:
 	goto TmShop_MainMenu
 
 TmShop_SupportTypeMenu:
-	msgbox TmShop_Text_ChooseType, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 32
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, TmShop_Text_TypeNormal, TmShop_Text_TypeFighting, TmShop_Text_TypeFlying, TmShop_Text_TypePoison, TmShop_Text_TypeRock, TmShop_Text_TypeFire, TmShop_Text_TypeWater, TmShop_Text_TypeElectric, TmShop_Text_TypePsychic, TmShop_Text_TypeIce, TmShop_Text_TypeDark, TmShop_Text_Back
+	callnative FamilyLanguage_BuildTmShopSupportTypeMenu
+	dynmultistack 1, 1, FALSE, 12, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	switch VAR_RESULT
 	case 0, TmShop_OpenSupportNormal
 	case 1, TmShop_OpenSupportFighting
@@ -82,9 +91,12 @@ TmShop_OpenSupportDark:
 	goto TmShop_SupportTypeMenu
 
 TmShop_WeakTypeMenu:
-	msgbox TmShop_Text_ChooseType, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 32
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, TmShop_Text_TypeNormal, TmShop_Text_TypeFighting, TmShop_Text_TypeFlying, TmShop_Text_TypeRock, TmShop_Text_TypeBug, TmShop_Text_TypeGhost, TmShop_Text_TypeSteel, TmShop_Text_TypeWater, TmShop_Text_TypeGrass, TmShop_Text_TypeElectric, TmShop_Text_TypeIce, TmShop_Text_TypeDark, TmShop_Text_Back
+	callnative FamilyLanguage_BuildTmShopWeakTypeMenu
+	dynmultistack 1, 1, FALSE, 13, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	switch VAR_RESULT
 	case 0, TmShop_OpenWeakNormal
 	case 1, TmShop_OpenWeakFighting
@@ -149,9 +161,12 @@ TmShop_OpenWeakDark:
 	goto TmShop_WeakTypeMenu
 
 TmShop_PowerfulTypeMenu:
-	msgbox TmShop_Text_ChooseType, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 32
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, TmShop_Text_TypeNormal, TmShop_Text_TypePoison, TmShop_Text_TypeGround, TmShop_Text_TypeRock, TmShop_Text_TypeBug, TmShop_Text_TypeGhost, TmShop_Text_TypeSteel, TmShop_Text_TypeFire, TmShop_Text_TypeGrass, TmShop_Text_TypeElectric, TmShop_Text_TypePsychic, TmShop_Text_TypeIce, TmShop_Text_TypeDragon, TmShop_Text_TypeDark, TmShop_Text_Back
+	callnative FamilyLanguage_BuildTmShopPowerfulTypeMenu
+	dynmultistack 1, 1, FALSE, 15, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	switch VAR_RESULT
 	case 0, TmShop_OpenPowerfulNormal
 	case 1, TmShop_OpenPowerfulPoison
@@ -226,9 +241,12 @@ TmShop_OpenPowerfulDark:
 	goto TmShop_PowerfulTypeMenu
 
 TmShop_UltimateTypeMenu:
-	msgbox TmShop_Text_ChooseType, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 32
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dynmultichoice 1, 1, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, TmShop_Text_TypeNormal, TmShop_Text_TypeFighting, TmShop_Text_TypeSteel, TmShop_Text_TypeFire, TmShop_Text_TypeGrass, TmShop_Text_TypeElectric, TmShop_Text_TypeIce, TmShop_Text_Back
+	callnative FamilyLanguage_BuildTmShopUltimateTypeMenu
+	dynmultistack 1, 1, FALSE, 8, FALSE, 0, DYN_MULTICHOICE_CB_NONE
 	switch VAR_RESULT
 	case 0, TmShop_OpenUltimateNormal
 	case 1, TmShop_OpenUltimateFighting

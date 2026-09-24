@@ -5,7 +5,13 @@ VioletCity_Gym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_VIOLET_GYM, VioletCity_Gym_EventScript_GymGuy2
+	callnative FamilyLanguage_SetScriptResult
+	goto_if_eq VAR_RESULT, TRUE, VioletCity_Gym_EventScript_GymGuyAdviceFr
 	msgbox VioletGym_Text_GymGuide_Intro, MSGBOX_DEFAULT
+	goto VioletCity_Gym_EventScript_GymGuyAdviceFr_Done
+VioletCity_Gym_EventScript_GymGuyAdviceFr:
+	msgbox VioletCity_Gym_EventScript_GymGuyAdviceFr_Text, MSGBOX_DEFAULT
+VioletCity_Gym_EventScript_GymGuyAdviceFr_Done:
 	goto_if_set FLAG_FAMILY_GYM_WATER_VIOLET, VioletCity_Gym_EventScript_GymGuyDone
 	giveitem ITEM_FRESH_WATER
 	goto_if_eq VAR_RESULT, FALSE, VioletCity_Gym_EventScript_GymGuyBagFull
@@ -15,7 +21,9 @@ VioletCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 VioletCity_Gym_EventScript_GymGuyBagFull::
-	msgbox VioletCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	setvar VAR_0x8000, 36
+	callnative FamilyLanguage_BufferText
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	goto VioletCity_Gym_EventScript_GymGuyDone
 	
 VioletCity_Gym_EventScript_GymGuy2::
@@ -184,3 +192,8 @@ VioletCity_Gym_Text_GymStatueCertified:
 VioletCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
+
+VioletCity_Gym_EventScript_GymGuyAdviceFr_Text:
+	.string "ALBERT contrôle la Vitesse avec VENT\n"
+	.string "ARRIÈRE puis garde l'élan avec DEMI-TOUR.\pTemporise VENT ARRIÈRE ou utilise des\n"
+	.string "capacités prioritaires.\pPrends cette EAU FRAÎCHE !$"

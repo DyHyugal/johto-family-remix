@@ -1,6 +1,7 @@
 #include "global.h"
 #include "option_menu.h"
 #include "challenge_menu.h"
+#include "family_language.h"
 #include "bg.h"
 #include "gpu_regs.h"
 #include "international_string_util.h"
@@ -218,6 +219,8 @@ static const u8 *const sChoices_MonoStereo[] = {
     COMPOUND_STRING("MONO"),
     COMPOUND_STRING("STEREO"),
 };
+
+static const u8 sText_VolumeMutedFr[] = _("MUET");
 
 static const u8 *const sChoices_Volume[] = {
     COMPOUND_STRING("MUTE"),
@@ -723,6 +726,8 @@ static void DrawChoices_Four(const u8 *const *strings, int selection, int y, boo
 static void DrawChoices_SingleSelected(const u8 *const *strings, int selection, int y, bool8 active)
 {
     const u8 *text = strings[selection];
+    if (strings == sChoices_Volume && selection == 0 && FamilyLanguage_IsFrench())
+        text = sText_VolumeMutedFr;
     DrawRightSideChoiceText(text, GetStringRightAlignXOffset(FONT_NORMAL, text, 198), y + 1, TRUE, active);
 }
 
