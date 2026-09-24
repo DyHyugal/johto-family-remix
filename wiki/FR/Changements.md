@@ -2,46 +2,32 @@
 
 # Changements
 
-Cette page regroupe les différences principales entre Pokémon Heart & Soul et Pokémon Family Remix. L'objectif est d'éviter une navigation remplie de micro-pages.
-
-## Sommaire
-
-- [Systèmes](#systèmes)
-- [Starters et œuf d'Orme](#starters-et-œuf-dorme)
-- [Pokémon](#pokémon)
-- [Évolutions et learnsets](#évolutions-et-learnsets)
-- [Rencontres sauvages](#rencontres-sauvages)
-- [Combats de boss](#combats-de-boss)
-- [Boutiques](#boutiques)
-- [Interface et confort](#interface-et-confort)
+Cette page regroupe les différences principales entre Pokémon Heart & Soul et Pokémon Family Remix sans multiplier les micro-pages.
 
 ## Systèmes
 
 Family Remix ajoute ou modifie notamment :
-
 - HARD par défaut, NORMAL disponible ;
-- Level Cap ;
+- nouvelles équipes Family Remix dans **les deux difficultés** ;
+- Level Cap dynamique ;
 - Training NPC ;
 - vitesse native x1/x2/x3/x4 ;
 - réglages audio indépendants ;
 - nouvelle configuration de partie ;
-- sauvegarde des paramètres simplifiée ;
-- meilleure séparation entre difficulté, challenges et randomizer.
+- sauvegarde des paramètres avec B = Save & Exit ;
+- sélection de langue EN / FR prévue pour la V1.
 
 ## Starters et œuf d'Orme
 
-Le choix de starter n'est plus limité au trio classique. Les familles sont regroupées par type et comprennent également Évoli.
+Le choix initial comprend 30 starters répartis entre Feu, Eau, Plante, Électrik, Sol et Glace, plus Évoli.
 
-L'œuf d'Orme devient une seconde sélection Family Remix : l'espèce choisie est réellement contenue dans l'œuf et conserve son identité jusqu'à l'éclosion.
-
-Des objets de type et d'évolution sont remis automatiquement afin que les starters choisis restent utilisables sans détour artificiel.
+L'œuf d'Orme devient une seconde sélection : l'espèce choisie est réellement contenue dans l'œuf. Les boosters de type et objets d'évolution nécessaires sont remis avec les starters. Évoli reçoit Mouchoir Soie, booster de son évolition et pierre correspondante.
 
 ## Pokémon
 
-Plusieurs Pokémon reçoivent des ajustements ciblés de type, statistiques, talents ou rôle.
+**26 modifications Pokémon** sont prévues dans la V1. Elles peuvent toucher type, statistiques, talents ou rôle.
 
-Exemples déjà verrouillés dans le design V1 :
-
+Exemples verrouillés :
 | Pokémon | Changement principal |
 |---|---|
 | Dracaufeu | Feu / Dragon |
@@ -49,89 +35,61 @@ Exemples déjà verrouillés dans le design V1 :
 | Jungko | Plante / Dragon, orientation plus physique |
 | Luxray | Électrik / Ténèbres |
 | Moustillon / Mateloutre / Clamiral | Eau / Combat |
-| Tranchodon | second type et profil offensif retravaillés |
 | Élekable | profil offensif et vitesse retravaillés |
 | Hyporoi | profil physique renforcé |
 
-La table exhaustive sera synchronisée avec les données compilées avant la RC afin d'éviter de documenter une valeur qui aurait changé pendant l'intégration.
+La table exhaustive sera synchronisée avec les données compilées afin de ne pas publier de valeurs intermédiaires.
 
 ## Évolutions et learnsets
 
-Certaines évolutions par objet sont soumises à un niveau minimum :
-
+Evolution gate :
 - base → stade 1 : niveau 16 ;
 - base → final sans stade intermédiaire : niveau 30 ;
 - stade 1 → final : niveau 36.
 
-Des learnsets ont été étendus pour soutenir les nouveaux rôles. Deux correspondances importantes utilisées dans le projet sont :
+La V1 comprend **15 learnsets custom** et utilise le comportement GEN_7 prévu par le projet.
 
+Correspondances importantes :
 - **Aquatacle** = `MOVE_WAVE_CRASH`
 - **Eau Revoir** = `MOVE_FLIP_TURN`
 
 ## Rencontres sauvages
 
-La distribution sauvage est repensée autour de la progression.
+La distribution suit la progression de l'histoire et exploite herbe, Surf, pêche, Rock Smash, horaires et autres méthodes disponibles.
 
 Principes :
+- tables principales basées sur quatre espèces et un poids cible 30 / 30 / 30 / 10 ;
+- starters sauvages rares et progressifs ;
+- formes finales surtout tardives ;
+- aucun légendaire/fabuleux ajouté comme rencontre aléatoire ordinaire ;
+- Safari conservé comme système dédié.
 
-- 4 espèces principales par table ;
-- distribution cible 30 / 30 / 30 / 10 ;
-- utilisation de l'herbe, Surf, pêche, Rock Smash, moment de la journée et autres méthodes disponibles ;
-- starters sauvages rares et placés progressivement ;
-- stades finaux surtout tardifs ;
-- aucun légendaire/fabuleux injecté comme rencontre aléatoire ;
-- espèces Safari dédiées conservées au Safari.
-
-Les données finales comptent **409 tables normales + 53 tables Safari**.
+État intégré avant la passe finale : **405 tables standard + 4 Headbutt**. Le Safari comporte **53 pools** distincts, chacun à quatre espèces en 30/30/30/10, avec rotation des pools pendant une admission.
 
 ## Combats de boss
 
-Le mode HARD remplace la simple augmentation de niveau par une logique d'équipe :
+Les nouvelles compositions Family Remix sont communes à NORMAL et HARD.
 
-- objets ;
-- IV31 ;
-- EV adaptés au rôle ;
-- météo/terrain ;
-- hazards ;
-- screens ;
-- Trick Room ;
-- setup ;
-- pivots ;
-- win conditions.
+**NORMAL** : mêmes équipes/sets, scaling IV/EV NORMAL et IA NORMAL.
+
+**HARD** : IV31, EV optimisés par rôle et IA HARD en plus des synergies prévues.
 
 À partir de la troisième arène, les Champions utilisent des équipes complètes de six Pokémon. Les Méga apparaissent à partir de la quatrième arène.
 
-Les conseils et les mécaniques de chaque boss sont détaillés dans [Boss & Conseils](Boss-et-Conseils.md).
+Les dirigeants Rocket suivent une progression dynamique : **dernier boss/cap +2 sur toute l'équipe**, puis ce niveau devient le nouveau cap.
+
+Voir [Boss & Conseils](Boss-et-Conseils.md).
 
 ## Boutiques
 
-Le TM Shop est organisé :
+TM Shop : **Catégorie → Type → CT** avec Support, Weak, Powerful et Ultimate.
 
-**Catégorie → Type → CT**
+Item Shop : **Evolution → Strategic → Other**.
 
-Catégories :
-
-- Support
-- Weak
-- Powerful
-- Ultimate
-
-Le shop d'objets utilise :
-
-**Evolution → Strategic → Other**
-
-Les objets de soin classiques, Poké Balls, Repels, Key Items et objets de scénario ne doivent pas court-circuiter la progression des boutiques normales.
+Les boutiques spéciales ne remplacent pas la progression normale des Poké Marts.
 
 ## Interface et confort
 
-Family Remix conserve la base graphique HnS et termine une refonte légère pour la V1 :
+La V1 conserve la base graphique HnS avec une passe d'harmonisation : battle UI, Settings, Summary, Pokédex, Shops, fenêtres, menus, textes, alignements, palettes et glitches visibles.
 
-- fenêtres ;
-- menus ;
-- interface de combat ;
-- summary ;
-- Pokédex ;
-- shops ;
-- palettes.
-
-Une refonte graphique plus profonde est réservée à une future V2.
+Une refonte graphique plus profonde reste réservée à une future V2.
