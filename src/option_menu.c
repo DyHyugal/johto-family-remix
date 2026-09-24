@@ -220,7 +220,7 @@ static const u8 *const sChoices_MonoStereo[] = {
 };
 
 static const u8 *const sChoices_Volume[] = {
-    COMPOUND_STRING("OFF"),
+    COMPOUND_STRING("MUTE"),
     COMPOUND_STRING("20%"),
     COMPOUND_STRING("40%"),
     COMPOUND_STRING("60%"),
@@ -720,6 +720,12 @@ static void DrawChoices_Four(const u8 *const *strings, int selection, int y, boo
     DrawRightSideChoiceText(strings[order[2]], GetStringRightAlignXOffset(FONT_NORMAL, strings[order[2]], 198), y + 1, selection == order[2], active);
 }
 
+static void DrawChoices_SingleSelected(const u8 *const *strings, int selection, int y, bool8 active)
+{
+    const u8 *text = strings[selection];
+    DrawRightSideChoiceText(text, GetStringRightAlignXOffset(FONT_NORMAL, text, 198), y + 1, TRUE, active);
+}
+
 // Frame type: draws "TYPE  N" on the right side
 static void DrawFrameTypeChoice(u8 selection, int y, bool8 active)
 {
@@ -796,6 +802,11 @@ static void OptionMenu_ItemPrintFunc(u8 windowId, u32 itemId, u8 y)
         break;
     case 4:
         DrawChoices_Four(items[itemId].choiceNames, sel, y, active);
+        break;
+    case 6:
+        // Volume has six values; showing all six at once would overlap.
+        // Render only the currently selected percentage/mute label.
+        DrawChoices_SingleSelected(items[itemId].choiceNames, sel, y, active);
         break;
     }
 }
