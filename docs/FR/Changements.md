@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Changements"
+---
+
 [Accueil](Accueil.md) · [Guide de jeu](Guide-de-jeu.md) · [Changements](Changements.md) · [Boss & Conseils](Boss-et-Conseils.md) · [Pokédex & Localisation](Pokedex-et-Localisation.md) · [Crédits & Versions](Credits-et-Versions.md) · **[EN](../EN/Changes.md)**
 
 # Changements
