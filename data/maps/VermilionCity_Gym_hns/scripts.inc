@@ -212,9 +212,17 @@ VermilionCity_Gym_EventScript_GymGuy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_VERMILION_GYM, VermilionCity_Gym_EventScript_GymGuyPostVictory
-	msgbox VermilionCity_Gym_Text_GymGuyAdvice
+	msgbox VermilionCity_Gym_Text_GymGuyAdvice, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_VERMILION, VermilionCity_Gym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, VermilionCity_Gym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_VERMILION
+VermilionCity_Gym_EventScript_GymGuyDone::
 	release
 	end
+VermilionCity_Gym_EventScript_GymGuyBagFull::
+	msgbox VermilionCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	goto VermilionCity_Gym_EventScript_GymGuyDone
 
 VermilionCity_Gym_EventScript_GymGuyPostVictory::
 	msgbox VermilionCity_Gym_Text_GymGuyPostVictory
@@ -383,20 +391,12 @@ VermilionGym_Text_JugglerHortonAfter:
 	.string "LT.SURGE is tough.$"
 
 VermilionCity_Gym_Text_GymGuyAdvice::
-    .string "Yo!\n"
-    .string "Champ in the making!\p"
-    .string "LT. SURGE has a nickname.\p"
-    .string "People refer to him as the\n"
-    .string "Lightning American!\p"
-    .string "He's an expert on electric\n"
-    .string "POKéMON.\p"
-    .string "FLYING/WATER-type POKéMON match\n"
-    .string "poorly against the ELECTRIC type.\p"
-    .string "Beware of paralysis, too.\p"
-    .string "LT. SURGE is very cautious.\p"
-    .string "He's locked himself in, so it won't\n"
-    .string "be easy getting to him.$"
-
+    .string "LT. SURGE builds his offense around\n"
+    .string "ELECTRIC TERRAIN. ALOLAN RAICHU gets\l"
+    .string "blazing fast with SURGE SURFER.\p"
+    .string "Remove the terrain or stall it out\n"
+    .string "and his team loses much of its tempo.\p"
+    .string "Take this FRESH WATER. Stay grounded!$"
 VermilionCity_Gym_Text_GymGuyPostVictory::
 	.string "Whew! That was an electrifying\n"
 	.string "bout!\p"
@@ -434,3 +434,7 @@ VermilionCity_Gym_Text_OnlyTrashLocksWereReset::
     .string "Hey!\n"
     .string "The electric locks were reset!$"
 
+
+VermilionCity_Gym_Text_FamilyGuideBagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
