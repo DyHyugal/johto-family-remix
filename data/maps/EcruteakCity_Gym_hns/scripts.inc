@@ -6,9 +6,17 @@ EcruteakCity_Gym_EventScript_GymGuy::
 	faceplayer
 	goto_if_set FLAG_DEFEATED_ECRUTEAK_CITY_GYM, EcruteakCity_Gym_EventScript_GymGuy2
 	msgbox EcruteakCity_GymGuideText, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_ECRUTEAK, EcruteakCity_Gym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Gym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_ECRUTEAK
+EcruteakCity_Gym_EventScript_GymGuyDone::
 	closemessage
 	release
 	end
+EcruteakCity_Gym_EventScript_GymGuyBagFull::
+	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	goto EcruteakCity_Gym_EventScript_GymGuyDone
 	
 EcruteakCity_Gym_EventScript_GymGuy2::
 	msgbox EcruteakCity_GymGuideWinText, MSGBOX_DEFAULT
@@ -199,15 +207,12 @@ MediumGraceAfterBattleText:
 	.string "your eyes!$"
 
 EcruteakCity_GymGuideText:
-	.string "Hey CHAMP! You're almost\n"
-	.string "halfway there!\p"
-	.string "Trainers here use GHOST and\n"
-	.string "DARK-type POKéMON.\p"
-	.string "While MORTY is a GHOST-type\n"
-	.string "expert, be wary of his mystic\l"
-	.string "deer.\p"
-	.string "It's said to cause strange\n"
-	.string "nightmares...$"
+	.string "MORTY likes to cripple physical\n"
+	.string "attackers with burns before his\l"
+	.string "GHOSTS start setting up.\p"
+	.string "Don't rely only on physical damage,\n"
+	.string "and never give him a free turn.\p"
+	.string "Take this FRESH WATER. Stay sharp!$"
 
 EcruteakCity_GymGuideWinText:
 	.string "Whew, {PLAYER}. You did great!\p"
@@ -220,3 +225,7 @@ EcruteakCity_GymClosedText:
 	.string "Sorry, but you'll have to\n"
 	.string "leave.\p"
 	.string "Hohohoho.$"
+
+FamilyGymGuide_Text_BagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
