@@ -2,38 +2,38 @@
 
 # Home
 
-> **V1 wiki in progress.** Validated systems are documented as such. Values still tied to the final playthrough may change before the stable release.
+> **V1 wiki in progress.** Validated systems are documented here; tables still tied to final integration will be synchronized with the compiled ROM.
 
 ## What is Pokémon Family Remix?
 
-Pokémon Family Remix is a fork of **Pokémon Heart & Soul**, a GBA Johto remake inspired by Pokémon Gold/Silver/Crystal and HGSS, enhanced by modern `pokeemerald-expansion` features.
+Pokémon Family Remix is a fork of **Pokémon Heart & Soul**, a GBA Johto remake inspired by Pokémon Gold/Silver/Crystal and HGSS and enhanced with modern `pokeemerald-expansion` features.
 
-Family Remix keeps the HnS adventure and foundation, then adds a stronger customization and difficulty layer built around:
-
-- redesigned **HARD** boss battles;
-- **NORMAL** mode still available;
-- Level Caps;
+Family Remix keeps the HnS adventure while redesigning progression and customization around:
+- new **Family Remix boss teams in both NORMAL and HARD**;
+- HARD by default, NORMAL available;
+- dynamic Level Caps;
 - expanded starter selection and a second starter through Elm's Egg;
-- targeted Pokémon, type, stat and learnset changes;
-- wild encounters redistributed around story progression;
+- targeted Pokémon/type/stat/learnset changes;
+- progression-based wild encounters;
 - Training NPC;
-- native x1/x2/x3/x4 game speed;
+- native x1/x2/x3/x4 speed;
 - independent audio controls;
 - strategic TM/item shops;
-- battle advice both in-game and in this wiki.
+- in-game and wiki battle advice;
+- EN / FR interface planned for V1.
+
+## NORMAL or HARD?
+
+Both modes are **Family Remix**. NORMAL does not restore vanilla HnS boss teams.
+
+**NORMAL** keeps the new Family Remix teams, sets, levels, mechanics and content, with NORMAL IV/EV scaling and NORMAL AI.
+
+**HARD** uses those same teams with 31 IVs, role-optimized EVs and the more advanced Family Remix HARD AI.
 
 ## Where should I start?
 
-**New player:** see the [Game Guide](Game-Guide.md).
-
-**Want the differences from HnS:** see [Changes](Changes.md).
-
-**Stuck on a Gym Leader or boss:** see [Bosses & Tips](Bosses-and-Tips.md).
-
-**Looking for a Pokémon:** see [Pokédex & Locations](Pokedex-and-Locations.md).
+**New player:** [Game Guide](Game-Guide.md) · **Changes from HnS:** [Changes](Changes.md) · **Boss help:** [Bosses & Tips](Bosses-and-Tips.md) · **Find a Pokémon:** [Pokédex & Locations](Pokedex-and-Locations.md)
 
 ## Difficulty philosophy
 
-HARD is not meant to turn the game into a constant grind. Difficulty should come mainly from team structure, synergy, items, EV/IV investment and smarter battle logic.
-
-Losing a battle should make you want to adjust your plan, not simply gain ten more levels.
+HARD is not meant to become a permanent grind. Difficulty comes mainly from team structure, synergy, items, EV/IV investment and smarter battle logic. Level Caps reinforce that approach: losing should encourage a new plan rather than ten extra levels.
