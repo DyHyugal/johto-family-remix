@@ -6,9 +6,17 @@ VioletCity_Gym_EventScript_GymGuy::
 	faceplayer
 	goto_if_set FLAG_DEFEATED_VIOLET_GYM, VioletCity_Gym_EventScript_GymGuy2
 	msgbox VioletGym_Text_GymGuide_Intro, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_VIOLET, VioletCity_Gym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, VioletCity_Gym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_VIOLET
+VioletCity_Gym_EventScript_GymGuyDone::
 	closemessage
 	release
 	end
+VioletCity_Gym_EventScript_GymGuyBagFull::
+	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	goto VioletCity_Gym_EventScript_GymGuyDone
 	
 VioletCity_Gym_EventScript_GymGuy2::
 	msgbox VioletGym_Text_GymGuide_Win, MSGBOX_DEFAULT
@@ -139,22 +147,12 @@ VioletGym_Text_BirdKeeperAbe_After:
 	.string "rookie trainer…$"
 
 VioletGym_Text_GymGuide_Intro:
-	.string "Hey! What's up? I'm no trainer,\n"
-	.string "but I can give some advice!\p"
-	.string "Believe me! If you believe, a\n"
-	.string "championship dream can come true.\p"
-	.string "You believe? Then listen.\p"
-	.string "FALKNER's ace is a bulky owl\n"
-	.string "that loves to eat BERRIES.\p"
-	.string "While it's not the strongest,\n"
-	.string "it can take a lot of hits.\p"
-	.string "You can hurt it with ELECTRIC \n"
-	.string "and ROCK-type moves, but watch out\l"
-	.string "for MUD-SLAP!\p"
-	.string "If you want more help, go visit the\n"
-	.string "POKéMON ACADEMY.\p"
-	.string "The students there really know\n"
-	.string "their stuff!$"
+	.string "FALKNER likes to take control of\n"
+	.string "Speed with TAILWIND, then keep\l"
+	.string "momentum with TAUNT and U-TURN.\p"
+	.string "If TAILWIND goes up, stall out its\n"
+	.string "turns or use priority moves.\p"
+	.string "Take this FRESH WATER. It may help!$"
 
 VioletGym_Text_GymGuide_Win:
 	.string "Nice battle! Keep it up,\n"
@@ -182,3 +180,7 @@ VioletCity_Gym_Text_GymStatueCertified:
 	.string "VIOLET CITY POKéMON GYM\p"
 	.string "FALKNER'S CERTIFIED TRAINERS:\n"
 	.string "{PLAYER}$"
+
+FamilyGymGuide_Text_BagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
