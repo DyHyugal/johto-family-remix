@@ -359,7 +359,7 @@ static const u8 *const sChoices_OriginalModern[] = {
 static const u8 sText_TopBar_Left[]   = _("{L_BUTTON}PREVIOUS");
 static const u8 sText_TopBar_Right[]  = _("{R_BUTTON}NEXT");
 static const u8 sText_TopBar_Save[]   = _("{R_BUTTON}SAVE");
-static const u8 sText_TopBar_Cancel[] = _("{B_BUTTON}CANCEL");
+static const u8 sText_TopBar_Cancel[] = _("{B_BUTTON}SAVE & EXIT");
 
 // =============================================================================
 // Tab item tables — skeleton placeholders
@@ -1676,10 +1676,9 @@ static void DrawTopBar(void)
         AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, right, 1, color, 0, sText_TopBar_Right);
     else if (sMenu->currentTab == TAB_COUNT - 1)
         AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, right, 1, color, 0, sText_TopBar_Save);
-    if (!sIsInitialSetup)
     {
-        int cancelX = (120 + width + right) / 2 - GetStringWidth(FONT_SMALL, sText_TopBar_Cancel, 0) / 2;
-        AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, cancelX, 1, color, 0, sText_TopBar_Cancel);
+        int saveExitX = (120 + width + right) / 2 - GetStringWidth(FONT_SMALL, sText_TopBar_Cancel, 0) / 2;
+        AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, saveExitX, 1, color, 0, sText_TopBar_Cancel);
     }
 
     PutWindowTilemap(WIN_TOPBAR);
@@ -1922,11 +1921,11 @@ static void Task_ProcessInput(u8 taskId)
 
     if (input == LIST_CANCEL)
     {
-        if (!sIsInitialSetup)
-        {
-            BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-            gTasks[taskId].func = Task_FadeOut;
-        }
+        // Family Remix: B is a direct Save & Exit shortcut from every tab.
+        // Reuse the exact same commit path as the final SAVE action; the
+        // existing sIsInitialSetup guard inside Task_ConfirmSaveYes ensures
+        // Trainer ID/RNG seeding only happens during initial setup.
+        Task_ConfirmSaveYes(taskId);
         return;
     }
 
