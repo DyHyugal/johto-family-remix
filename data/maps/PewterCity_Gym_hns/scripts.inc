@@ -95,12 +95,11 @@ PewterCity_Gym_Text_CamperJerry_AfterBattle:
 	.string "take him seriously.$"
 
 PewterCity_Gym_Text_Guide:
-	.string "Yo! CHAMP in making! You're really\n"
-	.string "rocking.\p"
-	.string "Are you battling the GYM LEADERS of\n"
-	.string "KANTO?\p"
-	.string "They're strong and dedicated people,\n"
-	.string "just like JOHTO's GYM LEADERS.$"
+	.string "BROCK uses SAND to wear you down and\n"
+	.string "make EXCADRILL terrifyingly fast.\p"
+	.string "Change the weather or stall out SAND,\n"
+	.string "and deny EXCADRILL a free SWORDS DANCE.\p"
+	.string "Take this FRESH WATER. Good luck!$"
 
 PewterCity_Gym_Text_Guide_Win:
 	.string "Yo! CHAMP in making! That GYM didn't\n"
@@ -109,9 +108,20 @@ PewterCity_Gym_Text_Guide_Win:
 	.string "inspiring. I mean that seriously.$"
 
 PewterCity_Gym_EventScript_GymGuy::
+	lock
+	faceplayer
 	goto_if_set FLAG_DEFEATED_PEWTER_GYM, PewterCity_Gym_EventScript_GymGuyAfter
-	msgbox PewterCity_Gym_Text_Guide, MSGBOX_NPC
+	msgbox PewterCity_Gym_Text_Guide, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_PEWTER, PewterCity_Gym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, PewterCity_Gym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_PEWTER
+PewterCity_Gym_EventScript_GymGuyDone::
+	release
 	end
+PewterCity_Gym_EventScript_GymGuyBagFull::
+	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	goto PewterCity_Gym_EventScript_GymGuyDone
 
 PewterCity_Gym_EventScript_GymGuyAfter::
 	msgbox PewterCity_Gym_Text_Guide_Win, MSGBOX_NPC
@@ -189,3 +199,7 @@ PewterCity_Gym_Text_BrockNotRequestedMon:
 PewterCity_Gym_Text_BrockTradeCompleted:
 	.string "BROCK: How's WOODY doing?\n"
 	.string "BONSLY are tougher than they look!$"
+
+FamilyGymGuide_Text_BagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
