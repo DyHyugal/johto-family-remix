@@ -2,7 +2,7 @@
 
 # Boss & Conseils
 
-Cette page décrit la **logique** des principaux combats HARD sans transformer le wiki en solution automatique. Les équipes exactes peuvent encore recevoir de petits ajustements pendant le playthrough final.
+Cette page décrit la **logique** des principaux combats Family Remix. Les compositions sont communes à NORMAL et HARD ; HARD ajoute l'optimisation IV/EV et l'IA avancée sans transformer le wiki en solution automatique. Les équipes exactes peuvent encore recevoir de petits ajustements pendant le playthrough final.
 
 ## Johto
 
@@ -144,7 +144,7 @@ Cette page décrit la **logique** des principaux combats HARD sans transformer l
 **À éviter :** sacrifier plusieurs Pokémon faibles à la suite et nourrir une snowball.
 </details>
 
-## Team Rocket
+## Team Rocket\n\nLes compositions Rocket Family Remix sont utilisées dans les deux difficultés. À chaque apparition, tous les Pokémon du dirigeant sont au niveau du dernier boss/cap +2 ; ce niveau devient ensuite le nouveau Level Cap. Les pré-évolutions sont utilisées si nécessaire pour respecter les niveaux d'évolution.\n
 
 <details>
 <summary><strong>Proton — tempo et sacrifice</strong></summary>
