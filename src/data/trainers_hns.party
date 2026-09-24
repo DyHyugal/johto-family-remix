@@ -16011,7 +16011,7 @@ Pic: Leader Falkner Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Light Blue
 Difficulty: Hard
 
@@ -16056,7 +16056,7 @@ Pic: Leader Bugsy Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Green
 Items: Potion / Potion
 Difficulty: Hard
@@ -16113,7 +16113,7 @@ Pic: Leader Whitney Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status / Prefer Baton Pass
 Mugshot: Pink
 Items: Super Potion / Potion
 Difficulty: Hard
@@ -16192,7 +16192,7 @@ Pic: Leader Morty Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Purple
 Items: Super Potion / Super Potion
 Difficulty: Hard
@@ -16271,7 +16271,7 @@ Pic: Leader Chuck Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions
 Mugshot: Orange
 Items: Super Potion / Super Potion
 Difficulty: Hard
@@ -16350,7 +16350,7 @@ Pic: Leader Jasmine Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Yellow
 Items: Super Potion / Super Potion
 Difficulty: Hard
@@ -16429,7 +16429,7 @@ Pic: Leader Pryce Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Light Blue
 Items: Super Potion / Super Potion
 Difficulty: Hard
@@ -16508,7 +16508,7 @@ Pic: Leader Clair Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Blue
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -16587,7 +16587,7 @@ Pic: Elite Four Will Hns
 Gender: Male
 Music: Hg Elite Four
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Pink
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -16666,7 +16666,7 @@ Pic: Elite Four Koga Hns
 Gender: Male
 Music: Hg Elite Four
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Purple
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -16745,7 +16745,7 @@ Pic: Elite Four Bruno Hns
 Gender: Male
 Music: Hg Elite Four
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions
 Mugshot: Orange
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -16824,7 +16824,7 @@ Pic: Elite Four Karen Hns
 Gender: Male
 Music: Hg Elite Four
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Yellow
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -16903,7 +16903,7 @@ Pic: Champion Lance Hns
 Gender: Male
 Music: Hg Champion
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions
 Items: Full Restore / Full Restore
 Mugshot: Blue
 Difficulty: Hard
@@ -16982,7 +16982,7 @@ Pic: Leader Brock Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Orange
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -17061,7 +17061,7 @@ Pic: Leader Misty Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Light Blue
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -17140,7 +17140,7 @@ Pic: Leader Surge Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Items: Full Restore / Full Restore
 Mugshot: Yellow
 Difficulty: Hard
@@ -17219,7 +17219,7 @@ Pic: Leader Erika Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Green
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -17298,7 +17298,7 @@ Pic: Leader Janine Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status / Stall
 Mugshot: Purple
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -17377,7 +17377,7 @@ Pic: Leader Sabrina Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Pink
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -17456,7 +17456,7 @@ Pic: Leader Blaine Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
 Mugshot: Dark Red
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -17535,7 +17535,7 @@ Pic: Leader Blue Hns
 Gender: Male
 Music: Hg Boy 1
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions
 Mugshot: Blue
 Items: Full Restore / Full Restore
 Difficulty: Hard
@@ -17614,7 +17614,7 @@ Pic: Champion Lance Hns
 Gender: Male
 Music: Hg Champion
 Double Battle: No
-AI: Basic Trainer
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions
 Items: Full Restore / Full Restore
 Mugshot: Blue
 Difficulty: Hard
