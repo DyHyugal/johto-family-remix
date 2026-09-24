@@ -17,7 +17,7 @@ def validate_bosses():
     marker = "/* ========== Family Remix FINAL hard boss parties ========== */"
     if text.count(marker) != 1:
         fail("missing or duplicated FINAL hard boss marker")
-    hard = text.split(marker, 1)[1]
+    normal, hard = text.split(marker, 1)
     blocks = re.findall(r"^=== ([A-Z0-9_]+) ===\n(.*?)(?=^=== |\Z)", hard, re.M | re.S)
     if len(blocks) != 22:
         fail(f"expected 22 fixed HARD boss teams, got {len(blocks)}")
@@ -26,6 +26,15 @@ def validate_bosses():
                    "PP Stall Prevention", "Assumptions")
     mon_count = 0
     for trainer_id, block in blocks:
+        normal_matches = re.findall(
+            rf"^=== {re.escape(trainer_id)} ===\n(.*?)(?=^=== |\Z)",
+            normal,
+            re.M | re.S,
+        )
+        if len(normal_matches) != 1:
+            fail(f"{trainer_id} must have exactly one NORMAL Family Remix roster")
+        normal_block = normal_matches[0]
+
         header = block.split("\n\n", 1)[0]
         if "Difficulty: Hard" not in header:
             fail(f"{trainer_id} is not marked HARD")
@@ -37,6 +46,25 @@ def validate_bosses():
         items_match = re.search(r"^Items: (.+)$", header, re.M)
         if items_match and len([x for x in items_match.group(1).split(" / ") if x]) > 2:
             fail(f"{trainer_id} has more than two healing items")
+
+        normal_header, normal_party = normal_block.split("\n\n", 1)
+        hard_header, hard_party = block.split("\n\n", 1)
+        normalize_header = lambda value: "\n".join(
+            line for line in value.splitlines()
+            if not line.startswith(("AI: ", "Difficulty: "))
+        )
+        normalize_party = lambda value: re.sub(
+            r"^(?:IVs|EVs): .+\n?", "", value, flags=re.M
+        ).strip()
+        if normalize_header(normal_header) != normalize_header(hard_header):
+            fail(f"{trainer_id} NORMAL/HARD trainer content differs")
+        if normalize_party(normal_party) != normalize_party(hard_party):
+            fail(f"{trainer_id} NORMAL/HARD species, levels, moves or held content differs")
+        normal_ai = re.search(r"^AI: (.+)$", normal_header, re.M)
+        if not normal_ai or normal_ai.group(1) != "Basic Trainer":
+            fail(f"{trainer_id} NORMAL must retain native Basic Trainer AI")
+        if re.search(r"^EVs:", normal_party, re.M):
+            fail(f"{trainer_id} NORMAL received HARD optimized EVs")
 
         levels = re.findall(r"^Level: (\d+)$", block, re.M)
         iv_lines = re.findall(r"^IVs: (.+)$", block, re.M)
