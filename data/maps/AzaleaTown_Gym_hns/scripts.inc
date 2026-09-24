@@ -492,7 +492,7 @@ AzaleaTown_Gym_EventScript_GymGuyDone::
 	release
 	end
 AzaleaTown_Gym_EventScript_GymGuyBagFull::
-	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	msgbox AzaleaTown_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
 	goto AzaleaTown_Gym_EventScript_GymGuyDone
 
 AzaleaTown_Gym_EventScript_GymGuy2::
@@ -812,6 +812,6 @@ AzaleaTown_Gym_Text_GymGuideWin:
 	.string "With people like you, the\n"
 	.string "future of POKéMON is bright!$"
 
-FamilyGymGuide_Text_BagFull:
+AzaleaTown_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
