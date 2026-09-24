@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Home"
+---
+
 [Home](Home.md) · [Game Guide](Game-Guide.md) · [Changes](Changes.md) · [Bosses & Tips](Bosses-and-Tips.md) · [Pokédex & Locations](Pokedex-and-Locations.md) · [Credits & Versions](Credits-and-Versions.md) · **[FR](../FR/Accueil.md)**
 
 # Home
