@@ -2,7 +2,7 @@
 
 # Bosses & Tips
 
-This page explains the **battle plan** behind major HARD fights without turning the wiki into an automatic solution. Exact teams may still receive small balance changes during the final playthrough.
+This page explains the **battle plan** behind major Family Remix fights. Team compositions are shared by NORMAL and HARD; HARD adds optimized IV/EV investment and advanced AI without turning the wiki into an automatic solution. Exact teams may still receive small balance changes during the final playthrough.
 
 ## Johto
 
@@ -144,7 +144,7 @@ This page explains the **battle plan** behind major HARD fights without turning 
 **Avoid:** sacrificing several weakened Pokémon in sequence and creating a snowball.
 </details>
 
-## Team Rocket
+## Team Rocket\n\nFamily Remix Rocket rosters are used in both difficulties. At each appearance, every Pokémon is set to the previous boss/current cap +2; that level then becomes the new Level Cap. Legal pre-evolutions are used when required by evolution levels.\n
 
 <details>
 <summary><strong>Proton — tempo and sacrifice</strong></summary>
