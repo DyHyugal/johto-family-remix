@@ -59,6 +59,8 @@ static void Task_NewGameHnsSpeech_WaitToShowProfessor(u8);
 static void NewGameHnsSpeech_StartFadeInTarget1OutTarget2(u8, u8);
 static void NewGameHnsSpeech_StartFadePlatformOut(u8, u8);
 static void Task_NewGameHnsSpeech_WaitForSpriteFadeInWelcome(u8);
+static void Task_NewGameHnsSpeech_FamilyRemixDisclaimer(u8);
+static void Task_NewGameHnsSpeech_WaitFamilyRemixDisclaimer(u8);
 static void NewGameHnsSpeech_ClearWindow(u8);
 static void Task_NewGameHnsSpeech_ThisIsAPokemon(u8);
 static void Task_NewGameHnsSpeech_MainSpeech(u8);
@@ -340,10 +342,31 @@ static void Task_NewGameHnsSpeech_WaitForSpriteFadeInWelcome(u8 taskId)
             PutWindowTilemap(0);
             CopyWindowToVram(0, COPYWIN_GFX);
             NewGameHnsSpeech_ClearWindow(0);
-            StringExpandPlaceholders(gStringVar4, gText_Oak_Welcome);
-            AddTextPrinterForMessage(TRUE);
-            gTasks[taskId].func = Task_NewGameHnsSpeech_ThisIsAPokemon;
+            gTasks[taskId].func = Task_NewGameHnsSpeech_FamilyRemixDisclaimer;
         }
+    }
+}
+
+static void Task_NewGameHnsSpeech_FamilyRemixDisclaimer(u8 taskId)
+{
+    static const u8 sText_FamilyRemixDisclaimer[] = _(
+        "{COLOR RED}POKéMON FAMILY REMIX defaults to HARD.{COLOR DARK_GRAY}\p"
+        "Boss battles are more strategic and demanding.\p"
+        "NORMAL remains available in the settings if you prefer standard HEART & SOUL balance.");
+
+    StringCopy(gStringVar4, sText_FamilyRemixDisclaimer);
+    AddTextPrinterForMessage(TRUE);
+    gTasks[taskId].func = Task_NewGameHnsSpeech_WaitFamilyRemixDisclaimer;
+}
+
+static void Task_NewGameHnsSpeech_WaitFamilyRemixDisclaimer(u8 taskId)
+{
+    if (!RunTextPrintersAndIsPrinter0Active() && (JOY_NEW(A_BUTTON) || JOY_NEW(B_BUTTON)))
+    {
+        NewGameHnsSpeech_ClearWindow(0);
+        StringExpandPlaceholders(gStringVar4, gText_Oak_Welcome);
+        AddTextPrinterForMessage(TRUE);
+        gTasks[taskId].func = Task_NewGameHnsSpeech_ThisIsAPokemon;
     }
 }
 
