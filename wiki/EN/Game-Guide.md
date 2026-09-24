@@ -12,7 +12,7 @@ HARD uses Family Remix boss teams: stronger synergy, sensible items, IV/EV inves
 
 ### NORMAL
 
-NORMAL preserves the standard Pokémon Heart & Soul balance and behavior. HARD-only teams and logic must not leak into this mode.
+NORMAL uses the same Family Remix boss teams, sets, levels and content as HARD, but keeps NORMAL IV/EV scaling and NORMAL AI. It is a less optimized Family Remix experience, not vanilla Heart & Soul.
 
 ## Settings
 
@@ -35,7 +35,7 @@ The Level Cap follows progression toward the next major mandatory battle. It is 
 
 The cap should never move backward once progression has advanced.
 
-The Training NPC reads the live cap directly and can raise a Pokémon up to that limit.
+Rocket Admin battles use a dynamic rule: every Pokémon is set to the previous mandatory boss/current cap +2, and that level becomes the new cap. Evolution legality is still respected.\n\nThe Training NPC reads the live cap directly and can raise a Pokémon up to that limit.
 
 ## Starters
 
