@@ -28,9 +28,17 @@ GoldenrodCity_Gym_EventScript_Gym_Guy::
 	faceplayer
 	goto_if_set FLAG_BADGE03_GET, GoldenrodCity_Gym_EventScript_Gym_Guy_After
 	msgbox GoldenrodCity_Gym_Text_GymGuide, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_GOLDENROD, GoldenrodCity_Gym_EventScript_Gym_Guy_Done
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_Gym_EventScript_Gym_Guy_BagFull
+	setflag FLAG_FAMILY_GYM_WATER_GOLDENROD
+GoldenrodCity_Gym_EventScript_Gym_Guy_Done::
 	closemessage
 	release
 	end
+GoldenrodCity_Gym_EventScript_Gym_Guy_BagFull::
+	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	goto GoldenrodCity_Gym_EventScript_Gym_Guy_Done
 
 GoldenrodCity_Gym_EventScript_Gym_Guy_After::
 	msgbox GoldenrodCity_Gym_Text_GymGuideWin, MSGBOX_DEFAULT
@@ -231,17 +239,17 @@ GoldenrodCity_Gym_Text_BeautySamanthaAfter:
     .string "any type…$"
 
 GoldenrodCity_Gym_Text_GymGuide:
-    .string "Yo! CHAMP in making!\p"
-    .string "This GYM is home to WHITNEY, the\n"
-    .string "master of NORMAL-type POKéMON.\p"
-    .string "Be cautious of her cute team.\p"
-    .string "Some of the POKéMON in this gym\n"
-    .string "have the newly discovered FAIRY\l"
-    .string "type as well.\p"
-    .string "Check ROUTE 34 if you need a\n"
-    .string "FIGHTING-type or POISON-type.$"
+    .string "WHITNEY can set up with one POKéMON\n"
+    .string "and pass those boosts with BATON PASS.\p"
+    .string "Stop EEVEE from setting up or passing\n"
+    .string "and you break a big part of her plan.\p"
+    .string "Take this FRESH WATER. You'll need it!$"
 
 GoldenrodCity_Gym_Text_GymGuideWin:
     .string "You won? Great! I was busy admiring\n"
     .string "the ladies here.$"
 
+
+FamilyGymGuide_Text_BagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
