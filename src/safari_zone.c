@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "event_data.h"
 #include "field_player_avatar.h"
+#include "family_safari.h"
 #include "item.h"
 #include "overworld.h"
 #include "main.h"
@@ -84,6 +85,9 @@ void EnterSafariMode(void)
         gSafariZoneStepCounter = SAFARI_ZONE_STEPS;
     sSafariZoneCaughtMons = 0;
     sSafariZonePkblkUses = 0;
+#if IS_HNS
+    FamilySafari_ResetRotation();
+#endif
 }
 
 void ExitSafariMode(void)
@@ -134,6 +138,9 @@ void SafariZoneRetirePrompt(void)
 void CB2_EndSafariBattle(void)
 {
     sSafariZonePkblkUses += gBattleResults.pokeblockThrows;
+#if IS_HNS
+    FamilySafari_AdvanceRotation();
+#endif
     if (gBattleOutcome == B_OUTCOME_CAUGHT)
         sSafariZoneCaughtMons++;
     if (gNumSafariBalls != 0)

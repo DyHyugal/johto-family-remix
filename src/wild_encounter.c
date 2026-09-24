@@ -8,6 +8,7 @@
 #include "follower_npc.h"
 #include "random.h"
 #include "field_player_avatar.h"
+#include "family_safari.h"
 #include "link.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
@@ -605,6 +606,29 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
 {
     u8 wildMonIndex = 0;
     u8 level;
+
+#if IS_HNS
+    if (area == WILD_AREA_LAND && GetSafariZoneFlag())
+    {
+        u16 species;
+        u8 safariSlot;
+
+        if (FamilySafari_TryGetEncounter(&species, &level, &safariSlot))
+        {
+            if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(level))
+                return FALSE;
+            if (flags & WILD_CHECK_KEEN_EYE && !IsAbilityAllowingEncounter(level))
+                return FALSE;
+
+#if RANDOMIZER_AVAILABLE == TRUE
+            species = RandomizeWildEncounter(species, gSaveBlock1Ptr->location.mapNum,
+                                             gSaveBlock1Ptr->location.mapGroup, area, safariSlot);
+#endif
+            CreateWildMon(species, level);
+            return TRUE;
+        }
+    }
+#endif
 
     switch (area)
     {

@@ -22,14 +22,13 @@ Maps concerned are listed in the JSON.
 
 ## Safari
 
-The Family Remix Safari design is not a single static wild table per map. Each Safari sector has multiple curated pools (`safari_pool_a` ... `safari_pool_f`) that must remain individually selectable/rotatable.
+The Family Remix Safari design is integrated through `src/family_safari.c` and the generated
+`src/data/family_remix_safari.h`. It is not a single static wild table per map. Each Safari sector has multiple curated pools (`safari_pool_a` ... `safari_pool_f`) that must remain individually selectable/rotatable.
 
 Do **not** merge all pools into one giant land table.
 
-Implementation requirement:
-- if HnS already exposes a usable Safari rotation/session state, reuse it;
-- otherwise Family Remix must provide its own session rotation instead of blocking the feature;
-- autonomous fallback rule: start a Safari session on pool A, then advance the active pool after each Safari wild encounter; wrap A→E on Johto sectors and A→F on Kanto sectors;
+Implemented session rule:
+- Family Remix provides one session rotation counter; start a Safari session on pool A, then advance the active pool after each Safari wild encounter; wrap A→E on Johto sectors and A→F on Kanto sectors;
 - use one session-level rotation counter and apply modulo the pool count of the current sector; resetting a new Safari admission to pool A is acceptable;
 - active pool exposes exactly four species at 30/30/30/10;
 - changing sector must not discard or merge curated pools;

@@ -183,7 +183,8 @@ def validate_encounters():
         "dataset_version": 3,
         "imported_standard_tables": 405,
         "imported_headbutt_tables": 4,
-        "special_tables_deferred": 53,
+        "special_tables_deferred": 0,
+        "integrated_safari_pools": 53,
     }
     for key, value in expected.items():
         if audit.get(key) != value:
@@ -219,7 +220,7 @@ def validate_encounters():
     headbutt = [table for table in special["tables"] if table["method"] == "headbutt_mons"]
     safari = [table for table in special["tables"] if table["method"] != "headbutt_mons"]
     if len(headbutt) != 4 or len(safari) != 53:
-        fail(f"expected 4 Headbutt and 53 deferred Safari tables, got {len(headbutt)} and {len(safari)}")
+        fail(f"expected 4 Headbutt and 53 Safari tables, got {len(headbutt)} and {len(safari)}")
     for table in headbutt:
         if table["rates"] != [30, 30, 30, 10] or len(table["species"]) != 4:
             fail(f"invalid Headbutt distribution for {table['map']}")
@@ -227,6 +228,33 @@ def validate_encounters():
     headbutt_c = (ROOT / "src/data/family_remix_headbutt.h").read_text()
     if len(re.findall(r"\{MAP_GROUP\(MAP_", headbutt_c)) != 4:
         fail("dedicated Headbutt engine table does not contain four maps")
+
+    if special.get("status") != "INTEGRATED" or special.get("engine_status", {}).get("safari") != "INTEGRATED_SESSION_ROTATION":
+        fail("Safari metadata is not marked integrated")
+    safari_by_map = {}
+    for table in safari:
+        safari_by_map.setdefault(table["map"], []).append(table)
+        if table["rates"] != [30, 30, 30, 10] or len(table["species"]) != 4:
+            fail(f"invalid Safari distribution for {table['map']} {table['method']}")
+        expected_range = (37, 44) if table["region"] == "Johto" else (68, 76)
+        if not (expected_range[0] <= table["min_level"] <= table["max_level"] <= expected_range[1]):
+            fail(f"invalid Safari level range for {table['map']} {table['method']}")
+    if len(safari_by_map) != 10:
+        fail(f"expected 10 Safari sectors, got {len(safari_by_map)}")
+    for map_name, pools in safari_by_map.items():
+        expected_pools = 6 if map_name in {
+            "MAP_FUCHSIA_CITY_SAFARI_ZONE_BEACH_HNS",
+            "MAP_FUCHSIA_CITY_SAFARI_ZONE_CAVE_HNS",
+            "MAP_FUCHSIA_CITY_SAFARI_ZONE_MOUNTAIN_HNS",
+        } else 5
+        if len(pools) != expected_pools:
+            fail(f"{map_name}: expected {expected_pools} rotating pools, got {len(pools)}")
+
+    safari_c = (ROOT / "src/data/family_remix_safari.h").read_text()
+    if safari_c.count(".minLevel =") != 53:
+        fail("generated Safari engine data does not contain 53 separate pools")
+    if len(re.findall(r"\{MAP_GROUP\(MAP_", safari_c)) != 10:
+        fail("generated Safari engine data does not contain 10 sectors")
 
 
 def parse_shop_items(path):
@@ -254,7 +282,7 @@ def main():
     validate_rockets()
     validate_encounters()
     validate_shops()
-    print("Family Remix data validation passed: bosses, EVs, encounters and shops")
+    print("Family Remix data validation passed: bosses, Rockets, EVs, encounters, Safari and shops")
 
 
 if __name__ == "__main__":

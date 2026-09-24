@@ -75567,13 +75567,14 @@
     "imported_standard_tables": 405,
     "imported_headbutt_tables": 4,
     "cloned_time_records": 5,
-    "special_tables_deferred": 53,
+    "special_tables_deferred": 0,
     "touched_hns_records": 224,
     "rates": {
       "land": "12 native slots grouped 30/30/30/10",
       "water_rock": "30/30/30/9/1; species4 uses slots 4+5 = 10%",
       "fishing": "Old 70/30; Good 40/30/30; Super 30/30/30/9/1 with species4=10%"
     },
-    "note": "Headbutt uses dedicated engine tables; Safari pools remain staged pending an explicit rotation rule."
+    "note": "Headbutt uses dedicated engine tables; Safari uses the Family Remix session rotation.",
+    "integrated_safari_pools": 53
   }
 }

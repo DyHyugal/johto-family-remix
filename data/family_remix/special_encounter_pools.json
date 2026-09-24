@@ -1,10 +1,10 @@
 {
   "dataset": "Pokemon Family Remix special encounter pools",
   "version": 3,
-  "status": "PARTIALLY_INTEGRATED",
+  "status": "INTEGRATED",
   "engine_status": {
     "headbutt": "INTEGRATED",
-    "safari": "DEFERRED_NEEDS_ROTATION_RULE"
+    "safari": "INTEGRATED_SESSION_ROTATION"
   },
   "rules": {
     "source_of_truth": "PFR_V1_Encounters_FINAL.json V3",
