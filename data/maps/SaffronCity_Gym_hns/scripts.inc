@@ -2,9 +2,20 @@ SaffronCity_Gym_hns_MapScripts::
 	.byte 0
 
 SaffronCity_Gym_EventScript_GymGuy::
+	lock
+	faceplayer
 	goto_if_set FLAG_DEFEATED_SAFFRON_GYM, SaffronCity_Gym_EventScript_GymGuy2
-	msgbox SaffronCity_Gym_Text_GymGuideIntro, MSGBOX_NPC
+	msgbox SaffronCity_Gym_Text_GymGuideIntro, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_SAFFRON, SaffronCity_Gym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, SaffronCity_Gym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_SAFFRON
+SaffronCity_Gym_EventScript_GymGuyDone::
+	release
 	end
+SaffronCity_Gym_EventScript_GymGuyBagFull::
+	msgbox SaffronCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	goto SaffronCity_Gym_EventScript_GymGuyDone
 
 SaffronCity_Gym_EventScript_GymGuy2::
 	msgbox SaffronCity_Gym_Text_GymGuideWin, MSGBOX_NPC
@@ -165,13 +176,12 @@ SaffronCity_Gym_Text_PsychicJaredAfter:
 	.string "by SABRINA.$"
 
 SaffronCity_Gym_Text_GymGuideIntro:
-	.string "Yo, CHAMP in making!\p"
-	.string "A trainer as skilled as you\n"
-	.string "doesn't need to be told how to\l"
-	.string "deal with PSYCHIC-type POKéMON,\l"
-	.string "right?\p"
-	.string "I expect great things from you!\p"
-	.string "Good luck!$"
+	.string "SABRINA uses TRICK ROOM. For a few\n"
+	.string "turns, the slowest POKéMON move first.\p"
+	.string "Don't race her for Speed: stall out\n"
+	.string "TRICK ROOM, use priority, and pressure\l"
+	.string "the setters.\p"
+	.string "Take this FRESH WATER. Good luck!$"
 
 SaffronCity_Gym_Text_GymGuideWin:
 	.string "That was another fantastic battle!$"
@@ -200,3 +210,7 @@ SaffronCity_Gym_Text_GymStatuePlayerWon::
     .string "LEADER: SABRINA\p"
     .string "WINNING TRAINERS:\n"
 	.string "BLUE, RED, {PLAYER}$"
+
+SaffronCity_Gym_Text_FamilyGuideBagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
