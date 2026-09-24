@@ -255,9 +255,20 @@ FuchsiaCity_Gym_Text_CamperBarry_After:
 	.string "what, huh?$"
 
 FuchsiaCity_Gym_EventScript_GymGuy::
+	lock
+	faceplayer
 	goto_if_set FLAG_DEFEATED_FUCHSIA_GYM, FuchsiaCity_Gym_EventScript_GymGuyAfter
-	msgbox FuchsiaCity_Gym_Text_Guide, MSGBOX_NPC
+	msgbox FuchsiaCity_Gym_Text_Guide, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_FUCHSIA, FuchsiaCity_Gym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, FuchsiaCity_Gym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_FUCHSIA
+FuchsiaCity_Gym_EventScript_GymGuyDone::
+	release
 	end
+FuchsiaCity_Gym_EventScript_GymGuyBagFull::
+	msgbox FuchsiaCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
+	goto FuchsiaCity_Gym_EventScript_GymGuyDone
 
 FuchsiaCity_Gym_EventScript_GymGuyAfter::
 	msgbox FuchsiaCity_Gym_Text_GuideWin, MSGBOX_NPC
@@ -288,13 +299,18 @@ FuchsiaCity_Gym_Text_GymStatuePlayerWon::
     .string "BLUE, RED, {PLAYER}$"
 
 FuchsiaCity_Gym_Text_Guide:
-	.string "Yo, CHAMP in making!\p"
-	.string "Whoops! Take a good look around you.\p"
-	.string "The trainers all look like the\n"
-	.string "LEADER, JANINE.\p"
-	.string "Which of them is the real JANINE?$"
+	.string "JANINE wants a long battle with\n"
+	.string "TOXIC SPIKES, recovery and REGENERATOR.\p"
+	.string "Clear hazards and status if you can,\n"
+	.string "and don't let her defensive core\l"
+	.string "reset for free.\p"
+	.string "Take this FRESH WATER. Stay healthy!$"
 
 FuchsiaCity_Gym_Text_GuideWin:
 	.string "That was a great battle, trainer\n"
 	.string "from JOHTO!$"
 
+
+FuchsiaCity_Gym_Text_FamilyGuideBagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
