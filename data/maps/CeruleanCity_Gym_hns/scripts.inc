@@ -163,7 +163,7 @@ CeruleanCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 CeruleanCity_Gym_EventScript_GymGuyBagFull::
-	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	msgbox CeruleanCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
 	goto CeruleanCity_Gym_EventScript_GymGuyDone
 
 CeruleanCity_Gym_EventScript_GymGuyAfter::
@@ -342,6 +342,6 @@ CeruleanGym_Text_Misty_ExplainTM:
 	.string "It causes damage and sometimes\n"
 	.string "causes confusion as well!$"
 
-FamilyGymGuide_Text_BagFull:
+CeruleanCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
