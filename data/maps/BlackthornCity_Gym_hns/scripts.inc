@@ -381,7 +381,7 @@ BlackthornGym_EventScript_GymGuyDone::
 	release
 	end
 BlackthornGym_EventScript_GymGuyBagFull::
-	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	msgbox BlackthornCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
 	goto BlackthornGym_EventScript_GymGuyDone
 	
 BlackthornGym_EventScript_GymGuy2::
@@ -440,6 +440,6 @@ BlackthornGym_Text_GymStatueCertified:
 	.string "CLAIR'S CERTIFIED TRAINERS:\n"
 	.string "{PLAYER}$"
 
-FamilyGymGuide_Text_BagFull:
+BlackthornCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
