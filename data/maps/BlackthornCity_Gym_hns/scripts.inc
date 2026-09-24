@@ -372,9 +372,17 @@ BlackthornGym_EventScript_GymGuy::
 	faceplayer
 	goto_if_set FLAG_DEFEATED_BLACKTHORN_GYM, BlackthornGym_EventScript_GymGuy2
 	msgbox BlackthornGym_Text_GuideText, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_BLACKTHORN, BlackthornGym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, BlackthornGym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_BLACKTHORN
+BlackthornGym_EventScript_GymGuyDone::
 	closemessage
 	release
 	end
+BlackthornGym_EventScript_GymGuyBagFull::
+	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	goto BlackthornGym_EventScript_GymGuyDone
 	
 BlackthornGym_EventScript_GymGuy2::
 	goto_if_set FLAG_BADGE08_GET, BlackthornGym_EventScript_GymGuy3
@@ -388,20 +396,12 @@ BlackthornGym_EventScript_GymGuy3::
 	end	
 
 BlackthornGym_Text_GuideText:
-    .string "Yo! CHAMP in making!\p"
-    .string "It's been a long journey, but we\n"
-    .string "are almost done! Count on me!\p"
-    .string "While CLAIR looks up to the Dragon\n"
-    .string "Master, LANCE, she's managed to\l"
-    .string "create her own identity with a\l"
-    .string "team consisting of dragons from\l"
-    .string "the sea.\p"
-    .string "Dragons are supposed to be\n"
-    .string "weak against ICE-type moves,\l"
-    .string "but you'll need some DRAGON-type\l"
-	.string "or FAIRY-type moves of your own if\l"
-    .string "you want to win.$"
-    .string "You got this!$"
+    .string "CLAIR has several ways to win:\n"
+    .string "paralysis, setup and critical hits.\p"
+    .string "Keep a healthy answer for KINGDRA,\n"
+    .string "and don't give DRAGON DANCE or\l"
+    .string "FOCUS ENERGY a free turn.\p"
+    .string "Take this FRESH WATER. Good luck!$"
 
 BlackthornGym_Text_GuideGotoDragonsDen:
 	.string "You were great to beat CLAIR!\p"
@@ -439,3 +439,7 @@ BlackthornGym_Text_GymStatueCertified:
 	.string "BLACKTHORN CITY POKéMON GYM\p"
 	.string "CLAIR'S CERTIFIED TRAINERS:\n"
 	.string "{PLAYER}$"
+
+FamilyGymGuide_Text_BagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
