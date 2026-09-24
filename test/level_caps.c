@@ -16,7 +16,7 @@ static u32 GetTestBossLevel(u16 trainerId, bool8 useLowestLevel)
     case TRAINER_RIVAL_TOTODILE_1_HNS:
         return 5;
     case TRAINER_FALKNER_1_HNS:
-        return useLowestLevel ? 8 : 11;
+        return useLowestLevel ? 14 : 17;
     case TRAINER_PROTON_1_HNS:
         return useLowestLevel ? 12 : 15;
     case TRAINER_RIVAL_CHIKORITA_2_HNS:
@@ -24,11 +24,11 @@ static u32 GetTestBossLevel(u16 trainerId, bool8 useLowestLevel)
     case TRAINER_RIVAL_TOTODILE_2_HNS:
         return useLowestLevel ? 15 : 18;
     case TRAINER_BUGSY_1_HNS:
-        return useLowestLevel ? 15 : 16;
+        return useLowestLevel ? 22 : 25;
     case TRAINER_WHITNEY_1_HNS:
-        return useLowestLevel ? 20 : 21;
+        return useLowestLevel ? 29 : 32;
     case TRAINER_LTSURGE_HNS:
-        return useLowestLevel ? 57 : 60;
+        return useLowestLevel ? 72 : 74;
     case TRAINER_RED_HNS:
         return useLowestLevel ? 77 : 93;
     default:
@@ -45,20 +45,20 @@ static void SetLevelCapMode(u8 mode)
 TEST("Level cap: Falkner is the first HnS milestone")
 {
     SetLevelCapMode(1);
-    EXPECT_EQ(GetCurrentLevelCap(), 11);
+    EXPECT_EQ(GetCurrentLevelCap(), 17);
 
     SetLevelCapMode(2);
-    EXPECT_EQ(GetCurrentLevelCap(), 8);
+    EXPECT_EQ(GetCurrentLevelCap(), 14);
 }
 
 TEST("Level cap: defeating a major fight selects the next actual boss")
 {
     SetLevelCapMode(1);
     SetTrainerFlag(TRAINER_RIVAL_CYNDAQUIL_1_HNS);
-    EXPECT_EQ(GetCurrentLevelCap(), 11);
+    EXPECT_EQ(GetCurrentLevelCap(), 17);
 
     FlagSet(FLAG_DEFEATED_VIOLET_GYM);
-    EXPECT_EQ(GetCurrentLevelCap(), 15);
+    EXPECT_EQ(GetCurrentLevelCap(), 17);
 
     SetTrainerFlag(TRAINER_PROTON_1_HNS);
     EXPECT_EQ(GetCurrentLevelCap(), 18);
@@ -72,27 +72,27 @@ TEST("Level cap: progression never moves backwards after a stronger boss")
     SetTrainerFlag(TRAINER_PROTON_1_HNS);
     SetTrainerFlag(TRAINER_RIVAL_CYNDAQUIL_2_HNS);
 
-    // Bugsy's current ace is lower than Silver's, so Silver remains the floor.
-    EXPECT_EQ(GetCurrentLevelCap(), 18);
+    // The next FINAL boss team supplies the cap; completed milestones remain the floor.
+    EXPECT_EQ(GetCurrentLevelCap(), 25);
     FlagSet(FLAG_DEFEATED_AZALEA_TOWN_GYM);
-    EXPECT_EQ(GetCurrentLevelCap(), 21);
+    EXPECT_EQ(GetCurrentLevelCap(), 32);
 }
 
 TEST("Level cap: hard mode uses the next boss party's lowest level")
 {
     SetLevelCapMode(2);
     SetTrainerFlag(TRAINER_RIVAL_CYNDAQUIL_1_HNS);
-    EXPECT_EQ(GetCurrentLevelCap(), 8);
+    EXPECT_EQ(GetCurrentLevelCap(), 14);
 
     FlagSet(FLAG_DEFEATED_VIOLET_GYM);
-    EXPECT_EQ(GetCurrentLevelCap(), 12);
+    EXPECT_EQ(GetCurrentLevelCap(), 14);
 }
 
 TEST("Level cap: league transitions use Kanto, Red, then the engine maximum")
 {
     SetLevelCapMode(1);
     FlagSet(FLAG_IS_CHAMPION);
-    EXPECT_EQ(GetCurrentLevelCap(), 60);
+    EXPECT_EQ(GetCurrentLevelCap(), 74);
 
     FlagSet(FLAG_IS_KANTO_CHAMPION);
     EXPECT_EQ(GetCurrentLevelCap(), 93);
@@ -113,6 +113,6 @@ TEST("Level cap: EXP Training reads the live boss cap")
     TrainingNpc_ApplyExp();
 
     EXPECT_EQ(gSpecialVar_Result, TRAINING_RESULT_SUCCESS);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 11);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 17);
 }
 #endif
