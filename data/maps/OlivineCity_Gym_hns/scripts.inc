@@ -182,7 +182,7 @@ OlivineCity_Gym_EventScript_GymGuideDone::
 	release
 	end
 OlivineCity_Gym_EventScript_GymGuideBagFull::
-	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	msgbox OlivineCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
 	goto OlivineCity_Gym_EventScript_GymGuideDone
 
 OlivineCity_Gym_EventScript_GymGuideSick::
@@ -390,6 +390,6 @@ OlivineCity_Gym_Text_JasmineTradeCompleted:
 	.string "…How is RUSTY doing?\n"
 	.string "I hope you're taking good care…$"
 
-FamilyGymGuide_Text_BagFull:
+OlivineCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
