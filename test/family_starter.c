@@ -124,7 +124,7 @@ TEST("Family starter: cancel or invalid choice preserves the mystery egg")
     EXPECT(!FlagGet(FLAG_RECEIVED_TOGEPI_EGG));
 }
 
-TEST("Family starter: primary Eevee remembers only an existing stone evolution")
+TEST("Family starter: primary Eevee receives all three planned rewards")
 {
     InitFamilyTest();
     gSpecialVar_0x8006 = SPECIES_VAPOREON;
@@ -132,6 +132,8 @@ TEST("Family starter: primary Eevee remembers only an existing stone evolution")
     FlagSet(FLAG_SYS_POKEMON_GET);
     EXPECT_EQ(FamilyStarter_GetPrimarySpecies(), SPECIES_EEVEE);
     EXPECT_EQ(VarGet(VAR_FAMILY_STARTER_EVOLUTION), SPECIES_VAPOREON);
+    EXPECT(CheckBagHasItem(ITEM_SILK_SCARF, 1));
+    EXPECT(CheckBagHasItem(ITEM_MYSTIC_WATER, 1));
     EXPECT(CheckBagHasItem(ITEM_WATER_STONE, 1));
     gSpecialVar_0x8006 = SPECIES_CHARCADET;
     FamilyStarter_RecordPrimary();
@@ -147,7 +149,21 @@ TEST("Family starter: Eevee egg stores its existing stone evolution preference")
     EXPECT_EQ(gSpecialVar_Result, MON_GIVEN_TO_PARTY);
     EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_EEVEE);
     EXPECT_EQ(VarGet(VAR_FAMILY_EGG_EVOLUTION), SPECIES_VAPOREON);
+    EXPECT(CheckBagHasItem(ITEM_SILK_SCARF, 1));
+    EXPECT(CheckBagHasItem(ITEM_MYSTIC_WATER, 1));
     EXPECT(CheckBagHasItem(ITEM_WATER_STONE, 1));
+}
+
+TEST("Family starter: Sylveon plan uses Fairy Feather as its type booster")
+{
+    InitFamilyTest();
+    gSpecialVar_0x8005 = SPECIES_EEVEE;
+    gSpecialVar_0x8006 = SPECIES_SYLVEON;
+    FamilyStarter_GiveEgg();
+    EXPECT_EQ(gSpecialVar_Result, MON_GIVEN_TO_PARTY);
+    EXPECT(CheckBagHasItem(ITEM_SILK_SCARF, 1));
+    EXPECT(CheckBagHasItem(ITEM_FAIRY_FEATHER, 1));
+    EXPECT(CheckBagHasItem(ITEM_SHINY_STONE, 1));
 }
 
 TEST("Family starter: Charcadet branch grants its selected stone")
@@ -157,6 +173,7 @@ TEST("Family starter: Charcadet branch grants its selected stone")
     FamilyStarter_GiveEgg();
     EXPECT_EQ(gSpecialVar_Result, MON_GIVEN_TO_PARTY);
     EXPECT_EQ(VarGet(VAR_FAMILY_EGG_EVOLUTION), SPECIES_ARMAROUGE);
+    EXPECT(CheckBagHasItem(ITEM_CHARCOAL, 1));
     EXPECT(CheckBagHasItem(ITEM_AUSPICIOUS_ARMOR, 1));
     EXPECT(!CheckBagHasItem(ITEM_MALICIOUS_ARMOR, 1));
 }
@@ -171,6 +188,10 @@ TEST("Family starter: linear species receive their automatic evolution item")
         ITEM_DRAGON_SCALE, ITEM_ELECTIRIZER, ITEM_THUNDER_STONE, ITEM_THUNDER_STONE,
         ITEM_RAZOR_FANG, ITEM_ICE_STONE, ITEM_ICE_STONE,
     };
+    static const u16 boosters[] = {
+        ITEM_MYSTIC_WATER, ITEM_MAGNET, ITEM_MAGNET, ITEM_MAGNET,
+        ITEM_SOFT_SAND, ITEM_NEVER_MELT_ICE, ITEM_NEVER_MELT_ICE,
+    };
     u32 i;
 
     for (i = 0; i < ARRAY_COUNT(species); i++)
@@ -178,6 +199,7 @@ TEST("Family starter: linear species receive their automatic evolution item")
         InitFamilyTest();
         CreateRandomMon(&gPlayerParty[0], species[i], 5);
         FamilyStarter_RecordPrimary();
+        EXPECT(CheckBagHasItem(boosters[i], 1));
         EXPECT(CheckBagHasItem(items[i], 1));
         EXPECT_EQ(VarGet(VAR_FAMILY_STARTER_EVOLUTION), SPECIES_NONE);
     }
@@ -200,6 +222,7 @@ TEST("Family starter: Froslass preference makes the exact primary preview female
     EXPECT_EQ(GetMonGender(&gPlayerParty[0]), MON_FEMALE);
     FamilyStarter_RecordPrimary();
     EXPECT_EQ(VarGet(VAR_FAMILY_STARTER_EVOLUTION), SPECIES_FROSLASS);
+    EXPECT(CheckBagHasItem(ITEM_NEVER_MELT_ICE, 1));
     EXPECT(CheckBagHasItem(ITEM_DAWN_STONE, 1));
 }
 
@@ -216,6 +239,7 @@ TEST("Family starter: Snorunt egg branches preserve gender and item choice")
     EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_PERSONALITY), personality);
     EXPECT_EQ(GetMonGender(&gPlayerParty[1]), MON_FEMALE);
     EXPECT_EQ(VarGet(VAR_FAMILY_EGG_EVOLUTION), SPECIES_FROSLASS);
+    EXPECT(CheckBagHasItem(ITEM_NEVER_MELT_ICE, 1));
     EXPECT(CheckBagHasItem(ITEM_DAWN_STONE, 1));
 
     InitFamilyTest();
@@ -239,24 +263,31 @@ TEST("Family starter: Froslass egg is regenerated female if its preview was lost
     EXPECT_EQ(VarGet(VAR_FAMILY_EGG_EVOLUTION), SPECIES_FROSLASS);
 }
 
-TEST("Family starter: item feedback is queued once after a successful grant")
+TEST("Family starter: cumulative item feedback is queued in reward order")
 {
     InitFamilyTest();
     gSpecialVar_0x8006 = SPECIES_CERULEDGE;
     FamilyStarter_GiveEgg();
+    EXPECT(CheckBagHasItem(ITEM_CHARCOAL, 1));
     EXPECT(CheckBagHasItem(ITEM_MALICIOUS_ARMOR, 1));
+
+    FamilyStarter_PreparePendingItemMessage();
+    EXPECT_EQ(gSpecialVar_Result, 1);
+    EXPECT_EQ(gSpecialVar_0x8000, ITEM_CHARCOAL);
     FamilyStarter_PreparePendingItemMessage();
     EXPECT_EQ(gSpecialVar_Result, 1);
     EXPECT_EQ(gSpecialVar_0x8000, ITEM_MALICIOUS_ARMOR);
     FamilyStarter_PreparePendingItemMessage();
     EXPECT_EQ(gSpecialVar_Result, FALSE);
+
     FamilyStarter_GiveEgg();
     EXPECT_EQ(gSpecialVar_Result, MON_CANT_GIVE);
+    EXPECT(CheckBagHasItem(ITEM_CHARCOAL, 1));
     EXPECT(CheckBagHasItem(ITEM_MALICIOUS_ARMOR, 1));
     EXPECT(!CheckBagHasItem(ITEM_MALICIOUS_ARMOR, 2));
 }
 
-TEST("Family starter: a full bag sends the reward to item storage")
+TEST("Family starter: a full bag sends every reward to item storage")
 {
     struct BagPocket *pocket;
     u32 i;
@@ -269,10 +300,17 @@ TEST("Family starter: a full bag sends the reward to item storage")
         BagPocket_SetSlotData(pocket, i, slot);
     }
     FamilyStarter_GiveEgg();
+    EXPECT(CheckPCHasItem(ITEM_MYSTIC_WATER, 1));
     EXPECT(CheckPCHasItem(ITEM_DRAGON_SCALE, 1));
+
+    FamilyStarter_PreparePendingItemMessage();
+    EXPECT_EQ(gSpecialVar_Result, 2);
+    EXPECT_EQ(gSpecialVar_0x8000, ITEM_MYSTIC_WATER);
     FamilyStarter_PreparePendingItemMessage();
     EXPECT_EQ(gSpecialVar_Result, 2);
     EXPECT_EQ(gSpecialVar_0x8000, ITEM_DRAGON_SCALE);
+    FamilyStarter_PreparePendingItemMessage();
+    EXPECT_EQ(gSpecialVar_Result, FALSE);
 }
 
 TEST("Family starter: rival uses a Ground starter against Electric")
