@@ -39,7 +39,7 @@ MahoganyTown_Gym_EventScript_GymGuyDone::
 	release
 	end
 MahoganyTown_Gym_EventScript_GymGuyBagFull::
-	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	msgbox MahoganyTown_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
 	goto MahoganyTown_Gym_EventScript_GymGuyDone
 	
 MahoganyTown_Gym_EventScript_GymGuy2::
@@ -266,6 +266,6 @@ MahoganyTown_Gym_Text_SkierClarissaAfter:
     .string "about my skiing…$"
 
 
-FamilyGymGuide_Text_BagFull:
+MahoganyTown_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
