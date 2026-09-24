@@ -4,20 +4,26 @@
 
 ## Difficulté
 
-Pokémon Family Remix est prévu pour démarrer en **HARD par défaut**. Un message au lancement d'une nouvelle partie rappelle que le mode **NORMAL** reste disponible.
+Pokémon Family Remix démarre en **HARD par défaut**. Le mode **NORMAL** reste disponible et propose lui aussi l'expérience Family Remix complète.
 
 ### HARD
-
-Le mode HARD utilise les équipes Family Remix pour les principaux boss : meilleures synergies, objets cohérents, IV/EV, météo, terrains, screens, Trick Room et plans de victoire identifiables.
+- équipes et sets Family Remix ;
+- IV = 31 sur les boss ;
+- EV explicites adaptés aux rôles ;
+- IA HARD et heuristiques Family Remix ;
+- synergies météo, terrains, screens, Trick Room, hazards, setup et pivots selon les boss.
 
 ### NORMAL
+- **mêmes nouvelles équipes et sets Family Remix** ;
+- mêmes niveaux, thèmes et contenus de progression ;
+- scaling IV/EV NORMAL au lieu des spreads optimisés HARD ;
+- IA NORMAL au lieu des heuristiques HARD.
 
-Le mode NORMAL conserve l'équilibrage et le fonctionnement standard de Pokémon Heart & Soul. Les équipes HARD ne doivent pas contaminer ce mode.
+NORMAL est donc une version moins optimisée de Family Remix, pas un mode vanilla HnS.
 
 ## Paramètres
 
 Le menu Family Remix est organisé autour de six onglets :
-
 - **Mode**
 - **Features**
 - **Randomizer**
@@ -25,61 +31,49 @@ Le menu Family Remix est organisé autour de six onglets :
 - **Difficulty**
 - **Challenges**
 
-Le preset Recommended applique les réglages conseillés. Le mode Custom permet d'entrer dans le détail.
+Le preset Recommended applique les réglages conseillés. Le mode Custom permet d'entrer dans le détail. **B = Save & Exit** sauvegarde directement les réglages.
 
-La V1 prévoit aussi une sauvegarde directe des réglages avec **B = Save & Exit** depuis n'importe quel onglet.
+La V1 prévoit également **Language / Langue** avec English et Français.
 
 ## Level Cap
 
-Le Level Cap suit la progression vers le prochain combat majeur. Il évite de résoudre la difficulté uniquement par le sur-leveling.
+Le Level Cap suit les combats majeurs et ne redescend jamais.
 
-Le cap ne doit jamais redescendre après avoir progressé.
+Pour les apparitions des dirigeants Team Rocket, la règle Family Remix est dynamique : **chaque Pokémon du boss Rocket est au niveau du dernier boss/cap +2**, puis ce niveau devient le nouveau Level Cap. Si plusieurs boss Rocket s'enchaînent, le cap continue donc à progresser de +2.
 
-Le Training NPC lit le cap actuel directement et peut amener un Pokémon jusqu'à cette limite.
+Les niveaux d'évolution restent respectés : une pré-évolution est utilisée tant que la forme finale n'est pas légalement accessible.
+
+Le Training NPC lit directement le cap courant.
 
 ## Starters
 
-Le sélecteur Family Remix propose six catégories de type ainsi qu'Évoli :
+Le sélecteur propose six catégories et Évoli :
+- Feu : Salamèche, Poussifeu, Ouisticram, Héricendre, Charbambin
+- Eau : Gobou, Tiplouf, Grenousse, Moustillon, Hypotrempe
+- Plante : Bulbizarre, Arcko, Vipélierre, Poussacha, Ouistempo
+- Électrik : Élekid, Magnéti, Pohm, Zapétrel, Pichu
+- Sol : Scorplane, Rototaupe, Mascaïman, Gringolem, Bacabouh
+- Glace : Goupix d'Alola, Stalgamin, Marcacrin, Darumarond de Galar, Sorbébé
+- Évoli et ses évolitions
 
-- Feu
-- Eau
-- Plante
-- Électrik
-- Sol
-- Glace
-- Évoli
+Le rival reçoit un choix conçu pour répondre au starter du joueur.
 
-Le rival reçoit un starter choisi dans une catégorie conçue pour répondre au tien.
-
-Après la quête de l'œuf d'Orme, le joueur sélectionne un **deuxième starter** à partir du même système.
+Après la quête de l'œuf d'Orme, le joueur sélectionne un **deuxième starter** via le même système.
 
 ### Objets des starters
 
-Chaque starter typé reçoit son booster de type. Les éventuels objets d'évolution nécessaires s'ajoutent à cette récompense.
+Chaque starter typé reçoit son booster de type, plus l'éventuel objet d'évolution nécessaire.
 
-Évoli reçoit trois objets après le choix de son évolution :
-
+Évoli reçoit :
 1. Mouchoir Soie ;
-2. booster correspondant au type de l'évolition ;
+2. booster du type de l'évolition choisie ;
 3. pierre d'évolution correspondante.
 
 ## Training NPC
 
-Le Training NPC est conçu pour réduire le grind de préparation. Ses services couvrent notamment :
-
-- IV ;
-- EV ;
-- reset EV ;
-- EXP ;
-- bonheur ;
-- nature ;
-- talent.
-
-Il ne remplace pas la construction d'équipe : il accélère simplement la préparation.
+Services prévus : IV, EV, reset EV, EXP, bonheur, nature et talent. Il réduit le grind de préparation sans remplacer la construction d'équipe.
 
 ## Shiny Rate
-
-Les taux proposés dans les paramètres V1 sont :
 
 | Réglage | Taux |
 |---|---:|
@@ -92,38 +86,18 @@ Les taux proposés dans les paramètres V1 sont :
 | High | 1/10 |
 | Guaranteed | 1/1 |
 
-Le challenge **Shiny Only** est prévu après la V1 et ne fait pas partie du périmètre de release actuel.
-
 ## Vitesse native
 
-La vitesse du jeu peut être réglée sur **x1 / x2 / x3 / x4**.
-
-Il s'agit d'une accélération logique native : la musique conserve son rythme normal et certaines scènes sensibles restent volontairement à vitesse normale.
+**x1 / x2 / x3 / x4**, sans accélérer la musique. Certaines scènes sensibles peuvent rester volontairement à vitesse normale.
 
 ## Audio
 
-Musique et effets/cry possèdent des volumes indépendants :
-
-- MUTE
-- 20 %
-- 40 %
-- 60 %
-- 80 %
-- 100 %
+Musique et effets/cry disposent de volumes indépendants : **MUET, 20 %, 40 %, 60 %, 80 %, 100 %**.
 
 ## Boutiques spéciales
 
-Family Remix ajoute une logique de boutiques séparant :
+TM Shop : **Support / Weak / Powerful / Ultimate**, puis sélection par type.
 
-- CT de support ;
-- attaques faibles ;
-- attaques puissantes ;
-- attaques ultimes ;
+Item Shop : **Evolution / Strategic / Other**.
 
-et, côté objets :
-
-- évolution ;
-- stratégique ;
-- autre/QoL.
-
-Les boutiques spéciales ne doivent pas remplacer la progression normale des Poké Marts.
+Ces boutiques complètent la progression normale sans remplacer les Poké Marts ni court-circuiter les objets de scénario.
