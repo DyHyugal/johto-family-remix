@@ -63,28 +63,14 @@ Manual playback/UI checks still needed in mGBA:
 - In game, open Options > CHALLENGE SETTINGS, then save and cancel separately;
   check return to Options and then the field, plus existing mid-game locks.
 
-## Native x2/x3/x4 feasibility
+## Native x2/x3/x4
 
-No speed multiplier is implemented in this change.
+Native game speed is implemented and validated separately in `NATIVE_SPEED_NOTES.md`.
 
-In `src/main.c`, AgbMain reads keys, executes the main callbacks, updates play
-time and map music, then waits for VBlank. VBlankIntr performs graphics transfers,
-link work, RNG advancement and m4aSoundMain; sound DMA/VSync is also tied to this
-hardware cadence. Tasks, animations and many script waits count game frames.
-`src/sound.c` additionally times fanfares in frames and waits for cry completion.
-GBS SFX count hardware-rate ticks in `src/gbs.c`.
+Current Family Remix behavior:
+- x1 / x2 / x3 / x4 logical game speed;
+- music/audio hardware clock stays at x1;
+- guarded overworld/battle extra ticks;
+- link-, transition-, input- and audio-sensitive paths keep the documented safeguards.
 
-Repeating callbacks two to four times per VBlank would advance some timers but
-not audio, interrupts or graphics transfers. It would also reuse input edges,
-interfere with link synchronization and produce inconsistent audio-wait behavior.
-Removing the VBlank wait or changing music tempo does not solve these problems.
-Emulator fast-forward accelerates the emulated hardware clock, which ROM-side
-music tempo compensation cannot generally undo for PCM samples or GBS channels.
-
-A robust native implementation needs separate simulation, presentation and audio
-clocks, explicit input-edge handling, audited script/audio waits, and exclusions
-for link, saves and transitions. It also needs worst-case CPU profiling on GBA:
-four simulation steps must still fit the frame budget. This is a larger engine
-project, not a safe global menu toggle. Targeted walking/battle-animation speed
-features could be investigated separately, with scene-specific tests; they would
-not constitute a universal x2/x3/x4 mode.
+Do not use the older feasibility conclusion that said no multiplier existed; that text predated the implementation. Regression commands remain the Native, Audio and Settings test groups plus the HnS production build.
