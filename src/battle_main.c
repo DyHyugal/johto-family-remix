@@ -21,6 +21,7 @@
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
 #include "berry.h"
+#include "caps.h"
 #include "bg.h"
 #include "data.h"
 #include "debug.h"
@@ -2207,6 +2208,39 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
     return trainer->partySize;
 }
 
+void ApplyFamilyRocketPartyLevel(struct Pokemon *party, u8 count, u16 trainerNum)
+{
+#if IS_HNS
+    u32 level = GetFamilyRocketTrainerLevel(trainerNum);
+    u32 i;
+
+    if (level == 0)
+        return;
+
+    for (i = 0; i < count; i++)
+    {
+        u16 species = GetMonData(&party[i], MON_DATA_SPECIES);
+        u16 legalSpecies = GetFamilyRocketLegalSpecies(species, level);
+        u16 ability = GetMonAbility(&party[i]);
+        u32 abilityNum;
+
+        u32 exp = gExperienceTables[gSpeciesInfo[legalSpecies].growthRate][level];
+
+        SetMonData(&party[i], MON_DATA_SPECIES, &legalSpecies);
+        SetMonData(&party[i], MON_DATA_EXP, &exp);
+        for (abilityNum = 0; abilityNum < NUM_ABILITY_SLOTS; abilityNum++)
+        {
+            if (gSpeciesInfo[legalSpecies].abilities[abilityNum] == ability)
+                break;
+        }
+        if (abilityNum == NUM_ABILITY_SLOTS)
+            abilityNum = 0;
+        SetMonData(&party[i], MON_DATA_ABILITY_NUM, &abilityNum);
+        CalculateMonStats(&party[i]);
+    }
+#endif
+}
+
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer)
 {
     u8 retVal;
@@ -2230,6 +2264,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
     {
         retVal = CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum), firstTrainer, gBattleTypeFlags);
     }
+    ApplyFamilyRocketPartyLevel(party, min(retVal, PARTY_SIZE), trainerNum);
     return retVal;
 }
 

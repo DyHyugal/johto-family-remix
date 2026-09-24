@@ -158,6 +158,23 @@ static u16 GetMilestoneTrainerId(const struct BossLevelCapMilestone *milestone)
     return milestone->trainerIds[0];
 }
 
+static bool32 IsFamilyRocketTrainer(u16 trainerId)
+{
+    switch (trainerId)
+    {
+    case TRAINER_PROTON_1_HNS:
+    case TRAINER_PROTON_2_HNS:
+    case TRAINER_PETREL_1_HNS:
+    case TRAINER_PETREL_2_HNS:
+    case TRAINER_ARIANA_1_HNS:
+    case TRAINER_ARIANA_2_HNS:
+    case TRAINER_ARCHER_HNS:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
 static u32 GetMilestoneLevelCap(const struct BossLevelCapMilestone *milestone, bool8 useLowestLevel)
 {
     u32 levelCap = 0;
@@ -202,12 +219,17 @@ static u32 GetBossProgressionLevelCap(const struct BossLevelCapMilestone *milest
 {
     u32 nextBossCap = 0;
     u32 progressionFloor = 0;
+    u32 progressionReference = 0;
     u32 i;
 
     for (i = 0; i < count; i++)
     {
-        u32 milestoneCap = GetMilestoneLevelCap(&milestones[i], useLowestLevel);
+        u16 trainerId = GetMilestoneTrainerId(&milestones[i]);
+        u32 milestoneCap = IsFamilyRocketTrainer(trainerId)
+            ? min(progressionReference + 2, MAX_LEVEL)
+            : GetMilestoneLevelCap(&milestones[i], useLowestLevel);
 
+        progressionReference = max(progressionReference, milestoneCap);
         if (IsMilestoneComplete(&milestones[i]))
         {
             if (milestoneCap > progressionFloor)
@@ -220,6 +242,79 @@ static u32 GetBossProgressionLevelCap(const struct BossLevelCapMilestone *milest
     }
 
     return max(nextBossCap, progressionFloor);
+}
+
+u32 GetFamilyRocketTrainerLevel(u16 trainerId)
+{
+    bool8 useLowestLevel = gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap == 2;
+    u32 progressionReference = 0;
+    u32 i;
+
+    if (!IsFamilyRocketTrainer(trainerId))
+        return 0;
+
+    for (i = 0; i < ARRAY_COUNT(sJohtoBossMilestones); i++)
+    {
+        u16 milestoneTrainerId = GetMilestoneTrainerId(&sJohtoBossMilestones[i]);
+        u32 milestoneCap = IsFamilyRocketTrainer(milestoneTrainerId)
+            ? min(progressionReference + 2, MAX_LEVEL)
+            : GetMilestoneLevelCap(&sJohtoBossMilestones[i], useLowestLevel);
+
+        progressionReference = max(progressionReference, milestoneCap);
+        if (milestoneTrainerId == trainerId)
+            return milestoneCap;
+    }
+
+    return 0;
+}
+
+u16 GetFamilyRocketLegalSpecies(u16 species, u32 level)
+{
+    switch (species)
+    {
+    case SPECIES_CROBAT:
+        if (level < 22)
+            return SPECIES_ZUBAT;
+        if (level < 23)
+            return SPECIES_GOLBAT;
+        break;
+    case SPECIES_WEEZING:
+        if (level < 35)
+            return SPECIES_KOFFING;
+        break;
+    case SPECIES_RATICATE:
+        if (level < 20)
+            return SPECIES_RATTATA;
+        break;
+    case SPECIES_SCOLIPEDE:
+        if (level < 22)
+            return SPECIES_VENIPEDE;
+        if (level < 30)
+            return SPECIES_WHIRLIPEDE;
+        break;
+    case SPECIES_TOXICROAK:
+        if (level < 37)
+            return SPECIES_CROAGUNK;
+        break;
+    case SPECIES_MUK_ALOLA:
+        if (level < 38)
+            return SPECIES_GRIMER_ALOLA;
+        break;
+    case SPECIES_ELECTRODE:
+        if (level < 30)
+            return SPECIES_VOLTORB;
+        break;
+    case SPECIES_MUK:
+        if (level < 38)
+            return SPECIES_GRIMER;
+        break;
+    case SPECIES_ZOROARK_HISUI:
+        if (level < 30)
+            return SPECIES_ZORUA_HISUI;
+        break;
+    }
+
+    return species;
 }
 
 static u32 GetHnsLevelCap(u8 challengeLevelCap)

@@ -21,6 +21,8 @@
 u32 GetCurrentLevelCap(void);
 u32 GetSoftLevelCapExpValue(u32 level, u32 expValue);
 u32 GetCurrentEVCap(void);
+u32 GetFamilyRocketTrainerLevel(u16 trainerId);
+u16 GetFamilyRocketLegalSpecies(u16 species, u32 level);
 
 #if TESTING
 typedef u32 (*LevelCapTrainerLevelGetter)(u16 trainerId, bool8 useLowestLevel);

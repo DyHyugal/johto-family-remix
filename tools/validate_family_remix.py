@@ -17,7 +17,11 @@ def validate_bosses():
     marker = "/* ========== Family Remix FINAL hard boss parties ========== */"
     if text.count(marker) != 1:
         fail("missing or duplicated FINAL hard boss marker")
-    normal, hard = text.split(marker, 1)
+    normal, final_parties = text.split(marker, 1)
+    rocket_marker = "/* ========== Family Remix FINAL Rocket parties ========== */"
+    if final_parties.count(rocket_marker) != 1:
+        fail("missing or duplicated FINAL Rocket marker")
+    hard, _ = final_parties.split(rocket_marker, 1)
     blocks = re.findall(r"^=== ([A-Z0-9_]+) ===\n(.*?)(?=^=== |\Z)", hard, re.M | re.S)
     if len(blocks) != 22:
         fail(f"expected 22 fixed HARD boss teams, got {len(blocks)}")
@@ -96,6 +100,82 @@ def validate_bosses():
             fail(f"owner-locked boss datum is missing: {value}")
 
 
+def validate_rockets():
+    text = (ROOT / "src/data/trainers_hns.party").read_text()
+    hard_marker = "/* ========== Family Remix FINAL hard boss parties ========== */"
+    rocket_marker = "/* ========== Family Remix FINAL Rocket parties ========== */"
+    normal = text.split(hard_marker, 1)[0]
+    rocket = text.split(rocket_marker, 1)[1]
+    hard_blocks = dict(re.findall(
+        r"^=== ([A-Z0-9_]+) ===\n(.*?)(?=^=== |\Z)", rocket, re.M | re.S
+    ))
+    expected = {
+        "TRAINER_PROTON_1_HNS": ("Crobat", "Weezing", "Raticate", "Scolipede", "Toxicroak", "Muk-Alola"),
+        "TRAINER_PROTON_2_HNS": ("Crobat", "Weezing", "Raticate", "Scolipede", "Toxicroak", "Muk-Alola"),
+        "TRAINER_PETREL_1_HNS": ("Ditto", "Weezing", "Electrode", "Muk", "Zoroark-Hisui", "Raticate"),
+        "TRAINER_PETREL_2_HNS": ("Ditto", "Weezing", "Electrode", "Muk", "Zoroark-Hisui", "Raticate"),
+        "TRAINER_ARIANA_1_HNS": ("Arbok", "Vileplume", "Grafaiai", "Nidoqueen", "Salazzle", "Honchkrow"),
+        "TRAINER_ARIANA_2_HNS": ("Arbok", "Vileplume", "Grafaiai", "Nidoqueen", "Salazzle", "Honchkrow"),
+        "TRAINER_ARCHER_HNS": ("Weavile", "Crobat", "Nidoking", "Magnezone", "Drapion", "Houndoom"),
+    }
+    if set(hard_blocks) != set(expected):
+        fail(f"expected seven final HARD Rocket variants, got {sorted(hard_blocks)}")
+
+    required_ai = ("Basic Trainer", "Try To 2HKO", "Smart Switching", "HP Aware",
+                   "PP Stall Prevention", "Assumptions")
+    for trainer_id, roster in expected.items():
+        normal_matches = re.findall(
+            rf"^=== {re.escape(trainer_id)} ===\n(.*?)(?=^=== |\Z)", normal, re.M | re.S
+        )
+        if len(normal_matches) != 1:
+            fail(f"{trainer_id} must have exactly one NORMAL Rocket roster")
+        normal_block = normal_matches[0]
+        hard_block = hard_blocks[trainer_id]
+        normal_header, normal_party = normal_block.split("\n\n", 1)
+        hard_header, hard_party = hard_block.split("\n\n", 1)
+        normalize_header = lambda value: "\n".join(
+            line for line in value.splitlines()
+            if not line.startswith(("AI: ", "Difficulty: "))
+        )
+        normalize_party = lambda value: re.sub(
+            r"^(?:IVs|EVs): .+\n?", "", value, flags=re.M
+        ).strip()
+        if normalize_header(normal_header) != normalize_header(hard_header):
+            fail(f"{trainer_id} NORMAL/HARD Rocket metadata differs")
+        if normalize_party(normal_party) != normalize_party(hard_party):
+            fail(f"{trainer_id} NORMAL/HARD Rocket content differs")
+        if re.search(r"^EVs:", normal_party, re.M):
+            fail(f"{trainer_id} NORMAL received HARD Rocket EVs")
+        normal_ai = re.search(r"^AI: (.+)$", normal_header, re.M).group(1)
+        if any(flag in normal_ai for flag in required_ai[1:]):
+            fail(f"{trainer_id} NORMAL received HARD Rocket AI")
+        hard_ai = re.search(r"^AI: (.+)$", hard_header, re.M).group(1)
+        if any(flag not in hard_ai for flag in required_ai):
+            fail(f"{trainer_id} HARD is missing fair strategic Rocket AI")
+        if any(flag in hard_ai for flag in ("Smart Trainer", "Omniscient", "Prediction")):
+            fail(f"{trainer_id} HARD uses forbidden hidden-information AI")
+
+        species = tuple(re.findall(
+            r"^(?!Level:|Ability:|Nature:|IVs:|EVs:|-)([^\n@]+?)(?: @ .+)?$",
+            hard_party,
+            re.M,
+        ))
+        if species != roster:
+            fail(f"{trainer_id} final Rocket roster differs: {species}")
+        if set(re.findall(r"^Level: (\d+)$", hard_party, re.M)) != {"1"}:
+            fail(f"{trainer_id} Rocket source levels must remain runtime placeholders")
+        iv_lines = re.findall(r"^IVs: (.+)$", hard_party, re.M)
+        ev_lines = re.findall(r"^EVs: (.+)$", hard_party, re.M)
+        if len(iv_lines) != 6 or any(set(map(int, re.findall(r"\d+", line))) != {31} for line in iv_lines):
+            fail(f"{trainer_id} HARD Rocket IVs are not all 31")
+        if len(ev_lines) != 6:
+            fail(f"{trainer_id} HARD Rocket EV data is incomplete")
+        for line in ev_lines:
+            values = [int(value) for value in re.findall(r"(\d+) (?:HP|Atk|Def|SpA|SpD|Spe)", line)]
+            if any(value > 252 for value in values) or sum(values) > 510:
+                fail(f"{trainer_id} has illegal HARD Rocket EVs: {line}")
+
+
 def validate_encounters():
     wild = json.loads((ROOT / "src/data/wild_encounters.json").read_text())
     audit = wild.get("family_remix_encounter_audit", {})
@@ -171,6 +251,7 @@ def validate_shops():
 
 def main():
     validate_bosses()
+    validate_rockets()
     validate_encounters()
     validate_shops()
     print("Family Remix data validation passed: bosses, EVs, encounters and shops")

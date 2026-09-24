@@ -10981,17 +10981,65 @@ Double Battle: No
 AI: Check Bad Move
 Mugshot: Dark Red
 
-Koffing
-Level: 12
+Crobat @ Sharp Beak
+Level: 1
+Ability: Infiltrator
+Nature: Jolly
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Brave Bird
+- Cross Poison
+- U-turn
+- Roost
 
-Slowpoke
-Level: 13
+Weezing @ Black Sludge
+Level: 1
+Ability: Levitate
+Nature: Bold
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Sludge Bomb
+- Will-O-Wisp
+- Pain Split
+- Explosion
 
-Houndour
-Level: 15
+Raticate @ Flame Orb
+Level: 1
+Ability: Guts
+Nature: Jolly
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Super Fang
+- Facade
+- Sucker Punch
+- U-turn
+
+Scolipede @ Life Orb
+Level: 1
+Ability: Speed Boost
+Nature: Jolly
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Megahorn
+- Poison Jab
+- Earthquake
+- Protect
+
+Toxicroak @ Expert Belt
+Level: 1
+Ability: Dry Skin
+Nature: Jolly
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Close Combat
+- Gunk Shot
+- Sucker Punch
+- Ice Punch
+
+Muk-Alola @ Assault Vest
+Level: 1
+Ability: Poison Touch
+Nature: Adamant
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Gunk Shot
+- Knock Off
+- Fire Punch
+- Shadow Sneak
 
 === TRAINER_PROTON_2_HNS ===
 Name: PROTON
@@ -11004,45 +11052,65 @@ AI: Basic Trainer
 Mugshot: Dark Red
 Items: Full Restore / Full Restore
 
-Muk
-Level: 36
+Crobat @ Sharp Beak
+Level: 1
+Ability: Infiltrator
+Nature: Jolly
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Sludge Wave
-- Mud Bomb
-- Acid Armor
-- Minimize
-
-Nidoqueen
-Level: 37
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Brave Bird
 - Cross Poison
-- Double Kick
-- Thunder Punch
-- Body Slam
+- U-turn
+- Roost
 
-Weezing
-Level: 36
+Weezing @ Black Sludge
+Level: 1
+Ability: Levitate
+Nature: Bold
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Sludge Bomb
-- Self Destruct
-- Haze
-- Gyro Ball
+- Will-O-Wisp
+- Pain Split
+- Explosion
 
-Nidoking
-Level: 37
+Raticate @ Flame Orb
+Level: 1
+Ability: Guts
+Nature: Jolly
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Cross Poison
-- Double Kick
-- Ice Punch
-- Thrash
+- Super Fang
+- Facade
+- Sucker Punch
+- U-turn
 
-Rhydon
-Level: 38
+Scolipede @ Life Orb
+Level: 1
+Ability: Speed Boost
+Nature: Jolly
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Megahorn
+- Poison Jab
 - Earthquake
-- Drill Run
-- Fissure
-- Rock Slide
+- Protect
+
+Toxicroak @ Expert Belt
+Level: 1
+Ability: Dry Skin
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Close Combat
+- Gunk Shot
+- Sucker Punch
+- Ice Punch
+
+Muk-Alola @ Assault Vest
+Level: 1
+Ability: Poison Touch
+Nature: Adamant
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Gunk Shot
+- Knock Off
+- Fire Punch
+- Shadow Sneak
 
 === TRAINER_ARCHER_HNS ===
 Name: ARCHER
@@ -11055,45 +11123,65 @@ AI: Basic Trainer
 Mugshot: Dark Red
 Items: Full Restore / Full Restore
 
-Porygon Z
-Level: 39
+Weavile @ Life Orb
+Level: 1
+Ability: Pressure
+Nature: Jolly
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Tri Attack
-- Zap Cannon
-- Flamethrower
+- Icicle Crash
+- Knock Off
+- Ice Shard
+- Low Kick
+
+Crobat @ Heavy-Duty Boots
+Level: 1
+Ability: Infiltrator
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Brave Bird
+- Cross Poison
+- U-turn
+- Roost
+
+Nidoking @ Life Orb
+Level: 1
+Ability: Sheer Force
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earth Power
+- Sludge Wave
 - Ice Beam
+- Thunderbolt
 
-Tauros
-Level: 38
+Magnezone @ Assault Vest
+Level: 1
+Ability: Analytic
+Nature: Modest
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Headbutt
+- Thunderbolt
+- Flash Cannon
+- Volt Switch
+- Body Press
+
+Drapion @ Black Sludge
+Level: 1
+Ability: Battle Armor
+Nature: Careful
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Knock Off
+- Poison Jab
 - Earthquake
-- Pursuit
-- Frustration
+- Taunt
 
-Gyarados
-Level: 39
+Houndoom @ Life Orb
+Level: 1
+Ability: Flash Fire
+Nature: Timid
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Crunch
-- Bounce
-- Twister
-- Aqua Tail
-
-Houndoom
-Level: 38
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Crunch
-- Smog
-- Roar
+- Nasty Plot
+- Dark Pulse
 - Flamethrower
-
-Slowbro
-Level: 40
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Zen Headbutt
-- Curse
-- Amnesia
-- Waterfall
+- Sludge Bomb
 
 === TRAINER_ARCHER_1_HNS ===
 Name: ARCHER
@@ -11243,37 +11331,62 @@ AI: Basic Trainer
 Mugshot: Dark Red
 Items: Full Restore / Full Restore
 
-Pineco
-Level: 30
+Ditto @ Choice Scarf
+Level: 1
+Ability: Imposter
+Nature: Timid
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Pin Missile
+- Transform
+
+Weezing @ Black Sludge
+Level: 1
+Ability: Levitate
+Nature: Bold
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Will-O-Wisp
+- Disable
+- Pain Split
 - Explosion
-- Spikes
-- Spike Cannon
 
-Larvitar
-Level: 30
+Electrode @ Focus Sash
+Level: 1
+Ability: Aftermath
+Nature: Timid
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Rock Slide
-- Screech
-- Bite
-- Thrash
+- Thunderbolt
+- Taunt
+- Thunder Wave
+- Explosion
 
-Magcargo
-Level: 30
+Muk @ Black Sludge
+Level: 1
+Ability: Sticky Hold
+Nature: Careful
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Smog
+- Poison Jab
+- Minimize
+- Disable
+- Explosion
+
+Zoroark-Hisui @ Life Orb
+Level: 1
+Ability: Illusion
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Hyper Voice
+- Shadow Ball
 - Flamethrower
-- Ancient Power
-- Curse
+- U-turn
 
-Cloyster
-Level: 30
+Raticate @ Flame Orb
+Level: 1
+Ability: Guts
+Nature: Jolly
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Ice Beam
-- Clamp
-- Spike Cannon
-- Surf
+- Super Fang
+- Facade
+- Sucker Punch
+- Protect
 
 === TRAINER_PETREL_2_HNS ===
 Name: PETREL
@@ -11286,37 +11399,62 @@ AI: Basic Trainer
 Mugshot: Dark Red
 Items: Full Restore / Full Restore
 
-Forretress
-Level: 38
+Ditto @ Choice Scarf
+Level: 1
+Ability: Imposter
+Nature: Timid
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Pin Missile
+- Transform
+
+Weezing @ Black Sludge
+Level: 1
+Ability: Levitate
+Nature: Bold
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Will-O-Wisp
+- Disable
+- Pain Split
 - Explosion
-- Spikes
-- Spike Cannon
 
-Pupitar
-Level: 38
+Electrode @ Focus Sash
+Level: 1
+Ability: Aftermath
+Nature: Timid
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Rock Slide
-- Screech
-- Bite
-- Thrash
+- Thunderbolt
+- Taunt
+- Thunder Wave
+- Explosion
 
-Magcargo
-Level: 39
+Muk @ Black Sludge
+Level: 1
+Ability: Sticky Hold
+Nature: Careful
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Smog
+- Poison Jab
+- Minimize
+- Disable
+- Explosion
+
+Zoroark-Hisui @ Life Orb
+Level: 1
+Ability: Illusion
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Hyper Voice
+- Shadow Ball
 - Flamethrower
-- Ancient Power
-- Curse
+- U-turn
 
-Cloyster
-Level: 38
+Raticate @ Flame Orb
+Level: 1
+Ability: Guts
+Nature: Jolly
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Ice Beam
-- Clamp
-- Spike Cannon
-- Surf
+- Super Fang
+- Facade
+- Sucker Punch
+- Protect
 
 === TRAINER_ARIANA_1_HNS ===
 Name: ARIANA
@@ -11329,29 +11467,65 @@ AI: Basic Trainer
 Mugshot: Dark Red
 Items: Full Restore / Full Restore
 
-Arbok
-Level: 31
+Arbok @ Black Sludge
+Level: 1
+Ability: Intimidate
+Nature: Jolly
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Leer
-- Poison Fang
-- Bite
-- Wrap
+- Glare
+- Gunk Shot
+- Earthquake
+- Crunch
 
-Persian
-Level: 30
+Vileplume @ Leftovers
+Level: 1
+Ability: Effect Spore
+Nature: Bold
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Faint Attack
-- Pay Day
-- Mud Slap
-- Slash
-
-Vileplume
-Level: 30
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Sweet Scent
 - Sleep Powder
-- Sludge Bomb
 - Giga Drain
+- Sludge Bomb
+- Nature Power
+
+Grafaiai @ Focus Sash
+Level: 1
+Ability: Prankster
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Parting Shot
+- Encore
+- Toxic
+- Knock Off
+
+Nidoqueen @ Life Orb
+Level: 1
+Ability: Sheer Force
+Nature: Modest
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earth Power
+- Ice Beam
+- Thunderbolt
+- Sludge Bomb
+
+Salazzle @ Focus Sash
+Level: 1
+Ability: Oblivious
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Nasty Plot
+- Flamethrower
+- Sludge Wave
+- Dragon Pulse
+
+Honchkrow @ Life Orb
+Level: 1
+Ability: Moxie
+Nature: Adamant
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Brave Bird
+- Sucker Punch
+- Superpower
+- Roost
 
 === TRAINER_ARIANA_2_HNS ===
 Name: ARIANA
@@ -11364,45 +11538,65 @@ AI: Basic Trainer
 Mugshot: Dark Red
 Items: Full Restore / Full Restore
 
-Arbok
-Level: 39
+Arbok @ Black Sludge
+Level: 1
+Ability: Intimidate
+Nature: Jolly
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Screech
-- Crunch
 - Glare
-- Poison Fang
+- Gunk Shot
+- Earthquake
+- Crunch
 
-Persian
-Level: 40
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Bite
-- Screech
-- Charm
-- Slash
-
-Vileplume
-Level: 39
+Vileplume @ Leftovers
+Level: 1
+Ability: Effect Spore
+Nature: Bold
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Sleep Powder
-- Sludge Bomb
-- Stun Spore
 - Giga Drain
+- Sludge Bomb
+- Nature Power
 
-Gyarados
-Level: 40
+Grafaiai @ Focus Sash
+Level: 1
+Ability: Prankster
+Nature: Jolly
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Strength
-- Twister
-- Bounce
-- Surf
-
-Murkrow
-Level: 40
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Pursuit
+- Parting Shot
+- Encore
 - Toxic
-- Faint Attack
-- Air Slash
+- Knock Off
+
+Nidoqueen @ Life Orb
+Level: 1
+Ability: Sheer Force
+Nature: Modest
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earth Power
+- Ice Beam
+- Thunderbolt
+- Sludge Bomb
+
+Salazzle @ Focus Sash
+Level: 1
+Ability: Oblivious
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Nasty Plot
+- Flamethrower
+- Sludge Wave
+- Dragon Pulse
+
+Honchkrow @ Life Orb
+Level: 1
+Ability: Moxie
+Nature: Adamant
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Brave Bird
+- Sucker Punch
+- Superpower
+- Roost
 
 === TRAINER_ANABEL_BF_BRAIN_HNS ===
 Name: ANABEL
@@ -18117,3 +18311,544 @@ EVs: 252 Atk / 252 Spe / 4 HP
 - Zen Headbutt
 - Earthquake
 - Ice Punch
+
+/* ========== Family Remix FINAL Rocket parties ========== */
+
+=== TRAINER_PROTON_1_HNS ===
+Name: PROTON
+Class: Rocket Admin Hns
+Pic: Proton Hns
+Gender: Male
+Music: Rocket
+Double Battle: No
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
+Mugshot: Dark Red
+Difficulty: Hard
+
+Crobat @ Sharp Beak
+Level: 1
+Ability: Infiltrator
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Brave Bird
+- Cross Poison
+- U-turn
+- Roost
+
+Weezing @ Black Sludge
+Level: 1
+Ability: Levitate
+Nature: Bold
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Def / 4 SpD
+- Sludge Bomb
+- Will-O-Wisp
+- Pain Split
+- Explosion
+
+Raticate @ Flame Orb
+Level: 1
+Ability: Guts
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Super Fang
+- Facade
+- Sucker Punch
+- U-turn
+
+Scolipede @ Life Orb
+Level: 1
+Ability: Speed Boost
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Megahorn
+- Poison Jab
+- Earthquake
+- Protect
+
+Toxicroak @ Expert Belt
+Level: 1
+Ability: Dry Skin
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Close Combat
+- Gunk Shot
+- Sucker Punch
+- Ice Punch
+
+Muk-Alola @ Assault Vest
+Level: 1
+Ability: Poison Touch
+Nature: Adamant
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 SpD
+- Gunk Shot
+- Knock Off
+- Fire Punch
+- Shadow Sneak
+
+=== TRAINER_PROTON_2_HNS ===
+Name: PROTON
+Class: Rocket Admin Hns
+Pic: Proton Hns
+Gender: Male
+Music: Rocket
+Double Battle: No
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
+Mugshot: Dark Red
+Items: Full Restore / Full Restore
+Difficulty: Hard
+
+Crobat @ Sharp Beak
+Level: 1
+Ability: Infiltrator
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Brave Bird
+- Cross Poison
+- U-turn
+- Roost
+
+Weezing @ Black Sludge
+Level: 1
+Ability: Levitate
+Nature: Bold
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Def / 4 SpD
+- Sludge Bomb
+- Will-O-Wisp
+- Pain Split
+- Explosion
+
+Raticate @ Flame Orb
+Level: 1
+Ability: Guts
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Super Fang
+- Facade
+- Sucker Punch
+- U-turn
+
+Scolipede @ Life Orb
+Level: 1
+Ability: Speed Boost
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Megahorn
+- Poison Jab
+- Earthquake
+- Protect
+
+Toxicroak @ Expert Belt
+Level: 1
+Ability: Dry Skin
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Close Combat
+- Gunk Shot
+- Sucker Punch
+- Ice Punch
+
+Muk-Alola @ Assault Vest
+Level: 1
+Ability: Poison Touch
+Nature: Adamant
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 SpD
+- Gunk Shot
+- Knock Off
+- Fire Punch
+- Shadow Sneak
+
+=== TRAINER_PETREL_1_HNS ===
+Name: PETREL
+Class: Rocket Admin Hns
+Pic: Petrel Hns
+Gender: Male
+Music: Rocket
+Double Battle: No
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
+Mugshot: Dark Red
+Items: Full Restore / Full Restore
+Difficulty: Hard
+
+Ditto @ Choice Scarf
+Level: 1
+Ability: Imposter
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Def / 4 SpD
+- Transform
+
+Weezing @ Black Sludge
+Level: 1
+Ability: Levitate
+Nature: Bold
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Def / 4 SpD
+- Will-O-Wisp
+- Disable
+- Pain Split
+- Explosion
+
+Electrode @ Focus Sash
+Level: 1
+Ability: Aftermath
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 SpA / 252 Spe / 4 HP
+- Thunderbolt
+- Taunt
+- Thunder Wave
+- Explosion
+
+Muk @ Black Sludge
+Level: 1
+Ability: Sticky Hold
+Nature: Careful
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 SpD / 4 Def
+- Poison Jab
+- Minimize
+- Disable
+- Explosion
+
+Zoroark-Hisui @ Life Orb
+Level: 1
+Ability: Illusion
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 SpA / 252 Spe / 4 HP
+- Hyper Voice
+- Shadow Ball
+- Flamethrower
+- U-turn
+
+Raticate @ Flame Orb
+Level: 1
+Ability: Guts
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Super Fang
+- Facade
+- Sucker Punch
+- Protect
+
+=== TRAINER_PETREL_2_HNS ===
+Name: PETREL
+Class: Rocket Admin Hns
+Pic: Petrel Hns
+Gender: Male
+Music: Rocket
+Double Battle: No
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
+Mugshot: Dark Red
+Items: Full Restore / Full Restore
+Difficulty: Hard
+
+Ditto @ Choice Scarf
+Level: 1
+Ability: Imposter
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Def / 4 SpD
+- Transform
+
+Weezing @ Black Sludge
+Level: 1
+Ability: Levitate
+Nature: Bold
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Def / 4 SpD
+- Will-O-Wisp
+- Disable
+- Pain Split
+- Explosion
+
+Electrode @ Focus Sash
+Level: 1
+Ability: Aftermath
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 SpA / 252 Spe / 4 HP
+- Thunderbolt
+- Taunt
+- Thunder Wave
+- Explosion
+
+Muk @ Black Sludge
+Level: 1
+Ability: Sticky Hold
+Nature: Careful
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 SpD / 4 Def
+- Poison Jab
+- Minimize
+- Disable
+- Explosion
+
+Zoroark-Hisui @ Life Orb
+Level: 1
+Ability: Illusion
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 SpA / 252 Spe / 4 HP
+- Hyper Voice
+- Shadow Ball
+- Flamethrower
+- U-turn
+
+Raticate @ Flame Orb
+Level: 1
+Ability: Guts
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Super Fang
+- Facade
+- Sucker Punch
+- Protect
+
+=== TRAINER_ARIANA_1_HNS ===
+Name: ARIANA
+Class: Rocket Admin Hns
+Pic: Ariana Hns
+Gender: Male
+Music: Rocket
+Double Battle: No
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
+Mugshot: Dark Red
+Items: Full Restore / Full Restore
+Difficulty: Hard
+
+Arbok @ Black Sludge
+Level: 1
+Ability: Intimidate
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Spe / 4 Def
+- Glare
+- Gunk Shot
+- Earthquake
+- Crunch
+
+Vileplume @ Leftovers
+Level: 1
+Ability: Effect Spore
+Nature: Bold
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Def / 4 SpD
+- Sleep Powder
+- Giga Drain
+- Sludge Bomb
+- Nature Power
+
+Grafaiai @ Focus Sash
+Level: 1
+Ability: Prankster
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Spe / 4 Def
+- Parting Shot
+- Encore
+- Toxic
+- Knock Off
+
+Nidoqueen @ Life Orb
+Level: 1
+Ability: Sheer Force
+Nature: Modest
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 SpA / 4 SpD
+- Earth Power
+- Ice Beam
+- Thunderbolt
+- Sludge Bomb
+
+Salazzle @ Focus Sash
+Level: 1
+Ability: Oblivious
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 SpA / 252 Spe / 4 HP
+- Nasty Plot
+- Flamethrower
+- Sludge Wave
+- Dragon Pulse
+
+Honchkrow @ Life Orb
+Level: 1
+Ability: Moxie
+Nature: Adamant
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Brave Bird
+- Sucker Punch
+- Superpower
+- Roost
+
+=== TRAINER_ARIANA_2_HNS ===
+Name: ARIANA
+Class: Rocket Admin Hns
+Pic: Ariana Hns
+Gender: Male
+Music: Rocket
+Double Battle: No
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
+Mugshot: Dark Red
+Items: Full Restore / Full Restore
+Difficulty: Hard
+
+Arbok @ Black Sludge
+Level: 1
+Ability: Intimidate
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Spe / 4 Def
+- Glare
+- Gunk Shot
+- Earthquake
+- Crunch
+
+Vileplume @ Leftovers
+Level: 1
+Ability: Effect Spore
+Nature: Bold
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Def / 4 SpD
+- Sleep Powder
+- Giga Drain
+- Sludge Bomb
+- Nature Power
+
+Grafaiai @ Focus Sash
+Level: 1
+Ability: Prankster
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Spe / 4 Def
+- Parting Shot
+- Encore
+- Toxic
+- Knock Off
+
+Nidoqueen @ Life Orb
+Level: 1
+Ability: Sheer Force
+Nature: Modest
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 SpA / 4 SpD
+- Earth Power
+- Ice Beam
+- Thunderbolt
+- Sludge Bomb
+
+Salazzle @ Focus Sash
+Level: 1
+Ability: Oblivious
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 SpA / 252 Spe / 4 HP
+- Nasty Plot
+- Flamethrower
+- Sludge Wave
+- Dragon Pulse
+
+Honchkrow @ Life Orb
+Level: 1
+Ability: Moxie
+Nature: Adamant
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Brave Bird
+- Sucker Punch
+- Superpower
+- Roost
+
+=== TRAINER_ARCHER_HNS ===
+Name: ARCHER
+Class: Rocket Admin Hns
+Pic: Archer Hns
+Gender: Male
+Music: Rocket
+Double Battle: No
+AI: Basic Trainer / Try To 2HKO / Smart Switching / HP Aware / PP Stall Prevention / Assumptions / Powerful Status
+Mugshot: Dark Red
+Items: Full Restore / Full Restore
+Difficulty: Hard
+
+Weavile @ Life Orb
+Level: 1
+Ability: Pressure
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Icicle Crash
+- Knock Off
+- Ice Shard
+- Low Kick
+
+Crobat @ Heavy-Duty Boots
+Level: 1
+Ability: Infiltrator
+Nature: Jolly
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Spe / 4 HP
+- Brave Bird
+- Cross Poison
+- U-turn
+- Roost
+
+Nidoking @ Life Orb
+Level: 1
+Ability: Sheer Force
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 SpA / 252 Spe / 4 HP
+- Earth Power
+- Sludge Wave
+- Ice Beam
+- Thunderbolt
+
+Magnezone @ Assault Vest
+Level: 1
+Ability: Analytic
+Nature: Modest
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 SpA / 4 SpD
+- Thunderbolt
+- Flash Cannon
+- Volt Switch
+- Body Press
+
+Drapion @ Black Sludge
+Level: 1
+Ability: Battle Armor
+Nature: Careful
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 SpD / 4 Def
+- Knock Off
+- Poison Jab
+- Earthquake
+- Taunt
+
+Houndoom @ Life Orb
+Level: 1
+Ability: Flash Fire
+Nature: Timid
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 SpA / 252 Spe / 4 HP
+- Nasty Plot
+- Dark Pulse
+- Flamethrower
+- Sludge Bomb
