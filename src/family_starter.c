@@ -23,8 +23,12 @@ static EWRAM_DATA struct Pokemon sFamilyStarterPreview = {0};
 static EWRAM_DATA u16 sFamilyStarterPreviewSpecies = SPECIES_NONE;
 static EWRAM_DATA u16 sFamilyStarterPreviewPreference = SPECIES_NONE;
 static EWRAM_DATA bool8 sFamilyStarterPreviewIsEgg = FALSE;
-static EWRAM_DATA u16 sFamilyStarterPendingItem = ITEM_NONE;
-static EWRAM_DATA bool8 sFamilyStarterPendingItemInPC = FALSE;
+#define FAMILY_STARTER_MAX_PENDING_ITEMS 3
+
+static EWRAM_DATA u16 sFamilyStarterPendingItems[FAMILY_STARTER_MAX_PENDING_ITEMS] = {0};
+static EWRAM_DATA bool8 sFamilyStarterPendingItemsInPC[FAMILY_STARTER_MAX_PENDING_ITEMS] = {0};
+static EWRAM_DATA u8 sFamilyStarterPendingItemCount = 0;
+static EWRAM_DATA u8 sFamilyStarterPendingItemRead = 0;
 
 static u16 ValidEvolutionPreference(u16 species, u16 preference);
 
@@ -58,6 +62,33 @@ static const u8 sCounterCategory[] = {
     [FAMILY_ELECTRIC] = FAMILY_GROUND,
     [FAMILY_GROUND] = FAMILY_WATER,
     [FAMILY_ICE] = FAMILY_FIRE,
+};
+
+static const u16 sCategoryBoosters[] = {
+    [FAMILY_FIRE] = ITEM_CHARCOAL,
+    [FAMILY_WATER] = ITEM_MYSTIC_WATER,
+    [FAMILY_GRASS] = ITEM_MIRACLE_SEED,
+    [FAMILY_ELECTRIC] = ITEM_MAGNET,
+    [FAMILY_GROUND] = ITEM_SOFT_SAND,
+    [FAMILY_ICE] = ITEM_NEVER_MELT_ICE,
+    [FAMILY_EEVEE] = ITEM_NONE,
+};
+
+struct EeveeTypeBooster
+{
+    u16 target;
+    u16 item;
+};
+
+static const struct EeveeTypeBooster sEeveeTypeBoosters[] = {
+    {SPECIES_VAPOREON, ITEM_MYSTIC_WATER},
+    {SPECIES_JOLTEON, ITEM_MAGNET},
+    {SPECIES_FLAREON, ITEM_CHARCOAL},
+    {SPECIES_ESPEON, ITEM_TWISTED_SPOON},
+    {SPECIES_UMBREON, ITEM_BLACK_GLASSES},
+    {SPECIES_LEAFEON, ITEM_MIRACLE_SEED},
+    {SPECIES_GLACEON, ITEM_NEVER_MELT_ICE},
+    {SPECIES_SYLVEON, ITEM_FAIRY_FEATHER},
 };
 
 struct FamilyStarterEvolution
@@ -142,8 +173,10 @@ void FamilyStarter_ClearPreview(void)
     sFamilyStarterPreviewSpecies = SPECIES_NONE;
     sFamilyStarterPreviewPreference = SPECIES_NONE;
     sFamilyStarterPreviewIsEgg = FALSE;
-    sFamilyStarterPendingItem = ITEM_NONE;
-    sFamilyStarterPendingItemInPC = FALSE;
+    memset(sFamilyStarterPendingItems, 0, sizeof(sFamilyStarterPendingItems));
+    memset(sFamilyStarterPendingItemsInPC, 0, sizeof(sFamilyStarterPendingItemsInPC));
+    sFamilyStarterPendingItemCount = 0;
+    sFamilyStarterPendingItemRead = 0;
 }
 
 static void PreparePreview(u16 species, u16 preference, bool32 isEgg)
@@ -368,34 +401,90 @@ static u16 GetEvolutionItem(u16 species, u16 preference)
     return ITEM_NONE;
 }
 
-static void UNUSED QueueEvolutionItem(u16 species, u16 preference)
+static void ResetPendingItems(void)
 {
-    u16 item = GetEvolutionItem(species, preference);
-    if (item == ITEM_NONE)
+    memset(sFamilyStarterPendingItems, 0, sizeof(sFamilyStarterPendingItems));
+    memset(sFamilyStarterPendingItemsInPC, 0, sizeof(sFamilyStarterPendingItemsInPC));
+    sFamilyStarterPendingItemCount = 0;
+    sFamilyStarterPendingItemRead = 0;
+}
+
+static void QueuePendingItem(u16 item)
+{
+    bool8 inPC;
+
+    if (item == ITEM_NONE || sFamilyStarterPendingItemCount >= FAMILY_STARTER_MAX_PENDING_ITEMS)
         return;
+
     if (AddBagItem(item, 1))
-    {
-        sFamilyStarterPendingItem = item;
-        sFamilyStarterPendingItemInPC = FALSE;
-    }
+        inPC = FALSE;
     else if (AddPCItem(item, 1))
+        inPC = TRUE;
+    else
+        return;
+
+    sFamilyStarterPendingItems[sFamilyStarterPendingItemCount] = item;
+    sFamilyStarterPendingItemsInPC[sFamilyStarterPendingItemCount] = inPC;
+    sFamilyStarterPendingItemCount++;
+}
+
+static u16 GetEeveeTypeBooster(u16 preference)
+{
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sEeveeTypeBoosters); i++)
+        if (sEeveeTypeBoosters[i].target == preference)
+            return sEeveeTypeBoosters[i].item;
+
+    return ITEM_NONE;
+}
+
+static void QueueStarterRewards(u16 species, u16 preference)
+{
+    u16 evolutionItem;
+    u32 category;
+
+    ResetPendingItems();
+
+    if (species == SPECIES_EEVEE)
     {
-        sFamilyStarterPendingItem = item;
-        sFamilyStarterPendingItemInPC = TRUE;
+        // Eevee intentionally receives three rewards:
+        // Normal STAB booster + planned Eeveelution STAB booster + evolution stone.
+        QueuePendingItem(ITEM_SILK_SCARF);
+        QueuePendingItem(GetEeveeTypeBooster(preference));
+        QueuePendingItem(GetEvolutionItem(species, preference));
+        return;
     }
+
+    category = GetMenuCategory(species);
+    if (category < FAMILY_EEVEE)
+        QueuePendingItem(sCategoryBoosters[category]);
+
+    // Evolution helpers are cumulative with the category booster.
+    evolutionItem = GetEvolutionItem(species, preference);
+    QueuePendingItem(evolutionItem);
 }
 
 void FamilyStarter_PreparePendingItemMessage(void)
 {
+    u16 item;
+    bool8 inPC;
+
     gSpecialVar_Result = FALSE;
-    if (sFamilyStarterPendingItem == ITEM_NONE)
+    if (sFamilyStarterPendingItemRead >= sFamilyStarterPendingItemCount)
+    {
+        ResetPendingItems();
         return;
-    gSpecialVar_0x8000 = sFamilyStarterPendingItem;
+    }
+
+    item = sFamilyStarterPendingItems[sFamilyStarterPendingItemRead];
+    inPC = sFamilyStarterPendingItemsInPC[sFamilyStarterPendingItemRead];
+    sFamilyStarterPendingItemRead++;
+
+    gSpecialVar_0x8000 = item;
     gSpecialVar_0x8001 = 1;
     gSpecialVar_0x8007 = TRUE;
-    gSpecialVar_Result = sFamilyStarterPendingItemInPC ? 2 : 1;
-    sFamilyStarterPendingItem = ITEM_NONE;
-    sFamilyStarterPendingItemInPC = FALSE;
+    gSpecialVar_Result = inPC ? 2 : 1;
 }
 
 void FamilyStarter_RecordPrimary(void)
@@ -408,7 +497,7 @@ void FamilyStarter_RecordPrimary(void)
         VarSet(VAR_FAMILY_STARTER_SPECIES, species);
         VarSet(VAR_FAMILY_STARTER_EVOLUTION, preference);
         SelectRivalStarter(species);
-        QueueEvolutionItem(species, preference);
+        QueueStarterRewards(species, preference);
     }
 #endif
 }
@@ -534,7 +623,7 @@ void FamilyStarter_GiveEgg(void)
     VarSet(VAR_FAMILY_EGG_EVOLUTION, preference);
     FlagSet(FLAG_RECEIVED_TOGEPI_EGG);
     FlagClear(FLAG_HIDE_NEWBARKTOWN_LAB_AIDE);
-    QueueEvolutionItem(species, preference);
+    QueueStarterRewards(species, preference);
     gSpecialVar_Result = result;
 #else
     gSpecialVar_Result = MON_CANT_GIVE;
