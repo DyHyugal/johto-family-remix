@@ -61644,41 +61644,6 @@
                 "min_level": 34,
                 "max_level": 44,
                 "species": "SPECIES_POLIWAG"
-              },
-              {
-                "min_level": 34,
-                "max_level": 44,
-                "species": "SPECIES_POLIWAG"
-              },
-              {
-                "min_level": 34,
-                "max_level": 44,
-                "species": "SPECIES_POLIWAG"
-              },
-              {
-                "min_level": 40,
-                "max_level": 44,
-                "species": "SPECIES_POLIWHIRL"
-              },
-              {
-                "min_level": 34,
-                "max_level": 44,
-                "species": "SPECIES_POLIWAG"
-              },
-              {
-                "min_level": 40,
-                "max_level": 44,
-                "species": "SPECIES_POLIWHIRL"
-              },
-              {
-                "min_level": 34,
-                "max_level": 44,
-                "species": "SPECIES_POLIWAG"
-              },
-              {
-                "min_level": 40,
-                "max_level": 44,
-                "species": "SPECIES_POLIWHIRL"
               }
             ]
           },
@@ -61863,41 +61828,6 @@
                 "min_level": 34,
                 "max_level": 44,
                 "species": "SPECIES_POLIWAG"
-              },
-              {
-                "min_level": 34,
-                "max_level": 44,
-                "species": "SPECIES_POLIWAG"
-              },
-              {
-                "min_level": 34,
-                "max_level": 44,
-                "species": "SPECIES_POLIWAG"
-              },
-              {
-                "min_level": 40,
-                "max_level": 44,
-                "species": "SPECIES_POLIWHIRL"
-              },
-              {
-                "min_level": 34,
-                "max_level": 44,
-                "species": "SPECIES_POLIWAG"
-              },
-              {
-                "min_level": 40,
-                "max_level": 44,
-                "species": "SPECIES_POLIWHIRL"
-              },
-              {
-                "min_level": 34,
-                "max_level": 44,
-                "species": "SPECIES_POLIWAG"
-              },
-              {
-                "min_level": 40,
-                "max_level": 44,
-                "species": "SPECIES_POLIWHIRL"
               }
             ]
           },
