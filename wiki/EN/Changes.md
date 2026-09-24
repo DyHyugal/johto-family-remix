@@ -19,7 +19,7 @@ This page groups the main differences between Pokémon Heart & Soul and Pokémon
 
 Family Remix adds or changes:
 
-- HARD by default, NORMAL still available;
+- HARD by default, NORMAL still available;\n- the same new Family Remix boss rosters in both difficulties;
 - Level Cap;
 - Training NPC;
 - native x1/x2/x3/x4 game speed;
@@ -82,11 +82,11 @@ Principles:
 - no Legendary/Mythical Pokémon injected into ordinary random encounters;
 - Safari-only species remain tied to Safari content.
 
-The final data set contains **409 normal tables + 53 Safari tables**.
+Current integrated state before the final pass: **405 standard tables + 4 Headbutt tables**. Safari adds **53 separate pools**, each using four species at 30/30/30/10 with pool rotation during a Safari admission.
 
 ## Boss battles
 
-HARD replaces simple level inflation with team logic:
+Family Remix boss rosters are shared by NORMAL and HARD. NORMAL uses NORMAL IV/EV scaling and AI; HARD adds the following optimization:
 
 - held items;
 - 31 IVs;
