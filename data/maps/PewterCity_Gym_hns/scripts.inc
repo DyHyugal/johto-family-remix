@@ -120,7 +120,7 @@ PewterCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 PewterCity_Gym_EventScript_GymGuyBagFull::
-	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	msgbox PewterCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
 	goto PewterCity_Gym_EventScript_GymGuyDone
 
 PewterCity_Gym_EventScript_GymGuyAfter::
@@ -200,6 +200,6 @@ PewterCity_Gym_Text_BrockTradeCompleted:
 	.string "BROCK: How's WOODY doing?\n"
 	.string "BONSLY are tougher than they look!$"
 
-FamilyGymGuide_Text_BagFull:
+PewterCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
