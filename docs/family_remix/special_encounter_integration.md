@@ -27,11 +27,17 @@ The Family Remix Safari design is not a single static wild table per map. Each S
 Do **not** merge all pools into one giant land table.
 
 Implementation requirement:
-- choose the active pool using the existing/new Safari rotation state;
+- if HnS already exposes a usable Safari rotation/session state, reuse it;
+- otherwise Family Remix must provide its own session rotation instead of blocking the feature;
+- autonomous fallback rule: start a Safari session on pool A, then advance the active pool after each Safari wild encounter; wrap A→E on Johto sectors and A→F on Kanto sectors;
+- use one session-level rotation counter and apply modulo the pool count of the current sector; resetting a new Safari admission to pool A is acceptable;
 - active pool exposes exactly four species at 30/30/30/10;
+- changing sector must not discard or merge curated pools;
 - preserve the validated Johto level range 37–44;
 - preserve the validated Kanto level range 68–76;
 - do not duplicate the V3 Safari dataset during import.
+
+This fallback is a Family Remix behavior. It may require changing native HnS Safari/encounter code in this fork; that is allowed when needed to make the Family Remix ROM correct.
 
 ## Standard encounters already integrated
 
