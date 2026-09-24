@@ -15,7 +15,7 @@ VioletCity_Gym_EventScript_GymGuyDone::
 	release
 	end
 VioletCity_Gym_EventScript_GymGuyBagFull::
-	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	msgbox VioletCity_Gym_Text_FamilyGuideBagFull, MSGBOX_DEFAULT
 	goto VioletCity_Gym_EventScript_GymGuyDone
 	
 VioletCity_Gym_EventScript_GymGuy2::
@@ -181,6 +181,6 @@ VioletCity_Gym_Text_GymStatueCertified:
 	.string "FALKNER'S CERTIFIED TRAINERS:\n"
 	.string "{PLAYER}$"
 
-FamilyGymGuide_Text_BagFull:
+VioletCity_Gym_Text_FamilyGuideBagFull:
 	.string "Your BAG is full. Make some room,\n"
 	.string "then come back for your FRESH WATER.$"
