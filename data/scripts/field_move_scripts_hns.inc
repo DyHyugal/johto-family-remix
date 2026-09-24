@@ -124,7 +124,7 @@ EventScript_HeadbuttTree:: @ fallthrough
 	applymovement VAR_LAST_TALKED, Movement_HeadbuttTree
 	playse SE_M_HEADBUTT
 	waitmovement 0
-	special RockSmashWildEncounter
+	special HeadbuttWildEncounter
 	goto EventScript_EndHeadbutt
 	waitstate
 	releaseall

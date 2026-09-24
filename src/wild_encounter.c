@@ -74,6 +74,10 @@ EWRAM_DATA u8 gChainFishingDexNavStreak = 0;
 
 #include "data/wild_encounters.h"
 
+#if IS_HNS
+#include "data/family_remix_headbutt.h"
+#endif
+
 static const struct WildPokemon sWildFeebas = {20, 25, SPECIES_FEEBAS};
 
 static const u16 sRoute119WaterTileData[] =
@@ -923,6 +927,53 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
     }
 
     return FALSE;
+}
+
+void HeadbuttWildEncounter(void)
+{
+#if IS_HNS
+    const struct WildPokemonInfo *wildPokemonInfo = NULL;
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sFamilyRemixHeadbuttEncounters); i++)
+    {
+        if (sFamilyRemixHeadbuttEncounters[i].mapGroup == gSaveBlock1Ptr->location.mapGroup
+         && sFamilyRemixHeadbuttEncounters[i].mapNum == gSaveBlock1Ptr->location.mapNum)
+        {
+            wildPokemonInfo = &sFamilyRemixHeadbuttEncounters[i].info;
+            break;
+        }
+    }
+
+    if (wildPokemonInfo == NULL)
+    {
+        RockSmashWildEncounter();
+        return;
+    }
+
+    if (WildEncounterCheck(wildPokemonInfo->encounterRate, TRUE) == TRUE
+     && TryGenerateWildMon(wildPokemonInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
+    {
+        if (TryDoDoubleWildBattle())
+        {
+            struct Pokemon mon1 = gEnemyParty[0];
+            TryGenerateWildMon(wildPokemonInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE);
+            gEnemyParty[1] = mon1;
+            BattleSetup_StartDoubleWildBattle();
+        }
+        else
+        {
+            BattleSetup_StartWildBattle();
+        }
+        gSpecialVar_Result = TRUE;
+    }
+    else
+    {
+        gSpecialVar_Result = FALSE;
+    }
+#else
+    RockSmashWildEncounter();
+#endif
 }
 
 void RockSmashWildEncounter(void)
