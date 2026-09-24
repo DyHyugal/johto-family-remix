@@ -30,9 +30,17 @@ MahoganyTown_GymEventScript_GymGuy::
 	faceplayer
 	goto_if_set FLAG_DEFEATED_MAHOGANY_TOWN_GYM, MahoganyTown_Gym_EventScript_GymGuy2
 	msgbox MahoganyTown_Gym_Text_Guide, MSGBOX_DEFAULT
+	goto_if_set FLAG_FAMILY_GYM_WATER_MAHOGANY, MahoganyTown_Gym_EventScript_GymGuyDone
+	giveitem ITEM_FRESH_WATER
+	goto_if_eq VAR_RESULT, FALSE, MahoganyTown_Gym_EventScript_GymGuyBagFull
+	setflag FLAG_FAMILY_GYM_WATER_MAHOGANY
+MahoganyTown_Gym_EventScript_GymGuyDone::
 	closemessage
 	release
 	end
+MahoganyTown_Gym_EventScript_GymGuyBagFull::
+	msgbox FamilyGymGuide_Text_BagFull, MSGBOX_DEFAULT
+	goto MahoganyTown_Gym_EventScript_GymGuyDone
 	
 MahoganyTown_Gym_EventScript_GymGuy2::
 	msgbox MahoganyTown_Gym_Text_GuideWin, MSGBOX_DEFAULT
@@ -185,13 +193,12 @@ MahoganyTown_Gym_Text_PryceRematchDefeat:
     .string "will overcome all life's obstacles.$"
 
 MahoganyTown_Gym_Text_Guide:
-    .string "PRYCE is a veteran who has\n"
-    .string "trained POKéMON for some 50 years.\p"
-    .string "He's got a solid lineup of\n"
-    .string "POKéMON to cover whatever\l"
-    .string "you bring his way.\p"
-    .string "Fire is a good place to start,\n"
-    .string "but watch out for the rain!$"
+	.string "PRYCE wants SNOW and AURORA VEIL\n"
+	.string "up so his sweepers can set up safely.\p"
+	.string "Pressure ALOLAN NINETALES quickly,\n"
+	.string "or stall out the VEIL before his\l"
+	.string "carries get comfortable.\p"
+	.string "Take this FRESH WATER. Keep cool!$"
 
 MahoganyTown_Gym_Text_GuideWin:
     .string "PRYCE is something, but you're\n"
@@ -258,3 +265,7 @@ MahoganyTown_Gym_Text_SkierClarissaAfter:
     .string "I shouldn't have been bragging\n"
     .string "about my skiing…$"
 
+
+FamilyGymGuide_Text_BagFull:
+	.string "Your BAG is full. Make some room,\n"
+	.string "then come back for your FRESH WATER.$"
